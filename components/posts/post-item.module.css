@@ -1,0 +1,40 @@
+.item{
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 1px 12px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+}
+
+.item img{
+    width: 100%;
+    object-fit: cover;
+    width: 35rem;
+    max-height: 30rem;
+}
+
+.content{
+    width: 100%;
+}
+.content p{
+    margin: 1em;
+}
+.profile{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center
+    ;
+    margin: 1em;
+}
+.profile img {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    margin-right: 1em;
+}
