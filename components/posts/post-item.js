@@ -12,7 +12,7 @@ function PostItem(props){
                     </div>
                     <p>{props.title}</p>
                     <div className={classes.image}>
-                        <Image src={props.image} alt={props.title} width={400} height={400} />
+                        <Image src={props.image} alt={props.title} width={600} height={600} />
                     </div>
                 </div>
             </div>

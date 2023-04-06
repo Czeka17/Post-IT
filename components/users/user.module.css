@@ -1,0 +1,18 @@
+.user{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 1em;
+}
+
+.user img{
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    margin: 2em;
+}
+
+.user button{
+    margin: 2em;
+}

@@ -11,6 +11,7 @@ function PostsList(props){
 
     const name = session.user.name
 
+
     useEffect(() => {
         fetch('/api/posts/addPost').then(response => response.json()).then((data) => {
             setPosts(data.posts);

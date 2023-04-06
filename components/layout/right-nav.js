@@ -4,25 +4,20 @@ function RightNav() {
     return <nav className={classes.navitems}>
         <ul>
             <li>
-            <Link href='/'>Marketplace</Link>
+            <Link href='/' className={classes.btn}>Marketplace</Link>
             </li>
-            <hr/>
             <li>
-            <Link href='/'>Users</Link>
+            <Link href='/users' className={classes.btn}>Users</Link>
             </li>
-            <hr/>
             <li>
-            <Link href='/'>Forum</Link>
+            <Link href='/' className={classes.btn}>Forum</Link>
             </li>
-            <hr/>
             <li>
-            <Link href='/'>Profile</Link>
+            <Link href='/' className={classes.btn}>Profile</Link>
             </li>
-            <hr/>
             <li>
-            <Link href='/'>Settings</Link>
+            <Link href='/' className={classes.btn}>Settings</Link>
             </li>
-            <hr/>
         </ul>
     </nav>
 }
