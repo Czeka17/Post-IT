@@ -4,6 +4,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    box-shadow: 2px 2px 10px;
 }
 
 .profile img{

@@ -1,7 +1,9 @@
+import Link from 'next/link';
 import classes from './user.module.css'
 
 function User(props){
-    return <li className={classes.user}>
+    return <li>
+        <Link href={`/${encodeURIComponent(props.name)}`} className={classes.user}>
         <div>
             <button>
                 Follow
@@ -11,6 +13,7 @@ function User(props){
         <h3>{props.name}</h3>
         <img src={props.userImage} alt={props.name} />
         </div>
+        </Link>
     </li>
 }
 
