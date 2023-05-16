@@ -32,6 +32,7 @@ function NewPost(props) {
         })
 
         messageInputRef.current.value = ''
+        setImage('')
     }
 
 

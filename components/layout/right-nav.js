@@ -1,8 +1,10 @@
 import classes from './right-nav.module.css'
 import Link from 'next/link';
+import { useSession } from "next-auth/react";
 function RightNav() {
+    const { data: session, status } = useSession()
     return <nav className={classes.navitems}>
-        <ul>
+        {session && <ul>
             <li>
             <Link href='/' className={classes.btn}>Marketplace</Link>
             </li>
@@ -18,7 +20,7 @@ function RightNav() {
             <li>
             <Link href='/' className={classes.btn}>Settings</Link>
             </li>
-        </ul>
+        </ul>}
     </nav>
 }
 

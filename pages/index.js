@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import MainDisplay from "../components/layout/Main";
-import { getSession,useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 function HomePage() {
 
     const DUMMY_FRIENDS = [

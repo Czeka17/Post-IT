@@ -1,8 +1,22 @@
 import UserProfile from "../components/profile/user-profile";
 import { connectToDatabase } from "../lib/db";
+
 function ProfilePage(props) {
 
-    return <UserProfile username={props.userData.name} image={props.userData.image} />
+    async function changeProfileHandler(image, username){
+        const response = await fetch('/api/user/changeImage', {
+            method: 'POST',
+            body: JSON.stringify(image, username),
+            headers: {
+                'Content-Type': 'application/json'
+              }
+        });
+
+        const data = await response.json()
+        console.log(data)
+    }
+
+    return <UserProfile username={props.userData.name} onChangeProfile={changeProfileHandler} image={props.userData.image} />
 }
 
 export async function getStaticPaths() {

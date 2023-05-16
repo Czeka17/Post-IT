@@ -47,7 +47,6 @@ async function handler(req,res){
             const db = client.db();
 
             const posts = await db.collection('posts').find().sort().toArray();
-
             res.status(200).json({posts: posts});
             return posts;
         } catch(error){

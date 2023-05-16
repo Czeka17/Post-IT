@@ -6,7 +6,7 @@ function UsersList(props){
     const [users,setUsers] = useState([])
 
     useEffect(() =>{
-        fetch('/api/users/user').then(response => response.json()).then((data) => {
+        fetch('/api/user/user').then(response => response.json()).then((data) => {
             setUsers(data.users)
         })
     }, [])

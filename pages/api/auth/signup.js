@@ -30,13 +30,13 @@ async function handler(req, res){
 
         const hashedPassword = await hashPassword(password)
 
-        let image = '/images/dummy.png'
+        let image = '/images/amogus.jpg'
 
         const result = await db.collection("users").insertOne({
             name: name,
             email: email,
             password: hashedPassword,
-            image: image
+            image: image,
         });
 
         res.status(201).json({message: 'Created user!'});

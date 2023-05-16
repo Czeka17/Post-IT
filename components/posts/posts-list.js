@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 function PostsList(props){
 
     const [posts, setPosts] = useState([])
-
+    const [isLoading, setIsLoading] = useState(true)
     const { data: session, status } = useSession()
 
     const name = session.user.name
@@ -16,6 +16,7 @@ function PostsList(props){
         fetch('/api/posts/addPost').then(response => response.json()).then((data) => {
             setPosts(data.posts);
         })
+        setIsLoading(false)
     }, [])
 
 
@@ -36,6 +37,7 @@ function addPostHandler(postData) {
     })
 }
 return <section>
+    {isLoading ? <p>Loading...</p> : <div>
     <div>
         <NewPost onAddPost={addPostHandler} name={name} userImage={session.user.image}/>
     </div>
@@ -44,6 +46,7 @@ return <section>
         <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} />
     ))}
 </ul>
+    </div>}
 </section>
 }
 
