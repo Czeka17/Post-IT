@@ -36,7 +36,7 @@ function addPostHandler(postData) {
           })
     })
 }
-return <section>
+return <section className={classes.postContainer}>
     {isLoading ? <p>Loading...</p> : <div>
     <div>
         <NewPost onAddPost={addPostHandler} name={name} userImage={session.user.image}/>

@@ -25,7 +25,6 @@ async function handler(req,res){
         const newPost = {
             name,
             message,
-            userImage,
             image
         };
 
@@ -45,7 +44,6 @@ async function handler(req,res){
     if(req.method === 'GET'){
         try {
             const db = client.db();
-
             const posts = await db.collection('posts').find().sort().toArray();
             res.status(200).json({posts: posts});
             return posts;

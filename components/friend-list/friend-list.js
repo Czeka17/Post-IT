@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import classes from './friend-list.module.css'
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 function FriendList() {
 const { data: session, status } = useSession()
 const [friendList, setFriendList] = useState([])
@@ -21,19 +22,21 @@ useEffect(() => {
         };
     console.log(friendList)
         fetchFriendList();
-}, [])
+}, [friendList])
 return (
     <section className={classes.position}>
+        {session && <div>
         <div>
             <h2>Friend List</h2>
         </div>
         <div>
             <ul>
                 {friendList.map((friend) => (
-                    <li className={classes.list} key={friend.id}><img src={friend.image} /><p>{friend.name}</p></li>
+                    <li className={classes.list} key={friend._id}><Link href={`/${encodeURIComponent(friend.name)}`}><img src={friend.image} /><p>{friend.name}</p></Link></li>
                 ))}
             </ul> 
         </div>
+        </div>}
     </section>
 )
 }

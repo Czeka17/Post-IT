@@ -29,12 +29,14 @@ export default NextAuth({
                     client.close();
                     throw new Error('Could not log you in!')
                 }
+                
                 client.close();
                 return{
                     name: user.name,
                     email: user.email,
+                    image: user.image
                 }
             }
         })
-    ]
+    ],
 })

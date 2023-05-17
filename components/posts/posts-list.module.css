@@ -3,4 +3,13 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    max-width: 100%;
+}
+
+.postContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 40%;
 }

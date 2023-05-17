@@ -1,5 +1,8 @@
 import { useRef, useState } from 'react';
 import classes from './add-post.module.css'
+
+
+
 function NewPost(props) {
     const [image, setImage] = useState('');
 
@@ -37,7 +40,7 @@ function NewPost(props) {
 
 
     return (<form onSubmit={sendCommentHandler}>
-        <div className={classes.idk}>
+        <div className={classes.container}>
             <textarea placeholder='How You feel today?' id="post" rows='5' ref={messageInputRef}></textarea>
             <div className={classes.button}>
             <input type="file" name="file" onChange={addImageHandler} ></input>

@@ -5,7 +5,6 @@ import classes from './Main.module.css'
 function MainDisplay(props) {
     return <section className={classes.position}>        
         <PostsList />
-        <FriendList friends={props.friends} />
     </section>
 }
 

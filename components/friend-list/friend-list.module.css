@@ -1,21 +1,28 @@
 .position{
     position: fixed;
-    top: 6em;
-    right: 1em;
+    height: 100%;
+    top: 5em;
+    right: 0;
     padding: 1em 2em;
     background-color: #146C94;
+    color: white;
 }
 
 .list {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
     align-items: center;
     padding: 0.5em;
+    margin: 2px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: 0.5s;
+}
+.list:hover{
+    transform: scale(1.1);
 }
 .list img {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     margin-right: 1em;
 }

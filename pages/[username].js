@@ -1,22 +1,41 @@
 import UserProfile from "../components/profile/user-profile";
 import { connectToDatabase } from "../lib/db";
+import { useSession } from "next-auth/react";
 
 function ProfilePage(props) {
+    const { data: session, status, update } = useSession()
+    const activeUser = session?.user?.name
+    const token = session?.accessToken;
+    console.log(token)
 
     async function changeProfileHandler(image, username){
         const response = await fetch('/api/user/changeImage', {
-            method: 'POST',
-            body: JSON.stringify(image, username),
-            headers: {
-                'Content-Type': 'application/json'
-              }
+          method: 'POST',
+          body: JSON.stringify(image, username),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
         });
+      
+        const data = await response.json();
+        console.log(data);
+        if (response.ok) {
+            // Update the image in the session data
+            update({
+              ...session,
+              user: {
+                ...session.user,
+                image: data.image,
+              },
+            });
+        }
+      
 
-        const data = await response.json()
-        console.log(data)
-    }
+      }
+      
 
-    return <UserProfile username={props.userData.name} onChangeProfile={changeProfileHandler} image={props.userData.image} />
+    return <UserProfile username={props.userData.name} onChangeProfile={changeProfileHandler} activeUser={activeUser} image={props.userData.image} />
 }
 
 export async function getStaticPaths() {

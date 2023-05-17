@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { signIn } from 'next-auth/react';
 
-
 async function createUser(email,name,password){
 	const response = await fetch('/api/auth/signup', {
 		method: 'POST',

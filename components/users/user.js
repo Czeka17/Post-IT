@@ -29,18 +29,20 @@ function User(props){
         }
       };
       
-    return <li>
-        <Link href={`/${encodeURIComponent(props.name)}`} className={classes.user}>
-        <div>
-            <button onClick={addUserHandler}>
-                Follow
-            </button>
-        </div>
+    return <li className={classes.user}>
+        <Link href={`/${encodeURIComponent(props.name)}`}>
         <div className={classes.user} >
         <h3>{props.name}</h3>
-        <img src={props.userImage} alt={props.name} />
         </div>
         </Link>
+        <div>
+        <img src={props.userImage} alt={props.name} />
+        </div>
+        <div>
+            <button onClick={addUserHandler}>
+                {props.friendList.some((friend) => friend.name === props.name) ? 'unfollow' : 'follow'}
+            </button>
+        </div>
     </li>
 }
 
