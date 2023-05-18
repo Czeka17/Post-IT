@@ -36,6 +36,25 @@ function addPostHandler(postData) {
           })
     })
 }
+
+function addCommentHandler(commentData){
+    fetch('/api/posts/addComment', {
+        method: 'POST',
+        body: JSON.stringify(commentData),
+        headers: {
+            'Content-Type': 'application/json'
+          }
+    }).then(response => {
+        if(response.ok){
+            return response.json
+        }
+        return response.json().then(data => {
+            throw new Error(data.message || 'Something went wrong!')
+          })
+    })
+}
+
+console.log(posts)
 return <section className={classes.postContainer}>
     {isLoading ? <p>Loading...</p> : <div>
     <div>
@@ -43,7 +62,7 @@ return <section className={classes.postContainer}>
     </div>
     <ul className={classes.list}>
     {posts.map((post) =>(
-        <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} />
+        <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} onAddComment={addCommentHandler} />
     ))}
 </ul>
     </div>}

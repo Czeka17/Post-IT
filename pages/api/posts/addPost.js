@@ -12,7 +12,7 @@ async function handler(req,res){
     }
 
     if (req.method === 'POST') {
-        const {name, message, userImage, image} = req.body;
+        const {name, message, image} = req.body;
 
         if(
             !message || message.trim() === ''
@@ -45,11 +45,16 @@ async function handler(req,res){
         try {
             const db = client.db();
             const posts = await db.collection('posts').find().sort().toArray();
-            res.status(200).json({posts: posts});
-            return posts;
-        } catch(error){
-            res.status(500).json({message: 'Getting posts failed.'})
-        }
+            for (const post of posts) {
+                const user = await db.collection('users').findOne({ name: post.name });
+                post.userImage = user.image;
+            }
+          
+              res.status(200).json({ posts: posts });
+              return posts;
+            } catch (error) {
+              res.status(500).json({ message: 'Getting posts failed.' });
+            }
     }
 
     client.close();

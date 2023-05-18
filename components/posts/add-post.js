@@ -18,7 +18,7 @@ function NewPost(props) {
         }
     }
 
-    function sendCommentHandler(event){
+    function sendPostHandler(event){
         event.preventDefault();
 
         const enteredMessage = messageInputRef.current.value 
@@ -39,7 +39,7 @@ function NewPost(props) {
     }
 
 
-    return (<form onSubmit={sendCommentHandler}>
+    return (<form onSubmit={sendPostHandler}>
         <div className={classes.container}>
             <textarea placeholder='How You feel today?' id="post" rows='5' ref={messageInputRef}></textarea>
             <div className={classes.button}>

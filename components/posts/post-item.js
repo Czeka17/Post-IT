@@ -1,6 +1,29 @@
 import classes from './post-item.module.css'
 import Image from 'next/image';
+import Comments from './comments';
+import { useRef } from 'react';
+import { useSession } from 'next-auth/react';
 function PostItem(props){
+    const commentInputRef = useRef()
+    const { data: session, status } = useSession()
+
+    const user = session.user.name
+    function sendCommentHandler(event){
+        event.preventDefault();
+
+        const enteredComment = commentInputRef.current.value
+
+        if(!enteredComment || enteredComment.trim() === ''){
+            return
+        }
+        props.onAddComment({
+            message: enteredComment,
+            username: user,
+            postId: props.id
+        })
+    }
+
+    console.log(user)
 
     return(
         <li className={classes.item}>
@@ -20,22 +43,14 @@ function PostItem(props){
                         <p>Like</p>
                     </div>
                     <div>
-                        <p>Comment</p>
+                        <button>Show comments</button>
                     </div>
                 </div>
-                <div className={classes.comments}>
-                    <ul>
-                        <li>
-                            <div className={classes.comment}>
-                                <img src={props.profile}/>
-                                <div className={classes.commentContent}>
-                                <h4>{props.author}</h4>
-                                <p>Dobre!</p>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                <form className={classes.commentForm} onSubmit={sendCommentHandler}>
+                    <textarea placeholder='comment' id='comment' ref={commentInputRef}></textarea>
+                    <button>Submit</button>
+                </form>
+                <Comments />
             </div>
         </li>
     )
