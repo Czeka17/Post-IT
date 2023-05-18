@@ -21,11 +21,12 @@ async function handler(req,res){
             client.close();
             return
         }
-
+        const currentDate = new Date();
         const newPost = {
             name,
             message,
-            image
+            image,
+            createdAt: currentDate.toISOString(),
         };
 
         let result;

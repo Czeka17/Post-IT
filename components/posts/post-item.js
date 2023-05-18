@@ -22,6 +22,8 @@ function PostItem(props){
             username: user,
             postId: props.id
         })
+
+        commentInputRef.current.value = '';
     }
 
     function hideCommentsHandler(){
@@ -56,8 +58,55 @@ function PostItem(props){
         }
       }
       
-    console.log(comments)
+      const deleteCommentHandler = async (commentId) => {
+        try {
+          const response = await fetch('/api/posts/deleteComment', {
+            method: 'DELETE',
+            body: JSON.stringify({ postId: props.id, commentId }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+    
+          if (response.ok) {
+            // Comment deleted successfully
+            const data = await response.json();
+            console.log(data);
+            const comments = data.commentList;
+            setComments(comments);
+          } else {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Something went wrong!');
+          }
+        } catch (error) {
+          // Handle error
+          console.error(error);
+        }
+      };
 
+
+      const createdAt = props.time;
+
+      const createdDate = new Date(createdAt);
+
+      const currentDate = new Date();
+      const timeDiff = currentDate - createdDate
+
+      const seconds = Math.floor(timeDiff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    let formattedTime = '';
+if (days > 0) {
+  formattedTime = `${days} day${days > 1 ? 's' : ''} ago`;
+} else if (hours > 0) {
+  formattedTime = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+} else if (minutes > 0) {
+  formattedTime = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+} else {
+  formattedTime = `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
+}
     return(
         <li className={classes.item}>
             <div>
@@ -65,6 +114,7 @@ function PostItem(props){
                 <div className={classes.profile}>
                         <img src={props.profile}/>
                         <h3>{props.author}</h3>
+                        <p>{formattedTime}</p>
                     </div>
                     <p>{props.title}</p>
                     {props.image && <div className={classes.image}>
@@ -84,7 +134,7 @@ function PostItem(props){
                     <button>Submit</button>
                 </form>
                 {showComments && (
-          <Comments comments={comments} />
+          <Comments comments={comments} user={user} onDeleteComment={deleteCommentHandler} />
         )}
             </div>
         </li>

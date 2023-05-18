@@ -2,13 +2,13 @@ import { connectToDatabase } from "../../../lib/db";
 import { ObjectId } from "mongodb";
 
 async function handler(req, res) {
-  if (req.method !== "POST") {
+  if (req.method !== "DELETE") {
     res.status(405).json({ message: "Method not allowed!" });
     return;
   }
 
   try {
-    const { postId } = req.body;
+    const {postId, commentId } = req.body;
 
     const client = await connectToDatabase();
     const db = client.db();
@@ -22,24 +22,17 @@ async function handler(req, res) {
       return;
     }
 
-    const commentList = post.commentList;
-
-    // Retrieve user information for each comment
-    const usersCollection = db.collection("users");
-    const commentsWithUser = await Promise.all(
-      commentList.map(async (comment) => {
-        const userId = new ObjectId(comment.userId);
-        const user = await usersCollection.findOne({ _id: userId });
-        return {
-          userId: comment.userId,
-          _id: comment._id,
-          message: comment.message,
-          user: user ? { name: user.name, image: user.image } : null
-        };
-      })
+    const updatedComments = post.commentList.filter(
+      (comment) => comment._id.toString() !== commentId
     );
 
-    res.status(200).json({ commentList: commentsWithUser });
+    // Update the commentList in the database
+    await postsCollection.updateOne(
+      { _id: objectId },
+      { $set: { commentList: updatedComments } }
+    );
+
+    res.status(200).json({ message: "Comment deleted successfully" });
 
     client.close();
   } catch (error) {

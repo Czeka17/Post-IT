@@ -63,7 +63,7 @@ return <section className={classes.postContainer}>
     </div>
     <ul className={classes.list}>
     {posts.map((post) =>(
-        <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} onAddComment={addCommentHandler} />
+        <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} onAddComment={addCommentHandler} />
     ))}
 </ul>
     </div>}

@@ -33,6 +33,7 @@ async function handler(req,res){
         const userId = user._id
 
         const newComment = {
+            _id: new ObjectId(),
             userId,
             message
         }
