@@ -8,7 +8,6 @@ function PostsList(props){
     const [posts, setPosts] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const { data: session, status } = useSession()
-
     const name = session.user.name
 
 
@@ -53,6 +52,8 @@ function addCommentHandler(commentData){
           })
     })
 }
+
+
 
 console.log(posts)
 return <section className={classes.postContainer}>

@@ -20,7 +20,6 @@ useEffect(() => {
             setFriendList(data.friendUsers);
           }
         };
-    console.log(friendList)
         fetchFriendList();
 }, [friendList])
 return (
