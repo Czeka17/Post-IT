@@ -26,29 +26,12 @@ function ProfilePage(props) {
     return <UserProfile username={props.userData.name} onChangeProfile={changeProfileHandler} activeUser={activeUser} image={props.userData.image} />
 }
 
-export async function getStaticPaths() {
-  const client = await connectToDatabase();
-
-  const db = client.db();
-
-  const usersCollection = db.collection("users");
-
-  const users = await usersCollection.find().toArray();
-
-  client.close();
-
-  return {
-    fallback: "blocking",
-    paths: users.map((user) => ({ params: { username: user.name } })),
-  };
-}
-
-export async function getStaticProps(context) {
-  const username = context.params.username;
+export async function getServerSideProps(context) {
+  const username = context.query.username;
 
   const client = await connectToDatabase();
   const db = client.db();
-  const usersCollection = db.collection("users");
+  const usersCollection = db.collection('users');
 
   const selectedUser = await usersCollection.findOne({ name: username });
 
@@ -56,7 +39,7 @@ export async function getStaticProps(context) {
 
   if (!selectedUser) {
     return {
-      notFound: true, // Return a 404 page if the user is not found
+      notFound: true,
     };
   }
 
