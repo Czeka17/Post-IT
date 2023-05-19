@@ -39,5 +39,5 @@ export default NextAuth({
             }
         })
     ],
-    secret: `opKCTGBzisY9JAOF`
+    secret: `GvjKyb0uG47E1EGUPkuMo5CFD6AfT1U7p/0sNE6naLI=`
 })
