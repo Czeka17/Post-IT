@@ -113,8 +113,10 @@ if (days > 0) {
                 <div className={classes.content}>
                 <div className={classes.profile}>
                         <img src={props.profile}/>
-                        <h3>{props.author}</h3>
-                        <p>{formattedTime}</p>
+                        <div className={classes.postAuthor}>
+                        <span>{props.author}</span>
+                        <span className={classes.postDate}>{formattedTime}</span>
+                        </div>
                     </div>
                     <p>{props.title}</p>
                     {props.image && <div className={classes.image}>
@@ -130,7 +132,7 @@ if (days > 0) {
                     </div>
                 </div>
                 <form className={classes.commentForm} onSubmit={sendCommentHandler}>
-                    <textarea placeholder='comment' id='comment' ref={commentInputRef}></textarea>
+                    <textarea placeholder='comment' id='comment' ref={commentInputRef} rows='2'></textarea>
                     <button>Submit</button>
                 </form>
                 {showComments && (

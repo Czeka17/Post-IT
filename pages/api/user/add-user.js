@@ -1,14 +1,13 @@
 import { connectToDatabase } from "../../../lib/db";
 
 async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.status(405).json({ message: 'Method Not Allowed' });
-    return;
-  }
+
+  let client
+  if (req.method === 'POST') {
 
   try {
     const { username, friendname } = req.body;
-    const client = await connectToDatabase();
+    client = await connectToDatabase();
     const db = client.db();
 
     const usersCollection = db.collection('users');
@@ -42,8 +41,43 @@ async function handler(req, res) {
     client.close();
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal1 Server Error' });
+    res.status(500).json({ message: 'Internal Server Error' });
   }
+} if(req.method === 'DELETE'){
+  try{const { username, friendname } = req.body;
+    client = await connectToDatabase();
+    const db = client.db();
+
+    const usersCollection = db.collection('users');
+
+    const user = await usersCollection.findOne({ name: username });
+    const friend = await usersCollection.findOne({ name: friendname });
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found!' });
+      client.close();
+      return;
+    }
+
+    if (!friend) {
+      res.status(404).json({ message: 'Friend not found!' });
+      client.close();
+      return;
+    }
+
+    const updatedFriendList = user.friendList.filter((friendItem) => friendItem !== friend.name);
+
+
+    console.log('Updated friend list:', updatedFriendList);
+
+    await usersCollection.updateOne({ name: username }, { $set: { friendList: updatedFriendList } });
+      res.status(200).json({ message: "Friend deleted successfully" });
+      client.close();
+    }catch(error){
+      console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
 }
 
 export default handler;

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import classes from './main-navigation.module.css'
 function MainNavigation() {
@@ -17,7 +16,7 @@ function MainNavigation() {
         </Link>
         <nav>
            <ul>
-            {session && <li><p>Signed in as {session.user.name}</p><Link href={session.user.name}><Image src={session.user.image} width={100} height={100}/></Link></li>}
+            {session && <li><p>Signed in as {session.user.name}</p><Link href={session.user.name}><img src={session.user.image} alt={session.user.name} /></Link></li>}
            {session && <li>
                 <button onClick={logoutHandler}>
                     Logout

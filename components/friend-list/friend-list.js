@@ -31,7 +31,7 @@ return (
         <div>
             <ul>
                 {friendList.map((friend) => (
-                    <li className={classes.list} key={friend._id}><Link href={`/${encodeURIComponent(friend.name)}`}><img src={friend.image} /><p>{friend.name}</p></Link></li>
+                    <li key={friend._id}><Link href={`/${encodeURIComponent(friend.name)}`} className={classes.list}><img src={friend.image} /><p>{friend.name}</p></Link></li>
                 ))}
             </ul> 
         </div>

@@ -4,7 +4,6 @@ import { useSession } from 'next-auth/react';
 function User(props){
     const { data: session, status } = useSession()
 
-
     const addUserHandler = async () => {
         try {
           const response = await fetch('/api/user/add-user', {
@@ -21,6 +20,29 @@ function User(props){
       
           // Handle the response as needed
           const data = await response.json();
+          console.log(data); 
+      
+        } catch (error) {
+          console.error(error);
+          // Handle the error condition appropriately
+        }
+      };
+    const deleteUserHandler = async () => {
+        try {
+          const response = await fetch('/api/user/add-user', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: session.user.name, friendname: props.name })
+          });
+      
+          if (!response.ok) {
+            throw new Error('Failed to delete user');
+          }
+      
+          // Handle the response as needed
+          const data = await response.json();
           console.log(data); // Log or further process the response data
       
         } catch (error) {
@@ -29,6 +51,7 @@ function User(props){
         }
       };
       
+      const isFriend = props.friendList.some((friend) => friend.name === props.name);
     return <li className={classes.user}>
         <Link href={`/${encodeURIComponent(props.name)}`}>
         <div className={classes.user} >
@@ -39,9 +62,11 @@ function User(props){
         <img src={props.userImage} alt={props.name} />
         </div>
         <div>
-            <button onClick={addUserHandler}>
-                {props.friendList.some((friend) => friend.name === props.name) ? 'unfollow' : 'follow'}
-            </button>
+        {isFriend ? (
+          <button onClick={deleteUserHandler}>Unfollow</button>
+        ) : (
+          <button onClick={addUserHandler}>Follow</button>
+        )}
         </div>
     </li>
 }

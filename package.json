@@ -6,6 +6,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.11.2",
+    "@cloudinary/url-gen": "^1.10.0",
     "@squoosh/lib": "^0.5.3",
     "bcryptjs": "^2.4.3",
     "image-minify": "^1.0.0",

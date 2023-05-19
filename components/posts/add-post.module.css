@@ -19,4 +19,5 @@
     width: 50%;
     margin: 0.5em 1em;
     border-radius: 8px;
+    cursor: pointer;
 }

@@ -1,11 +1,12 @@
 .position{
     position: fixed;
-    height: 100%;
+    height: 90%;
     top: 5em;
     right: 0;
-    padding: 1em 2em;
+    padding: 0 2em;
     background-color: #146C94;
     color: white;
+    overflow: auto;
 }
 
 .list {

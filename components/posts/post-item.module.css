@@ -6,8 +6,6 @@
     margin-top: 1rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     gap: 1em;
     max-width: 100%;
     min-width: 100%;
@@ -25,6 +23,7 @@
 }
 .content p{
     margin: 1em;
+    padding: 0 0.2em;
     white-space: wrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -37,7 +36,7 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
     margin: 1em;
 }
 .profile img {
@@ -45,6 +44,16 @@
     width: 45px;
     height: 45px;
     margin-right: 1em;
+    align-self: center;
+    border: 1px solid #146C94;
+}
+.postAuthor{
+    display: flex;
+    flex-direction: column;
+}
+.postDate{
+    opacity: 0.75;
+    z-index: 0;
 }
 .reaction {
     display: flex;
@@ -60,8 +69,11 @@
     padding: 0 2em;
 }
 .commentForm textarea{
-    max-width: 50%;
-    min-width: 50%;
-    border-radius: 10px;
+    width: 100%;
+    max-width: 100%;
     padding: 1em;
+    border-radius: 8px;
+    resize: none;
+    border: 2px solid #146C94;
+    border-radius: 10px;
 }
