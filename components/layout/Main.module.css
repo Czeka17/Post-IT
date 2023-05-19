@@ -1,8 +1,7 @@
 .position{
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
-    padding-top: 7em;
+    padding: 7em 0;
 }
 

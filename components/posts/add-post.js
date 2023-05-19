@@ -1,7 +1,12 @@
 import { useRef, useState } from 'react';
 import classes from './add-post.module.css'
+import { Cloudinary } from '@cloudinary/url-gen';
 
+import FileResizer from 'react-image-file-resizer';
 
+const cloudName = 'dmn5oy2qa';
+
+const cld = new Cloudinary({ cloud: { cloudName: cloudName } });
 
 function NewPost(props) {
     const [image, setImage] = useState('');
@@ -9,14 +14,48 @@ function NewPost(props) {
     const messageInputRef = useRef()
 
 
-    function addImageHandler(e){
-        const reader = new FileReader();
-        reader.readAsDataURL(e.target.files[0]);
-        reader.onload = () => {
-            console.log(reader.result)
-            setImage(reader.result);
-        }
-    }
+    function addImageHandler(e) {
+        const file = e.target.files[0];
+    
+        FileResizer.imageFileResizer(
+          file,
+          800,
+          800,
+          'PNG', 
+          100, 
+          0, 
+          (resizedImage) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const convertedFile = new File([resizedImage], file.name, {
+                type: file.type,
+                lastModified: file.lastModified,
+              });
+    
+    
+              const formData = new FormData();
+              formData.append('file', convertedFile);
+              formData.append('upload_preset', 'ewqicijo');
+    
+              fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+                method: 'POST',
+                body: formData,
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  const imageUrl = cld.image(data.public_id);
+                  console.log(imageUrl.toURL()); 
+                  setImage(imageUrl.toURL())
+                })
+                .catch((error) => {
+                  console.log('Upload error:', error);
+                });
+            };
+            reader.readAsDataURL(resizedImage);
+          },
+          'blob' 
+        );
+      }
 
     function sendPostHandler(event){
         event.preventDefault();

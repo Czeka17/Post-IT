@@ -19,18 +19,6 @@ function ProfilePage(props) {
         });
       
         const data = await response.json();
-        console.log(data);
-        if (response.ok) {
-            // Update the image in the session data
-            update({
-              ...session,
-              user: {
-                ...session.user,
-                image: data.image,
-              },
-            });
-        }
-      
 
       }
       
@@ -39,43 +27,47 @@ function ProfilePage(props) {
 }
 
 export async function getStaticPaths() {
-    const client = await connectToDatabase();
+  const client = await connectToDatabase();
 
-    const db = client.db();
+  const db = client.db();
 
-    const usersCollection = db.collection('users');
+  const usersCollection = db.collection("users");
 
-    const users = await usersCollection.find().toArray();
+  const users = await usersCollection.find().toArray();
 
-    client.close();
-    return{
-        fallback:'blocking',
-        paths: users.map(user => ({params: {username: user.name}}))
-    }
+  client.close();
+
+  return {
+    fallback: "blocking",
+    paths: users.map((user) => ({ params: { username: user.name } })),
+  };
 }
 
-export async function getStaticProps(context){
+export async function getStaticProps(context) {
+  const username = context.params.username;
 
-    const username = context.params.username;
+  const client = await connectToDatabase();
+  const db = client.db();
+  const usersCollection = db.collection("users");
 
-    const client = await connectToDatabase();
+  const selectedUser = await usersCollection.findOne({ name: username });
 
-    const db = client.db();
+  client.close();
 
-    const usersCollection = db.collection('users');
+  if (!selectedUser) {
+    return {
+      notFound: true, // Return a 404 page if the user is not found
+    };
+  }
 
-    const selectedUser = await usersCollection.findOne({ name: username})
-
-    client.close();
-
-    return{
-        props: {
-            userData: {
-                id: selectedUser._id.toString(),
-                name: selectedUser.name,
-                image: selectedUser.image
-            }
-        }
-    }
+  return {
+    props: {
+      userData: {
+        id: selectedUser._id.toString(),
+        name: selectedUser.name,
+        image: selectedUser.image,
+      },
+    },
+  };
 }
 export default ProfilePage;

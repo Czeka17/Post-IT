@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Comments from './comments';
 import { useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { AiOutlineSend, AiOutlineHeart } from "react-icons/ai";
 function PostItem(props){
     const commentInputRef = useRef()
     const { data: session, status } = useSession()
@@ -84,6 +85,13 @@ function PostItem(props){
         }
       };
 
+      let commentsLength
+
+      if(props.comments?.length > 0){
+        commentsLength = props.comments?.length
+      }else{
+        commentsLength = 0
+      }
 
       const createdAt = props.time;
 
@@ -120,20 +128,20 @@ if (days > 0) {
                     </div>
                     <p>{props.title}</p>
                     {props.image && <div className={classes.image}>
-                        <Image src={props.image} alt={props.title} width={600} height={600} />
+                        <img src={props.image} alt={props.title} />
                     </div>}
                 </div>
                 <div className={classes.reaction}>
                     <div>
-                        <p>Like</p>
+                        <p><AiOutlineHeart/></p>
                     </div>
                     <div>
-                        {showComments ?<button onClick={hideCommentsHandler}>Hide Comments</button> : <button onClick={showCommentsHandler}>Show comments</button>}
+                        {showComments ?<button onClick={hideCommentsHandler}>Hide Comments</button> : <button onClick={showCommentsHandler}>Show comments ({commentsLength})</button>}
                     </div>
                 </div>
                 <form className={classes.commentForm} onSubmit={sendCommentHandler}>
                     <textarea placeholder='comment' id='comment' ref={commentInputRef} rows='2'></textarea>
-                    <button>Submit</button>
+                    <button><AiOutlineSend/></button>
                 </form>
                 {showComments && (
           <Comments comments={comments} user={user} onDeleteComment={deleteCommentHandler} />

@@ -1,5 +1,5 @@
 import classes from './comments.module.css'
-
+import {BsTrash3Fill} from 'react-icons/bs'
 
 function Comments(props) {
 
@@ -17,7 +17,7 @@ function Comments(props) {
                   <h4>{comment.user.name}</h4>
                   <p>{comment.message}</p>
                 </div>
-                {props.user === comment.user.name && <button onClick={() => props.onDeleteComment(comment._id)}>Delete</button>}
+                {props.user === comment.user.name && <button onClick={() => props.onDeleteComment(comment._id)}><BsTrash3Fill/></button>}
               </div>
             </li>
           ))}

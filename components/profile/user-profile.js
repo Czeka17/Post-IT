@@ -7,7 +7,6 @@ import FileResizer from 'react-image-file-resizer';
 
 const cloudName = 'dmn5oy2qa';
 
-// Initialize Cloudinary
 const cld = new Cloudinary({ cloud: { cloudName: cloudName } });
 
 function UserProfile(props) {
@@ -18,26 +17,23 @@ function UserProfile(props) {
 
     FileResizer.imageFileResizer(
       file,
-      500, // New width
-      500, // New height
-      'PNG', // Output format (check your image format)
-      100, // Quality
-      0, // Rotation
+      500,
+      500,
+      'PNG', 
+      100, 
+      0, 
       (resizedImage) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          const base64data = reader.result;
-
-          // Convert the Blob to a File
           const convertedFile = new File([resizedImage], file.name, {
             type: file.type,
             lastModified: file.lastModified,
           });
 
-          // Upload the image to Cloudinary
+
           const formData = new FormData();
           formData.append('file', convertedFile);
-          formData.append('upload_preset', 'ewqicijo'); // Replace 'your_upload_preset' with your actual upload preset
+          formData.append('upload_preset', 'ewqicijo');
 
           fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
             method: 'POST',
@@ -45,7 +41,6 @@ function UserProfile(props) {
           })
             .then((response) => response.json())
             .then((data) => {
-              // Get the Cloudinary image URL
               const imageUrl = cld.image(data.public_id);
               console.log(imageUrl.toURL()); 
               props.onChangeProfile({
@@ -59,7 +54,7 @@ function UserProfile(props) {
         };
         reader.readAsDataURL(resizedImage);
       },
-      'blob' // Output type
+      'blob' 
     );
   }
 
