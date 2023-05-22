@@ -1,6 +1,7 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/db";
 
-async function handler(req,res){
+async function handler(req:NextApiRequest,res:NextApiResponse){
 
     let client;
 
@@ -45,10 +46,10 @@ async function handler(req,res){
     if(req.method === 'GET'){
         try {
             const db = client.db();
-            const posts = await db.collection('posts').find().sort().toArray();
+            const posts = await db.collection('posts').find().sort({ createdAt: -1 }).toArray();
             for (const post of posts) {
                 const user = await db.collection('users').findOne({ name: post.name });
-                post.userImage = user.image;
+                post.userImage = user?.image;
             }
           
               res.status(200).json({ posts: posts });

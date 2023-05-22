@@ -3,12 +3,34 @@ import classes from './posts-list.module.css'
 import NewPost from "./add-post"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
-function PostsList(props){
 
-    const [posts, setPosts] = useState([])
+interface Post {
+    _id: string;
+    message: string;
+    image: string;
+    name: string;
+    userImage: string;
+    createdAt: string;
+    commentList: Comment[];
+  }
+  
+  interface Comment {
+    _id: string;
+    userId: string;
+    message: string;
+    user: {
+      name: string;
+      image: string;
+    };
+  }
+
+  interface PostsListProps {}
+function PostsList(props: PostsListProps){
+
+    const [posts, setPosts] = useState<Post[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const { data: session, status } = useSession()
-    const name = session.user.name
+    const name = session?.user?.name || ''
 
 
     useEffect(() => {
@@ -19,16 +41,16 @@ function PostsList(props){
     }, [])
 
 
-function addPostHandler(postData) {
+function addPostHandler(postData:any) {
     fetch('/api/posts/addPost', {
         method: 'POST',
         body: JSON.stringify(postData),
         headers: {
             'Content-Type': 'application/json'
           }
-    }).then(response => {
+    }).then((response) => {
         if(response.ok){
-            return response.json
+            return response.json()
         }
         return response.json().then(data => {
             throw new Error(data.message || 'Something went wrong!')
@@ -36,7 +58,7 @@ function addPostHandler(postData) {
     })
 }
 
-function addCommentHandler(commentData){
+function addCommentHandler(commentData:any){
     fetch('/api/posts/addComment', {
         method: 'POST',
         body: JSON.stringify(commentData),
@@ -45,7 +67,7 @@ function addCommentHandler(commentData){
           }
     }).then(response => {
         if(response.ok){
-            return response.json
+            return response.json()
         }
         return response.json().then(data => {
             throw new Error(data.message || 'Something went wrong!')
@@ -59,7 +81,7 @@ console.log(posts)
 return <section className={classes.postContainer}>
     {isLoading ? <p>Loading...</p> : <div>
     <div>
-        <NewPost onAddPost={addPostHandler} name={name} userImage={session.user.image}/>
+        <NewPost onAddPost={addPostHandler} name={name} userImage={session?.user?.image || ''}/>
     </div>
     <ul className={classes.list}>
     {posts.map((post) =>(

@@ -1,11 +1,25 @@
 import classes from './comments.module.css'
 import {BsTrash3Fill} from 'react-icons/bs'
 
-function Comments(props) {
+interface Comment {
+    userId: string;
+    user: {
+      name: string;
+      image: string;
+    };
+    _id: string;
+    message: string;
+  }
 
+  interface CommentsProps {
+    comments: Comment[];
+    user: string;
+    onDeleteComment: (commentId: string) => void;
+  }
+  function Comments(props: CommentsProps) {
     if (props.comments?.length === 0) {
-        return <p>No comments found</p>;
-      }
+      return <p>No comments found</p>;
+    }
     return (
       <div className={classes.comments}>
         <ul>

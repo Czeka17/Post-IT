@@ -1,7 +1,11 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/db";
 import { ObjectId } from "mongodb";
+interface Comment {
+    _id: string;
 
-async function handler(req, res) {
+  }
+async function handler(req:NextApiRequest, res:NextApiResponse) {
   if (req.method !== "DELETE") {
     res.status(405).json({ message: "Method not allowed!" });
     return;
@@ -23,10 +27,10 @@ async function handler(req, res) {
     }
 
     const updatedComments = post.commentList.filter(
-      (comment) => comment._id.toString() !== commentId
+      (comment:Comment) => comment._id.toString() !== commentId
     );
 
-    // Update the commentList in the database
+
     await postsCollection.updateOne(
       { _id: objectId },
       { $set: { commentList: updatedComments } }

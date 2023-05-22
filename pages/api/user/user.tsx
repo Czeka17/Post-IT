@@ -1,6 +1,7 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/db";
 
-async function handler(req, res) {
+async function handler(req:NextApiRequest, res:NextApiResponse) {
   let client;
 
   try {
@@ -13,8 +14,8 @@ async function handler(req, res) {
   if (req.method === "GET") {
     try {
       const db = client.db();
-      const page = parseInt(req.query.page) || 1; // Get the page number from the query parameters, default to 1
-      const usersPerPage = 5; // Number of users per page
+      const page = parseInt(req.query.page as string, 10) || 1; 
+      const usersPerPage = 5;
       const skip = (page - 1) * usersPerPage;
 
       const users = await db

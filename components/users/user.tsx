@@ -1,7 +1,12 @@
 import Link from 'next/link';
 import classes from './user.module.css'
 import { useSession } from 'next-auth/react';
-function User(props){
+interface UserProps {
+    name: string;
+    friendList: { name: string }[];
+    userImage: string;
+  }
+function User(props:UserProps){
     const { data: session, status } = useSession()
 
     const addUserHandler = async () => {
@@ -11,7 +16,7 @@ function User(props){
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username: session.user.name, friendname: props.name })
+            body: JSON.stringify({ username: session?.user?.name, friendname: props.name })
           });
       
           if (!response.ok) {
@@ -34,7 +39,7 @@ function User(props){
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username: session.user.name, friendname: props.name })
+            body: JSON.stringify({ username: session?.user?.name, friendname: props.name })
           });
       
           if (!response.ok) {

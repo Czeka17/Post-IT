@@ -1,7 +1,8 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { hashPassword } from "../../../lib/auth";
 import { connectToDatabase } from "../../../lib/db";
 
-async function handler(req, res){
+async function handler(req:NextApiRequest, res:NextApiResponse){
     if(req.method === 'POST'){
         const data = req.body;
 
@@ -31,7 +32,7 @@ async function handler(req, res){
         const hashedPassword = await hashPassword(password)
 
         let image = '/images/amogus.jpg'
-        const friendList = []
+        const friendList:string[] = []
         const result = await db.collection("users").insertOne({
             name: name,
             email: email,

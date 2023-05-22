@@ -1,6 +1,11 @@
 import { connectToDatabase } from "../../../lib/db";
+import { NextApiRequest, NextApiResponse } from "next";
 
-async function handler(req, res) {
+interface User {
+    name: string;
+    friendList: string[];
+  }
+async function handler(req:NextApiRequest, res:NextApiResponse) {
 
   let client
   if (req.method === 'POST') {
@@ -48,7 +53,7 @@ async function handler(req, res) {
     client = await connectToDatabase();
     const db = client.db();
 
-    const usersCollection = db.collection('users');
+    const usersCollection = db.collection<User>('users');
 
     const user = await usersCollection.findOne({ name: username });
     const friend = await usersCollection.findOne({ name: friendname });

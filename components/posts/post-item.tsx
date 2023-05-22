@@ -1,19 +1,40 @@
 import classes from './post-item.module.css'
 import Image from 'next/image';
 import Comments from './comments';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { AiOutlineSend, AiOutlineHeart } from "react-icons/ai";
-function PostItem(props){
-    const commentInputRef = useRef()
+
+interface Comment {
+    userId: string;
+    user: {
+      name: string;
+      image: string;
+    };
+    _id: string;
+    message: string;
+  }
+  
+  interface PostItemProps {
+    id: string;
+    profile: string;
+    author: string;
+    title: string;
+    image?: string;
+    time: string;
+    comments?: Comment[];
+    onAddComment: (comment: { message: string; username: string; postId: string }) => void;
+  }
+function PostItem(props: PostItemProps){
+    const commentInputRef = useRef<HTMLTextAreaElement>(null)
     const { data: session, status } = useSession()
-    const [comments,setComments] = useState([])
+    const [comments,setComments] = useState<Comment[]>([])
     const [showComments, setShowComments] = useState(false);
-    const user = session.user.name
-    function sendCommentHandler(event){
+    const user = session?.user?.name || ''
+    function sendCommentHandler(event: React.FormEvent<HTMLFormElement>){
         event.preventDefault();
 
-        const enteredComment = commentInputRef.current.value
+        const enteredComment = commentInputRef.current?.value
 
         if(!enteredComment || enteredComment.trim() === ''){
             return
@@ -31,7 +52,7 @@ function PostItem(props){
         setShowComments(false)
     }
 
-    async function showCommentsHandler(event) {
+    async function showCommentsHandler(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
       
         try {
@@ -45,7 +66,7 @@ function PostItem(props){
       
           if (response.ok) {
             const data = await response.json();
-            console.log(data); // Log the response data
+            console.log(data);
             const comments = data.commentList;
             setComments(comments);
             setShowComments(true);
@@ -54,12 +75,11 @@ function PostItem(props){
             throw new Error(errorData.message || 'Something went wrong!');
           }
         } catch (error) {
-          // Handle error
           console.error(error);
         }
       }
       
-      const deleteCommentHandler = async (commentId) => {
+      const deleteCommentHandler = async (commentId:string) => {
         try {
           const response = await fetch('/api/posts/deleteComment', {
             method: 'DELETE',
@@ -70,7 +90,6 @@ function PostItem(props){
           });
     
           if (response.ok) {
-            // Comment deleted successfully
             const data = await response.json();
             console.log(data);
             const comments = data.commentList;
@@ -80,25 +99,18 @@ function PostItem(props){
             throw new Error(errorData.message || 'Something went wrong!');
           }
         } catch (error) {
-          // Handle error
           console.error(error);
         }
       };
 
-      let commentsLength
-
-      if(props.comments?.length > 0){
-        commentsLength = props.comments?.length
-      }else{
-        commentsLength = 0
-      }
+      const commentsLength = props.comments?.length ?? 0;
 
       const createdAt = props.time;
 
       const createdDate = new Date(createdAt);
 
       const currentDate = new Date();
-      const timeDiff = currentDate - createdDate
+      const timeDiff = currentDate.getTime() - createdDate.getTime()
 
       const seconds = Math.floor(timeDiff / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -140,7 +152,7 @@ if (days > 0) {
                     </div>
                 </div>
                 <form className={classes.commentForm} onSubmit={sendCommentHandler}>
-                    <textarea placeholder='comment' id='comment' ref={commentInputRef} rows='2'></textarea>
+                    <textarea placeholder='comment' id='comment' ref={commentInputRef} rows={2}></textarea>
                     <button><AiOutlineSend/></button>
                 </form>
                 {showComments && (

@@ -21,6 +21,19 @@
     "swr": "^2.1.5"
   },
   "devDependencies": {
-    "tailwindcss": "^3.3.2"
-  }
+    "@types/bcryptjs": "^2.4.2",
+    "@types/react": "^18.2.6",
+    "tailwindcss": "^3.3.2",
+    "typescript": "^5.0.4"
+  },
+  "name": "my-page",
+  "description": "This is a starter template for [Learn Next.js](https://nextjs.org/learn).",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

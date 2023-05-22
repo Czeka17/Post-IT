@@ -2,13 +2,18 @@ import { useEffect, useState } from "react";
 import User from "./user";
 import classes from "./users-list.module.css";
 import { useSession } from "next-auth/react";
+interface User {
+    _id: string;
+    name: string;
+    image: string;
+  }
 
 function UsersList() {
   const { data: session, status } = useSession();
-  const [friendList, setFriendList] = useState([]);
+  const [friendList, setFriendList] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [users, setUsers] = useState([]);
-  const [page, setPage] = useState(1);
+  const [users, setUsers] = useState<User[]>([]);
+  const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
     const fetchFriendList = async () => {

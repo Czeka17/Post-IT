@@ -2,9 +2,15 @@ import { useState, useEffect } from 'react';
 import classes from './friend-list.module.css'
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-function FriendList() {
+
+interface Friend{
+    _id: string,
+    name: string,
+    image: string
+}
+function FriendList(props: Friend) {
 const { data: session, status } = useSession()
-const [friendList, setFriendList] = useState([])
+const [friendList, setFriendList] = useState<Friend[]>([])
 
 useEffect(() => {
     const fetchFriendList = async() => {
@@ -13,7 +19,7 @@ useEffect(() => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username: session.user.name})
+            body: JSON.stringify({ username: session?.user?.name})
         })
         if (response.ok) {
             const data = await response.json();
@@ -30,7 +36,7 @@ return (
         </div>
         <div>
             <ul>
-                {friendList.map((friend) => (
+                {friendList.map((friend: Friend) => (
                     <li key={friend._id}><Link href={`/${encodeURIComponent(friend.name)}`} className={classes.list}><img src={friend.image} /><p>{friend.name}</p></Link></li>
                 ))}
             </ul> 

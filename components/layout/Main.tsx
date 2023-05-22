@@ -1,8 +1,8 @@
-import FriendList from "../friend-list/friend-list"
-import PostsList from "../posts/posts-list"
+
+import PostsList from "../posts/post-list";
 import classes from './Main.module.css'
 
-function MainDisplay(props) {
+function MainDisplay() {
     return <section className={classes.position}>        
         <PostsList />
     </section>

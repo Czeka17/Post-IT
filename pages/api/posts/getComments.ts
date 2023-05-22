@@ -1,7 +1,18 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/db";
 import { ObjectId } from "mongodb";
 
-async function handler(req, res) {
+interface Comment {
+    userId: string;
+    user: {
+      name: string;
+      image: string;
+    };
+    _id: string;
+    message: string;
+  }
+
+async function handler(req:NextApiRequest, res:NextApiResponse) {
   if (req.method !== "POST") {
     res.status(405).json({ message: "Method not allowed!" });
     return;
@@ -27,7 +38,7 @@ async function handler(req, res) {
     // Retrieve user information for each comment
     const usersCollection = db.collection("users");
     const commentsWithUser = await Promise.all(
-      commentList.map(async (comment) => {
+      commentList.map(async (comment:Comment) => {
         const userId = new ObjectId(comment.userId);
         const user = await usersCollection.findOne({ _id: userId });
         return {

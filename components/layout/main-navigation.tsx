@@ -16,7 +16,7 @@ function MainNavigation() {
         </Link>
         <nav>
            <ul>
-            {session && <li><p>Signed in as {session.user.name}</p><Link href={session.user.name}><img src={session.user.image} alt={session.user.name} /></Link></li>}
+            {session?.user && <li><p>Signed in as {session.user.name}</p><Link href={{ pathname: session.user.name }} passHref><img src={session.user.image  || '/default-image.jpg'} alt={session.user.name || 'profile picture'} /></Link></li>}
            {session && <li>
                 <button onClick={logoutHandler}>
                     Logout
