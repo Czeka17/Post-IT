@@ -17,8 +17,8 @@ function UserProfile(props) {
 
     FileResizer.imageFileResizer(
       file,
-      500,
-      500,
+      1000,
+      1000,
       'PNG', 
       100, 
       0, 
