@@ -1,4 +1,4 @@
-import AuthForm from "../components/auth/auth-form";
+import AuthForm from '../components/auth/auth-form';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
@@ -21,7 +21,9 @@ function AuthPage() {
       return <p>Loading...</p>
     }
   
-    return <AuthForm />
+    return <>
+    <AuthForm />
+    </>
 }
 
 export default AuthPage;

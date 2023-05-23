@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/db";
+import { ObjectId } from "mongodb";
 
 async function handler(req:NextApiRequest,res:NextApiResponse){
 
@@ -57,6 +58,26 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
             } catch (error) {
               res.status(500).json({ message: 'Getting posts failed.' });
             }
+    }
+    if(req.method === 'DELETE'){
+        const db = client.db();
+        const {postId} = req.body;
+        const objectId = new ObjectId(postId)
+        const postsCollection = db.collection('posts');
+        try {
+            const result = await postsCollection.deleteOne({ _id: objectId });
+            if (result.deletedCount === 0) {
+              res.status(404).json({ message: "Post not found!" });
+              client.close()
+            } else {
+              res.status(200).json({ message: "Post deleted successfully" });
+              client.close()
+            }
+          } catch (error) {
+            res.status(500).json({ message: "Error deleting post" });
+            client.close()
+          }
+
     }
 
     client.close();

@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
+import React, { LegacyRef, useRef, useState, useEffect } from "react";
 import classes from "./auth-form.module.css";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { signIn } from 'next-auth/react';
-
-async function createUser(email,name,password){
+import Notification from "../layout/notification";
+async function createUser(email:string,name:string,password:string){
 	const response = await fetch('/api/auth/signup', {
 		method: 'POST',
 		body: JSON.stringify({email, name, password}),
@@ -26,46 +26,86 @@ async function createUser(email,name,password){
 function AuthForm() {
 
 	const router = useRouter();
-	const emailInputRef = useRef();
-	const nameInputRef = useRef();
-	const passwordInputRef = useRef();
-
+	const emailInputRef = useRef<HTMLInputElement | null>(null);
+	const nameInputRef = useRef<HTMLInputElement | null>(null);
+	const passwordInputRef = useRef<HTMLInputElement | null>(null);
+    const [requestStatus, setRequestStatus] = useState<string | null>();
 	const [isLogin, setIsLogin] = useState(true);
 
+    useEffect(() => {
+        if(requestStatus === 'success' || requestStatus === 'error'){
+            const timer = setTimeout(() =>{
+                setRequestStatus(null);
+            }, 3000);
+  
+            return () => clearTimeout(timer);
+        }
+    }, [requestStatus])
 	function switchAuthModeHandler() {
 		setIsLogin((prevState) => !prevState);
 	}
 
-	async function submitHandler(event){
+	async function submitHandler(event:React.FormEvent<HTMLFormElement>){
 		event.preventDefault();
+        setRequestStatus('pending')
 
 		if(isLogin){
-			const enteredPassword = passwordInputRef.current.value;
-			const enteredName = nameInputRef.current.value;
+			const enteredPassword = passwordInputRef.current!.value;
+			const enteredName = nameInputRef.current!.value;
 
 			const result = await signIn('credentials', {redirect: false,
 			name: enteredName,
 			password: enteredPassword,
 		})
-		if (!result.error){
+		if (result && !result.error){
+            setRequestStatus('success')
 			router.replace('/')
-		}
+		}else{
+            setRequestStatus('error')
+        }
 		} else{
 			try{
-				const enteredEmail = emailInputRef.current.value;
-				const enteredName = nameInputRef.current.value;
-				const enteredPassword = passwordInputRef.current.value;
+				const enteredEmail = emailInputRef.current!.value;
+				const enteredName = nameInputRef.current!.value;
+				const enteredPassword = passwordInputRef.current!.value;
 		
 
 				const result = await createUser(enteredEmail, enteredName, enteredPassword)
 				console.log(result)
+                setRequestStatus('success')
 			}
 			catch(error){
+                setRequestStatus('error')
 				console.log(error)
 			}
 		}
 
 	}
+
+    let notification: { status: string; title: string; message: string } | null = null;
+
+    if(requestStatus === 'pending'){
+      notification = {
+          status: 'pending',
+          title: 'Checking...',
+          message: 'Checking credentials'
+      }
+  }
+  
+  if(requestStatus === 'success') {
+      notification = {
+          status: 'success',
+          title: 'Success!',
+          message: 'logged in successfully'
+      }
+  }
+  if(requestStatus === 'error') {
+      notification = {
+          status: 'error',
+          title: 'Error!',
+          message: 'Invalid inputs!'
+      }
+  }
 
 
 	return (
@@ -120,6 +160,7 @@ function AuthForm() {
 					</div>
 				</form>
 			</section>
+           {notification &&  <Notification status={notification.status} title={notification.title} message={notification.message}/>}
 		</section>
 	);
 }

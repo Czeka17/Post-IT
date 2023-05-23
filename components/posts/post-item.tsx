@@ -102,6 +102,27 @@ function PostItem(props: PostItemProps){
           console.error(error);
         }
       };
+      const deletePostHandler = async (postId:string) => {
+        try {
+          const response = await fetch('/api/posts/addPost', {
+            method: 'DELETE',
+            body: JSON.stringify({postId}),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+    
+          if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+          } else {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Something went wrong!');
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
       const commentsLength = props.comments?.length ?? 0;
 
@@ -131,12 +152,18 @@ if (days > 0) {
         <li className={classes.item}>
             <div>
                 <div className={classes.content}>
-                <div className={classes.profile}>
+                <div className={classes.profileContainer}>
+                        <div className={classes.profile}>
                         <img src={props.profile}/>
                         <div className={classes.postAuthor}>
                         <span>{props.author}</span>
                         <span className={classes.postDate}>{formattedTime}</span>
                         </div>
+                        </div>
+                       {props.author === session?.user?.name && <div>
+                          <button onClick={() => deletePostHandler(props.id)}>DELETE</button>
+                          <p>Edit</p>
+                        </div>}
                     </div>
                     <p>{props.title}</p>
                     {props.image && <div className={classes.image}>

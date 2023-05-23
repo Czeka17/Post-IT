@@ -8,7 +8,8 @@ interface Friend{
     name: string,
     image: string
 }
-function FriendList(props: Friend) {
+interface FriendListProps {}
+function FriendList(props: FriendListProps) {
 const { data: session, status } = useSession()
 const [friendList, setFriendList] = useState<Friend[]>([])
 

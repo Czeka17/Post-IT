@@ -22,7 +22,6 @@ interface NewPostProps {
   }
 function NewPost(props: NewPostProps) {
     const [image, setImage] = useState<string>('');
-
     const messageInputRef = useRef<HTMLTextAreaElement>(null)
 
 
@@ -101,7 +100,7 @@ function NewPost(props: NewPostProps) {
     return (<form onSubmit={sendPostHandler}>
         <div className={classes.container}>
             <textarea placeholder='How You feel today?' id="post" rows={5} ref={messageInputRef}></textarea>
-            <div className={classes.button}>
+            <div className={classes.buttons}>
             <input type="file" name="file" onChange={addImageHandler} ></input>
             <button>
                 Add post

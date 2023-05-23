@@ -9,13 +9,13 @@
 }
 
 
-.button {
+.buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
 }
-.button button {
+.buttons button {
     width: 50%;
     margin: 0.5em 1em;
     border-radius: 8px;
