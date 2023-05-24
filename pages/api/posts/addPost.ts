@@ -65,10 +65,8 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
           }
       
           res.status(200).json({ posts });
-          client.close()
         } catch (error) {
           res.status(500).json({ message: 'Getting posts failed.' });
-          client.close()
         }
       }
       
