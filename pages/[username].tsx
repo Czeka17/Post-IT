@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from "next";
 import UserProfile from "../components/profile/user-profile";
 import { connectToDatabase } from "../lib/db";
-import { useSession } from "next-auth/react";
+import { useSession,getSession } from "next-auth/react";
 import classes from './[username].module.css'
 
 
@@ -42,6 +42,7 @@ interface ProfilePageProps {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const username = context.query.username;
+  const session = await getSession({req: context.req});
 
   const client = await connectToDatabase();
   const db = client.db();
@@ -54,6 +55,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!selectedUser) {
     return {
       notFound: true,
+    };
+  }
+  
+  if(!session){
+    return {
+      redirect: {
+        destination: '/auth',
+        permanent: false,
+      }
     };
   }
 

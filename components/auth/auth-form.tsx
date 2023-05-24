@@ -71,7 +71,13 @@ function AuthForm() {
 
 				const result = await createUser(enteredEmail, enteredName, enteredPassword)
 				console.log(result)
+				await signIn('credentials', {
+                  redirect: false,
+                  name: enteredName,
+                  password: enteredPassword,
+                });
                 setRequestStatus('success')
+				router.replace('/');
 			}
 			catch(error){
                 setRequestStatus('error')

@@ -29,6 +29,7 @@ useEffect(() => {
         };
         fetchFriendList();
 }, [friendList])
+
 return (
     <section className={classes.position}>
         {session && <div>

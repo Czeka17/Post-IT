@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import User from "./user";
 import classes from "./users-list.module.css";
 import { useSession } from "next-auth/react";
-interface User {
+interface user {
     _id: string;
     name: string;
     image: string;
@@ -10,9 +10,9 @@ interface User {
 
 function UsersList() {
   const { data: session, status } = useSession();
-  const [friendList, setFriendList] = useState<User[]>([]);
+  const [friendList, setFriendList] = useState<user[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<user[]>([]);
   const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ function UsersList() {
     };
 
     fetchFriendList();
-  }, [session?.user?.name]);
+  }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
