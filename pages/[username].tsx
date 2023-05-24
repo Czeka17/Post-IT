@@ -2,6 +2,7 @@ import { GetServerSidePropsContext } from "next";
 import UserProfile from "../components/profile/user-profile";
 import { connectToDatabase } from "../lib/db";
 import { useSession } from "next-auth/react";
+import classes from './[username].module.css'
 
 
 interface ProfilePageProps {
@@ -33,9 +34,10 @@ interface ProfilePageProps {
       }
       
 
-    return <UserProfile username={props.userData.name}  onChangeProfile={(profile: { image: string; username: string }) =>
+    return <section className={classes.wrapper}><UserProfile username={props.userData.name}  onChangeProfile={(profile: { image: string; username: string }) =>
       changeProfileHandler(profile.image, profile.username)
     } activeUser={activeUser} image={props.userData.image} />
+    </section>
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

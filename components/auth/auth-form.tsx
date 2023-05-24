@@ -1,6 +1,5 @@
 import React, { LegacyRef, useRef, useState, useEffect } from "react";
 import classes from "./auth-form.module.css";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { signIn } from 'next-auth/react';
 import Notification from "../layout/notification";
@@ -111,7 +110,6 @@ function AuthForm() {
 	return (
 		<section className={classes.placing}>
 			<section className={classes.introduction}>
-                <Image src="/images/amogus.jpg" alt="logo" width={100} height={100}/>
 				<h1>Welcome to PostIT</h1>
                 <p>If you want to share posts with your friends then postIT is made special for you!</p>
                 <p>Start now for free!</p>

@@ -44,21 +44,34 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
             res.status(500).json({message: 'Insetring post failed!'})
         }
     }
-    if(req.method === 'GET'){
+    if (req.method === 'GET') {
         try {
-            const db = client.db();
-            const posts = await db.collection('posts').find().sort({ createdAt: -1 }).toArray();
+          const db = client.db();
+          let posts;
+      
+          if (req.query.author) {
+            const author = req.query.author;
+            posts = await db.collection('posts').find({ name: author }).sort({ createdAt: -1 }).toArray();
             for (const post of posts) {
-                const user = await db.collection('users').findOne({ name: post.name });
-                post.userImage = user?.image;
+              const user = await db.collection('users').findOne({ name: post.name });
+              post.userImage = user?.image;
             }
-          
-              res.status(200).json({ posts: posts });
-              return posts;
-            } catch (error) {
-              res.status(500).json({ message: 'Getting posts failed.' });
+          } else {
+            posts = await db.collection('posts').find().sort({ createdAt: -1 }).toArray();
+            for (const post of posts) {
+              const user = await db.collection('users').findOne({ name: post.name });
+              post.userImage = user?.image;
             }
-    }
+          }
+      
+          res.status(200).json({ posts });
+          client.close()
+        } catch (error) {
+          res.status(500).json({ message: 'Getting posts failed.' });
+          client.close()
+        }
+      }
+      
     if(req.method === 'DELETE'){
         const db = client.db();
         const {postId} = req.body;
