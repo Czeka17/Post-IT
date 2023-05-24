@@ -2,7 +2,7 @@ import AuthForm from '../components/auth/auth-form';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
-
+import classes from './auth.module.css'
 function AuthPage() {
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
@@ -18,7 +18,9 @@ function AuthPage() {
     }, [router]);
   
     if(isLoading) {
-      return <p>Loading...</p>
+      return <div className={classes.loading}>
+        <p>POST<span>IT</span></p>
+      </div>
     }
   
     return <>

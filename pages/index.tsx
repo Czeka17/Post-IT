@@ -2,9 +2,8 @@ import { Fragment } from "react";
 import MainDisplay from "../components/layout/Main";
 import { getSession } from 'next-auth/react';
 import { GetServerSidePropsContext } from "next";
-function HomePage() {
 
-   
+function HomePage() {
 return <Fragment>
     <MainDisplay />
 </Fragment>

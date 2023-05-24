@@ -36,8 +36,8 @@ function PostsList(props: PostsListProps){
     useEffect(() => {
         fetch('/api/posts/addPost').then(response => response.json()).then((data) => {
             setPosts(data.posts);
+            setIsLoading(false)
         })
-        setIsLoading(false)
     }, [])
 
 
@@ -76,10 +76,9 @@ function addCommentHandler(commentData:any){
 }
 
 
-
 console.log(posts)
 return <section className={classes.postContainer}>
-    {isLoading ? <p>Loading...</p> : <div>
+    {isLoading ? <div className={classes.loading}><p>POST<span>IT</span></p></div> :<div>
     <div>
         <NewPost onAddPost={addPostHandler} name={name} userImage={session?.user?.image || ''}/>
     </div>
