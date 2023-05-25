@@ -1,21 +1,37 @@
-.user{
+.user {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
-    border: 1px solid black;
+    border-radius: 8px;
     padding: 1em 3em;
     margin: 1em;
-}
-
-.user img{
+    background-color: #444952;
+  }
+  
+  .userContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .userContent img{
+    margin-right: 1em;
+  }
+  
+  .user h3 {
+    margin-right: 1em;
+    white-space: nowrap; /* Added property */
+    overflow: hidden; /* Added property */
+    text-overflow: ellipsis; /* Added property */
+  }
+  
+  .user img {
     width: 75px;
     height: 75px;
     border-radius: 50%;
-
-}
-
-.user button{
-    margin: 2em;
-}
+  }
+  
+  .user button {
+    margin-left: 1em; /* Adjust margin as per your preference */
+  }

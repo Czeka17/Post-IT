@@ -8,6 +8,8 @@ import FileResizer from 'react-image-file-resizer';
 import PostItem from '../posts/post-item';
 import User from '../users/user';
 import useFriendList from '../../hooks/useFriendList';
+import {FaUserFriends} from 'react-icons/fa'
+import {HiOutlineClipboardList} from 'react-icons/hi'
 const cloudName = 'dmn5oy2qa';
 
 const cld = new Cloudinary({ cloud: { cloudName: cloudName } });
@@ -18,6 +20,10 @@ interface Friend{
   name: string,
   image: string
 }
+interface Like {
+  likes: number;
+  likedBy: string;
+}
 interface Post {
   _id: string;
   message: string;
@@ -26,6 +32,7 @@ interface Post {
   userImage: string;
   createdAt: string;
   commentList: Comment[];
+  likes: Like[]
 }
 
 interface Comment {
@@ -153,16 +160,16 @@ function addCommentHandler(commentData:any){
     </div>
     <div className={classes.buttons}>
       <button onClick={ShowPosts}>
-      Posts
+      <HiOutlineClipboardList/>
       </button>
       <button onClick={ShowFriendList}>
-        Friends
+        <FaUserFriends />
       </button>
     </div>
     <div>
       {!isLoading && <ul className={classes.postsList}>
         {showPosts && posts?.map((post) =>(
-          <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} onAddComment={addCommentHandler} comments={post.commentList}/>
+          <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList}/>
         ))}
       </ul>}
       <ul className={classes.friendList}>{!showPosts && friendList?.map((friend) =>(

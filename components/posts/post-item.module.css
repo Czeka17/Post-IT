@@ -1,5 +1,5 @@
 .item{
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 1px 12px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
     border-radius: 8px;
     overflow: hidden;
     background-color: #fff;
@@ -17,7 +17,6 @@
     width: 100%;
     width: 100%;
     object-fit:fill;
-    max-height: 30rem;
 }
 
 .content{
@@ -97,3 +96,16 @@
 .commentForm button:hover{
     transform: scale(1.1);
 }
+
+.heart-icon.liked {
+    animation: fillHeart 0.5s forwards; 
+  }
+
+@keyframes fillHeart {
+    0% {
+      fill: transparent; 
+    }
+    100% {
+      fill: red; 
+    }
+  }

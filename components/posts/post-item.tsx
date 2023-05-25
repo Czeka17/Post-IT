@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Comments from './comments';
 import React, { useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { AiOutlineSend, AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineSend, AiFillHeart } from "react-icons/ai";
 
 interface Comment {
     userId: string;
@@ -14,6 +14,9 @@ interface Comment {
     _id: string;
     message: string;
   }
+  interface Like {
+    likedBy: string;
+  }
   
   interface PostItemProps {
     id: string;
@@ -23,6 +26,7 @@ interface Comment {
     image?: string;
     time: string;
     comments?: Comment[];
+    likes: Like[]
     onAddComment: (comment: { message: string; username: string; postId: string }) => void;
   }
 function PostItem(props: PostItemProps){
@@ -30,6 +34,7 @@ function PostItem(props: PostItemProps){
     const { data: session, status } = useSession()
     const [comments,setComments] = useState<Comment[]>([])
     const [showComments, setShowComments] = useState(false);
+    const [likesCount, setLikesCount] = useState(props.likes.length);
     const user = session?.user?.name || ''
     function sendCommentHandler(event: React.FormEvent<HTMLFormElement>){
         event.preventDefault();
@@ -50,6 +55,29 @@ function PostItem(props: PostItemProps){
 
     function hideCommentsHandler(){
         setShowComments(false)
+    }
+
+    async function likePostHandler(){
+      try{
+        const response = await fetch('/api/posts/postLikes',{
+          method: 'POST',
+          body: JSON.stringify({postId: props.id, username: session?.user?.name}),
+          headers: {
+            'Content-Type': 'application/json',
+        }
+        })
+        if (response.ok) {
+          const data = await response.json();
+          if(isLikedByUser){
+            setLikesCount((prevCount) => prevCount - 1);
+
+          }else{
+            setLikesCount((prevCount) => prevCount + 1);
+          }
+        }
+      }catch(error){
+        console.log(error)
+      }
     }
 
     async function showCommentsHandler(event: React.MouseEvent<HTMLButtonElement>) {
@@ -148,6 +176,9 @@ if (days > 0) {
 } else {
   formattedTime = `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
 }
+
+const isLikedByUser = Array.isArray(props.likes) && props.likes.some(item => item.likedBy === user);
+
     return(
         <li className={classes.item}>
             <div>
@@ -172,7 +203,7 @@ if (days > 0) {
                 </div>
                 <div className={classes.reaction}>
                     <div>
-                        <p><AiOutlineHeart/></p>
+                        <p onClick={likePostHandler}><AiFillHeart className={`${classes['heart-icon']} ${isLikedByUser ? classes['liked'] : ''} `} />{likesCount}</p>
                     </div>
                     <div>
                         {showComments ?<button onClick={hideCommentsHandler}>Hide Comments</button> : <button onClick={showCommentsHandler}>Show comments ({commentsLength})</button>}

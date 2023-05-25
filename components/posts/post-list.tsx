@@ -4,7 +4,8 @@ import NewPost from "./add-post"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import UsersList from "../users/users.list"
-
+import {FaUserFriends} from 'react-icons/fa'
+import {HiOutlineClipboardList} from 'react-icons/hi'
 interface Post {
     _id: string;
     message: string;
@@ -13,6 +14,11 @@ interface Post {
     userImage: string;
     createdAt: string;
     commentList: Comment[];
+    likes: Like[]
+  }
+
+  interface Like {
+    likedBy: string;
   }
   
   interface Comment {
@@ -92,12 +98,12 @@ return <section className={classes.postContainer}>
         <NewPost onAddPost={addPostHandler} name={name} userImage={session?.user?.image || ''}/>
     </div>
     <div className={classes.display}>
-        <button onClick={ShowPosts}>POSTS</button>
-        <button onClick={ShowFriendList}>Friends</button>
+        <button onClick={ShowPosts}><HiOutlineClipboardList/></button>
+        <button onClick={ShowFriendList}><FaUserFriends /></button>
     </div>
     <ul className={classes.list}>
     {showPosts && posts.map((post) =>(
-        <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} onAddComment={addCommentHandler} comments={post.commentList}/>
+        <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList}/>
     ))}
     {!showPosts && <UsersList />}
 </ul>

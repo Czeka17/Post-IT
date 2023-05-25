@@ -73,7 +73,6 @@ function NewPost(props: NewPostProps) {
       }
 
     function sendPostHandler(event: FormEvent){
-        event.preventDefault();
 
         if(!messageInputRef.current){
             return

@@ -29,6 +29,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
             message,
             image,
             createdAt: currentDate.toISOString(),
+            likes: []
         };
 
         let result;
