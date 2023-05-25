@@ -12,7 +12,7 @@ function MainNavigation() {
     
     return <header className={classes.header}>
         <Link href='/' >
-            <div className={classes.logo}>PostIT</div>
+            <div className={classes.logo}>Post<span>IT</span></div>
         </Link>
         <nav>
            <ul>

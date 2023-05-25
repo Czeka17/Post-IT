@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import User from "./user";
 import classes from "./users-list.module.css";
 import { useSession } from "next-auth/react";
+import useFriendList from "../../hooks/useFriendList";
 interface user {
     _id: string;
     name: string;
@@ -11,33 +12,21 @@ interface user {
 function UsersList() {
   const { data: session, status } = useSession();
   const [friendList, setFriendList] = useState<user[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState<user[]>([]);
   const [page, setPage] = useState<number>(1);
 
-  useEffect(() => {
-    const fetchFriendList = async () => {
-      const response = await fetch("/api/user/friend-list", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username: session?.user?.name }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setFriendList(data.friendUsers);
-        setIsLoading(false);
-      }
-    };
-
-    fetchFriendList();
-  }, []);
+ if(session && session?.user?.name){
+  const friends = useFriendList(session.user.name)
+  useEffect(() =>
+  setFriendList(friends)
+  ,[friends])
+ }
+ 
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await fetch(`/api/user/user?page=${page}`);
+      const response = await fetch(`/api/user/user?page=${page}&username=${session?.user?.name}`);
       const data = await response.json();
       setUsers((prevUsers) => [...prevUsers, ...data.users]);
     };
@@ -61,9 +50,6 @@ function UsersList() {
   }, []);
   return (
     <section>
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
         <div>
           <ul className={classes.userlist}>
             {users.map((user) => (
@@ -71,7 +57,6 @@ function UsersList() {
             ))}
           </ul>
         </div>
-      )}
     </section>
   );
 }

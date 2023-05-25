@@ -15,12 +15,13 @@ async function handler(req:NextApiRequest, res:NextApiResponse) {
     try {
       const db = client.db();
       const page = parseInt(req.query.page as string, 10) || 1; 
+      const username = req.query.username
       const usersPerPage = 5;
       const skip = (page - 1) * usersPerPage;
 
       const users = await db
         .collection("users")
-        .find()
+        .find({ name: { $ne: username } })
         .skip(skip)
         .limit(usersPerPage)
         .toArray();

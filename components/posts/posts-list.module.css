@@ -12,10 +12,21 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 40%;
-    width: 40%;
+    max-width: 45%;
+    width: 45%;
+    background: #393E46;
+    border-radius: 8px;
+    padding: 2em;
 }
-
+.display{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.display button{
+  width: 100%;
+}
 .loading {
     background-color: white;
     z-index: 50;

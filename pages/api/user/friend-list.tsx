@@ -23,8 +23,12 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
     const friendUsers = await usersCollection.find(
         { name: { $in: friendList } }
       ).toArray();
+
+      const filteredFriendUsers = friendUsers.filter(
+        (friendUser) => friendUser.name !== username
+      );
     
-      res.status(200).json({ friendUsers });
+      res.status(200).json({ filteredFriendUsers });
       client.close();
     }
 

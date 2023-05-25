@@ -1,6 +1,5 @@
 .comments {
     margin: 1em;
-    background: gray;
     padding: 1em;
  }
  .comment{
@@ -10,7 +9,7 @@
      align-items: flex-start;
      padding: 0.5em;
      margin: 0.5em;
-     background-color: white;
+     background-color: #444952;
      border-radius: 10px;
  }
  .comment img{

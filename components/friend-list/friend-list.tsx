@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import classes from './friend-list.module.css'
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-
+import useFriendList from '../../hooks/useFriendList';
 interface Friend{
     _id: string,
     name: string,
@@ -13,22 +13,12 @@ function FriendList(props: FriendListProps) {
 const { data: session, status } = useSession()
 const [friendList, setFriendList] = useState<Friend[]>([])
 
-useEffect(() => {
-    const fetchFriendList = async() => {
-        const response = await fetch('/api/user/friend-list', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username: session?.user?.name})
-        })
-        if (response.ok) {
-            const data = await response.json();
-            setFriendList(data.friendUsers);
-          }
-        };
-        fetchFriendList();
-}, [friendList])
+if(session && session.user?.name){
+    const friends = useFriendList(session.user.name)
+  useEffect(() =>
+  setFriendList(friends)
+  ,[friends])
+}
 
 return (
     <section className={classes.position}>

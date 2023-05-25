@@ -7,6 +7,7 @@ import React, {useState, useEffect} from 'react';
 import FileResizer from 'react-image-file-resizer';
 import PostItem from '../posts/post-item';
 import User from '../users/user';
+import useFriendList from '../../hooks/useFriendList';
 const cloudName = 'dmn5oy2qa';
 
 const cld = new Cloudinary({ cloud: { cloudName: cloudName } });
@@ -61,22 +62,10 @@ function UserProfile(props: UserProfileProps) {
     setShowPosts(true)
   }
 
-  useEffect(() => {
-    const fetchFriendList = async() => {
-        const response = await fetch('/api/user/friend-list', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username: props.username})
-        })
-        if (response.ok) {
-            const data = await response.json();
-            setFriendList(data.friendUsers);
-          }
-        };
-        fetchFriendList();
-}, [friendList])
+  const friends = useFriendList(props.username)
+  useEffect(() =>
+  setFriendList(friends)
+  ,[friends])
   function selectImageHandler(e:React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
 

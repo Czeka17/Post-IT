@@ -3,6 +3,7 @@ import classes from './posts-list.module.css'
 import NewPost from "./add-post"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
+import UsersList from "../users/users.list"
 
 interface Post {
     _id: string;
@@ -30,8 +31,16 @@ function PostsList(props: PostsListProps){
     const [posts, setPosts] = useState<Post[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const { data: session, status } = useSession()
+    const [showPosts, setShowPosts] = useState(true)
     const name = session?.user?.name || ''
 
+    function ShowFriendList(){
+        setShowPosts(false)
+      }
+
+      function ShowPosts(){
+        setShowPosts(true)
+      }
 
     useEffect(() => {
         fetch('/api/posts/addPost').then(response => response.json()).then((data) => {
@@ -82,10 +91,15 @@ return <section className={classes.postContainer}>
     <div>
         <NewPost onAddPost={addPostHandler} name={name} userImage={session?.user?.image || ''}/>
     </div>
+    <div className={classes.display}>
+        <button onClick={ShowPosts}>POSTS</button>
+        <button onClick={ShowFriendList}>Friends</button>
+    </div>
     <ul className={classes.list}>
-    {posts.map((post) =>(
+    {showPosts && posts.map((post) =>(
         <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} onAddComment={addCommentHandler} comments={post.commentList}/>
     ))}
+    {!showPosts && <UsersList />}
 </ul>
     </div>}
 </section>
