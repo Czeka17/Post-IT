@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import socket from '../../socket';
+import socket from '../../pages/api/server/socket';
 import classes from './chat.module.css';
 import { useSession } from 'next-auth/react';
 import { ChatContext } from '../../store/chatContext';
