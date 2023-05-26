@@ -4,6 +4,7 @@ import Comments from './comments';
 import React, { useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { AiOutlineSend, AiFillHeart } from "react-icons/ai";
+import Link from 'next/link';
 
 interface Comment {
     userId: string;
@@ -35,6 +36,11 @@ function PostItem(props: PostItemProps){
     const [comments,setComments] = useState<Comment[]>([])
     const [showComments, setShowComments] = useState(false);
     const [likesCount, setLikesCount] = useState(props.likes.length);
+    const [isLikedByUser, setIsLikedByUser] = useState(
+      props.likes.some(item => item.likedBy === session?.user?.name)
+    );
+
+
     const user = session?.user?.name || ''
     function sendCommentHandler(event: React.FormEvent<HTMLFormElement>){
         event.preventDefault();
@@ -70,9 +76,11 @@ function PostItem(props: PostItemProps){
           const data = await response.json();
           if(isLikedByUser){
             setLikesCount((prevCount) => prevCount - 1);
+            setIsLikedByUser(false);
 
           }else{
             setLikesCount((prevCount) => prevCount + 1);
+            setIsLikedByUser(true);
           }
         }
       }catch(error){
@@ -152,6 +160,8 @@ function PostItem(props: PostItemProps){
         }
       };
 
+      
+
       const commentsLength = props.comments?.length ?? 0;
 
       const createdAt = props.time;
@@ -177,20 +187,19 @@ if (days > 0) {
   formattedTime = `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
 }
 
-const isLikedByUser = Array.isArray(props.likes) && props.likes.some(item => item.likedBy === user);
 
     return(
         <li className={classes.item}>
             <div>
                 <div className={classes.content}>
                 <div className={classes.profileContainer}>
-                        <div className={classes.profile}>
-                        <img src={props.profile}/>
+                        <Link href={`/${encodeURIComponent(props.author)}`}><div className={classes.profile}>
+                        <img src={props.profile} alt={props.author}/>
                         <div className={classes.postAuthor}>
                         <span>{props.author}</span>
                         <span className={classes.postDate}>{formattedTime}</span>
                         </div>
-                        </div>
+                        </div></Link>
                        {props.author === session?.user?.name && <div>
                           <button onClick={() => deletePostHandler(props.id)}>DELETE</button>
                           <p>Edit</p>
@@ -202,10 +211,10 @@ const isLikedByUser = Array.isArray(props.likes) && props.likes.some(item => ite
                     </div>}
                 </div>
                 <div className={classes.reaction}>
-                    <div>
-                        <p onClick={likePostHandler}><AiFillHeart className={`${classes['heart-icon']} ${isLikedByUser ? classes['liked'] : ''} `} />{likesCount}</p>
+                    <div className={classes.like}>
+                        <button onClick={likePostHandler}><AiFillHeart className={`${classes['heart-icon']} ${isLikedByUser ? classes['liked'] : 'disliked'} `} /><p>{likesCount}</p></button>
                     </div>
-                    <div>
+                    <div className={classes.showComment}>
                         {showComments ?<button onClick={hideCommentsHandler}>Hide Comments</button> : <button onClick={showCommentsHandler}>Show comments ({commentsLength})</button>}
                     </div>
                 </div>

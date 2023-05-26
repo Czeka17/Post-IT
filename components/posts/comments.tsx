@@ -24,9 +24,11 @@ interface Comment {
       <div className={classes.comments}>
         <ul>
           {props.comments?.map((comment) => (
-            <li key={comment.userId}>
-              <div className={classes.comment}>
+            <li key={comment.userId} className={classes.comment}>
+              <div>
                 <img src={comment.user.image} alt={comment.user.name}/>
+              </div>
+              <div>
                 <div className={classes.commentContent}>
                   <h4>{comment.user.name}</h4>
                   <p>{comment.message}</p>

@@ -53,7 +53,11 @@
     margin-right: 1em;
     align-self: center;
     border: 1px solid #146C94;
+    transition: opacity 0.3s;
 }
+.profile img:hover{
+    opacity: 0.75;
+} 
 .postAuthor{
     display: flex;
     flex-direction: column;
@@ -65,9 +69,31 @@
 .reaction {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     padding: 1em;
+    width: 100%;
+}
+.like{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.like p {
+    color: white;
+}
+.like button {
+    background: transparent;
+    border: none;
+}
+.showComment{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .commentForm{
     position: relative;
@@ -96,14 +122,23 @@
 .commentForm button:hover{
     transform: scale(1.1);
 }
-
+.heart-icon{
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 1s;
+    fill: white;
+}
+.heart-icon:hover{
+    transform: scale(1.1);
+}
 .heart-icon.liked {
     animation: fillHeart 0.5s forwards; 
   }
 
+
 @keyframes fillHeart {
     0% {
-      fill: transparent; 
+      fill: white;
     }
     100% {
       fill: red; 

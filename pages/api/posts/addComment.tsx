@@ -40,7 +40,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
         }
         const commentList = post.commentList || []
 
-        await commentList.push(newComment);
+        commentList.push(newComment);
 
         await postsCollection.updateOne(
             {_id: objectId},

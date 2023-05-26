@@ -42,7 +42,7 @@
   }
 
   .header li:hover{
-    color:#7ae2ff;
+    color:#00ADB5;
   }
 
   .header img {
@@ -50,4 +50,8 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    transition: opacity 0.3s;
+  }
+  .header img:hover{
+    opacity: 0.75;
   }

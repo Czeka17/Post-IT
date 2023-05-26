@@ -31,7 +31,7 @@ async function handler(req:NextApiRequest, res:NextApiResponse){
 
         const hashedPassword = await hashPassword(password)
 
-        let image = '/images/amogus.jpg'
+        let image = '/images/user.png'
         const friendList:string[] = []
         const result = await db.collection("users").insertOne({
             name: name,

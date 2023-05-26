@@ -3,7 +3,6 @@ import classes from './user-profile.module.css';
 
 import { Cloudinary } from '@cloudinary/url-gen';
 import React, {useState, useEffect} from 'react';
-
 import FileResizer from 'react-image-file-resizer';
 import PostItem from '../posts/post-item';
 import User from '../users/user';
@@ -55,6 +54,7 @@ function UserProfile(props: UserProfileProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [showPosts, setShowPosts] = useState(true)
   const [friendList, setFriendList] = useState<Friend[]>([])
+  const [selectedImage, setSelectedImage] = useState<string>('');
   useEffect(() => {
     fetch(`/api/posts/addPost?author=${props.username}`).then(response => response.json()).then((data) => {
         setPosts(data.posts);
@@ -73,6 +73,8 @@ function UserProfile(props: UserProfileProps) {
   useEffect(() =>
   setFriendList(friends)
   ,[friends])
+
+
   function selectImageHandler(e:React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
 
@@ -105,6 +107,7 @@ function UserProfile(props: UserProfileProps) {
                 .then((data) => {
                   const imageUrl = cld.image(data.public_id);
                   console.log(imageUrl.toURL());
+                  setSelectedImage(imageUrl.toURL())
                   props.onChangeProfile({
                     image: imageUrl.toURL(),
                     username: props.username,
@@ -124,10 +127,32 @@ function UserProfile(props: UserProfileProps) {
       }
     }
 
-  function submitHandler(event: React.FormEvent) {
-    event.preventDefault();
 
-  }
+
+  useEffect(() => {
+    if (selectedImage) {
+      const formData = new FormData();
+      formData.append('file', selectedImage);
+      formData.append('upload_preset', 'ewqicijo');
+
+      fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+        method: 'POST',
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const imageUrl = cld.image(data.public_id);
+          console.log(imageUrl.toURL());
+          props.onChangeProfile({
+            image: imageUrl.toURL(),
+            username: props.username,
+          });
+        })
+        .catch((error) => {
+          console.log('Upload error:', error);
+        });
+    }
+  }, [selectedImage]);
 
 function addCommentHandler(commentData:any){
     fetch('/api/posts/addComment', {
@@ -148,12 +173,19 @@ function addCommentHandler(commentData:any){
 
   return (
     <section className={classes.container}>
-    <div className={classes.profile}>
-      <img src={props.image} />
+     <div className={classes.profile}>
+      <label htmlFor="imageInput">
+        <img src={props.image} alt="Profile Image" />
+      </label>
       {props.activeUser === props.username ? (
-        <form onSubmit={submitHandler}>
-          <input type="file" name="file" onChange={selectImageHandler} />
-          <button>Change image</button>
+        <form>
+          <input
+            id="imageInput"
+            type="file"
+            name="file"
+            onChange={selectImageHandler}
+            style={{ display: 'none' }}
+          />
         </form>
       ) : null}
       <h2>{props.username}</h2>
