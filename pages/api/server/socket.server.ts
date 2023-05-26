@@ -29,7 +29,7 @@ export default async function socketServer(req: IncomingMessage, res: ServerResp
 
     const io = new Server(httpServer, {
       cors: {
-        origin: 'https://facebook-clone-git-main-czeka17.vercel.app', // Update with your frontend URL or restrict it to specific origins
+        origin: '*', // Update with your frontend URL or restrict it to specific origins
       },
     });
 
