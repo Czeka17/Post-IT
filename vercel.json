@@ -1,8 +1,0 @@
-{
-    "functions": {
-      "api/server/socket.server": {
-        "runtime": "node14"
-      }
-    }
-  }
-  
