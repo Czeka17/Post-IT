@@ -1,8 +1,7 @@
 {
     "functions": {
-      "api/**/*": {
-        "runtime": "vercel-node@1",
-        "memory": 128
+      "api/socket.server": {
+        "runtime": "now-nodejs@14"
       }
     }
   }
