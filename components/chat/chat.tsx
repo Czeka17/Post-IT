@@ -18,13 +18,11 @@ function Chat() {
   const { messages, addMessage } = useContext(ChatContext);
 
   useEffect(() => {
-    // Listen for incoming messages
     socket.on('message', (message) => {
       addMessage(message);
     });
 
     return () => {
-      // Clean up event listeners
       socket.off('message');
     };
   }, [addMessage]);
