@@ -6,12 +6,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "16": "^0.0.2",
     "@cloudinary/react": "^1.11.2",
     "@cloudinary/url-gen": "^1.10.0",
-    "@squoosh/lib": "^0.5.3",
+    "@squoosh/lib": "^0.5.2",
     "@types/socket.io": "^3.0.2",
     "@vercel/node": "^2.14.3",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "http": "^0.0.1-security",
     "image-minify": "^1.0.0",
     "mongodb": "^5.1.0",

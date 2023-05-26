@@ -22,7 +22,7 @@
 		"components",
 		"../netflix-clone/pages/app.test.tsx",
 		"pages/api/server",
-		"socket/socket.ts"
+		"socket.ts"
 	],
 	"exclude": ["node_modules"]
 }
