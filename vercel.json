@@ -1,6 +1,6 @@
 {
     "functions": {
-      "api/socket.server": {
+      "api/server/socket.server.ts": {
         "runtime": "now-nodejs@14"
       }
     }
