@@ -2,60 +2,71 @@ import { useEffect, useState } from "react";
 import classes from "./chat.module.css";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import Pusher from "pusher-js";
 
 interface Message {
   id: string;
-  user: string | null | undefined;
+  user: string;
   message: string;
   image: string;
   timestamp: number;
 }
 
+interface EventData {
+	id: string;
+	username?: string;
+	name?: string;
+	message: string;
+	userimage?: string;
+	image?: string;
+	timestamp: number;
+  }
+
 function Chat() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    fetchMessages();
-  }, []);
+    if (status === "authenticated") {
+      fetchMessages();
+      setupWebSocket();
+    }
+  }, [status]);
 
   const fetchMessages = async () => {
-	try {
-	  const response = await fetch("/api/chat");
-	  const data = await response.json();
-	  setMessages(data.messages);
-	} catch (error) {
-	  console.error("Error fetching messages:", error);
-	}
+    try {
+      const response = await fetch("/api/chat");
+      const data = await response.json();
+      setMessages(data.messages);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
   };
-  
-  const username = session?.user?.name;
-  const userimage = session?.user?.image;
-  
+
+
   const sendMessage = async () => {
 	if (!messageInput.trim()) {
 	  return;
 	}
   
+	if(session?.user?.name && session.user.image){
+	const newMessage: Message = {
+	  id: "", 
+	  user: session.user.name,
+	  message: messageInput,
+	  image: session.user.image,
+	  timestamp: Date.now(),
+	};
+  
 	try {
-	  await fetch("/api/chat", {
-		method: 'POST',
-		headers: {
-		  "Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-		  message: messageInput,
-		  username: username,
-		  userimage: userimage,
-		}),
-	  });
+	  await axios.post("/api/chat", newMessage);
 	  setMessageInput("");
-	  fetchMessages();
 	} catch (error) {
 	  console.error("Error sending message:", error);
 	}
   };
+}
   
 
   const formatTimeElapsed = (timestamp: number) => {
@@ -72,6 +83,46 @@ function Chat() {
     } else {
       return `${seconds}s ago`;
     }
+  };
+
+  const setupWebSocket = () => {
+    const pusher = new Pusher("0b4db96a211280fa4ebb", {
+      cluster: "eu",
+      forceTLS: true,
+    });
+
+    const channel = pusher.subscribe("postIT");
+
+	channel.bind("new-message", (data: EventData) => {
+		// Check if the message already exists in the messages state
+		const existingMessage = messages.find((message) => message.id === data.id);
+		if (existingMessage) {
+		  return; // Ignore duplicate message
+		}
+	  
+		// Handle incoming message
+		const newMessage: Message = {
+		  id: data.id,
+		  user: data.name!,
+		  message: data.message,
+		  image: data.image!,
+		  timestamp: data.timestamp,
+		};
+	  
+		setMessages((prevMessages) => [...prevMessages, newMessage]);
+	  });
+	  
+	  
+
+    pusher.connection.bind("connected", () => {
+      console.log("Connected to Pusher server");
+      // Perform any necessary actions after connecting
+    });
+
+    pusher.connection.bind("error", (error:Error) => {
+      console.error("Pusher connection error:", error);
+      // Handle the error
+    });
   };
 
   return (
