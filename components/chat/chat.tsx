@@ -62,6 +62,7 @@ function Chat() {
 	try {
 	  await axios.post("/api/chat", newMessage);
 	  setMessageInput("");
+	  fetchMessages()
 	} catch (error) {
 	  console.error("Error sending message:", error);
 	}
@@ -94,22 +95,24 @@ function Chat() {
     const channel = pusher.subscribe("postIT");
 
 	channel.bind("new-message", (data: EventData) => {
-		// Check if the message already exists in the messages state
-		const existingMessage = messages.find((message) => message.id === data.id);
-		if (existingMessage) {
-		  return; // Ignore duplicate message
-		}
-	  
-		// Handle incoming message
-		const newMessage: Message = {
-		  id: data.id,
-		  user: data.name!,
-		  message: data.message,
-		  image: data.image!,
-		  timestamp: data.timestamp,
-		};
-	  
-		setMessages((prevMessages) => [...prevMessages, newMessage]);
+		setMessages((prevMessages: Message[]) => {
+		  // Check if the message already exists in the messages state
+		  const existingMessage = prevMessages.find((message) => message.id === data.id);
+		  if (existingMessage) {
+			return prevMessages; // Ignore duplicate message
+		  }
+	
+		  // Handle incoming message
+		  const newMessage: Message = {
+			id: data.id,
+			user: data.name!,
+			message: data.message,
+			image: data.image!,
+			timestamp: data.timestamp,
+		  };
+	
+		  return [...prevMessages, newMessage];
+		});
 	  });
 	  
 	  
