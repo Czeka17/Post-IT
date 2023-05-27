@@ -17,35 +17,46 @@ function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    // Fetch initial messages from the server
     fetchMessages();
   }, []);
 
   const fetchMessages = async () => {
-    try {
-      const response = await axios.get("/api/chat");
-      setMessages(response.data.messages);
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-    }
+	try {
+	  const response = await fetch("/api/chat");
+	  const data = await response.json();
+	  setMessages(data.messages);
+	} catch (error) {
+	  console.error("Error fetching messages:", error);
+	}
   };
-
-  const username = session?.user?.name
-  const userimage = session?.user?.image
-
+  
+  const username = session?.user?.name;
+  const userimage = session?.user?.image;
+  
   const sendMessage = async () => {
-    if (!messageInput.trim()) {
-      return;
-    }
-
-    try {
-      await axios.post("/api/chat", { message: messageInput, username:username, userimage:userimage });
-      setMessageInput("");
-      fetchMessages(); // Fetch updated messages after sending a new message
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
+	if (!messageInput.trim()) {
+	  return;
+	}
+  
+	try {
+	  await fetch("/api/chat", {
+		method: 'POST',
+		headers: {
+		  "Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+		  message: messageInput,
+		  username: username,
+		  userimage: userimage,
+		}),
+	  });
+	  setMessageInput("");
+	  fetchMessages();
+	} catch (error) {
+	  console.error("Error sending message:", error);
+	}
   };
+  
 
   const formatTimeElapsed = (timestamp: number) => {
     const currentTime = Date.now();

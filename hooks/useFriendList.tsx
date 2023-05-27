@@ -17,7 +17,7 @@ const useFriendList = (username:string) => {
           }
         };
         fetchFriendList();
-}, [username, friendList])
+}, [username])
  return friendList;
 };
 
