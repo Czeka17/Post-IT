@@ -91,42 +91,40 @@ function Chat() {
       cluster: "eu",
       forceTLS: true,
     });
-
+  
     const channel = pusher.subscribe("postIT");
-
-	channel.bind("new-message", (data: EventData) => {
-		setMessages((prevMessages: Message[]) => {
-		  // Check if the message already exists in the messages state
-		  const existingMessage = prevMessages.find((message) => message.id === data.id);
-		  if (existingMessage) {
-			return prevMessages; // Ignore duplicate message
-		  }
-	
-		  // Handle incoming message
-		  const newMessage: Message = {
-			id: data.id,
-			user: data.name!,
-			message: data.message,
-			image: data.image!,
-			timestamp: data.timestamp,
-		  };
-	
-		  return [...prevMessages, newMessage];
-		});
-	  });
-	  
-	  
-
+  
+    channel.bind("new-message", (data: EventData) => {
+      setMessages((prevMessages) => {
+        
+        const existingMessage = prevMessages.find((message) => message.id === data.id);
+        if (existingMessage) {
+          return prevMessages; 
+        }
+  
+        const newMessage: Message = {
+          id: data.id,
+          user: data.name!,
+          message: data.message,
+          image: data.image!,
+          timestamp: data.timestamp,
+        };
+  
+        return [...prevMessages, newMessage];
+      });
+    });
+  
     pusher.connection.bind("connected", () => {
       console.log("Connected to Pusher server");
       // Perform any necessary actions after connecting
     });
-
-    pusher.connection.bind("error", (error:Error) => {
+  
+    pusher.connection.bind("error", (error: Error) => {
       console.error("Pusher connection error:", error);
       // Handle the error
     });
   };
+  
 
   return (
     <div className={classes.chat}>

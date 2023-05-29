@@ -16,7 +16,6 @@
     width: 45%;
     background: #393E46;
     border-radius: 8px;
-    padding: 2em;
 }
 .display{
   display: flex;
@@ -25,7 +24,8 @@
   align-items: center;
 }
 .display button{
-  width: 100%;
+  width: 50%;
+  margin-bottom: 2em;
 }
 .loading {
     background-color: white;
@@ -59,3 +59,9 @@
     }
   }
   
+  @media(max-width: 1024px){
+    .postContainer{
+      width: 100%;
+      max-width: 100%;
+    }
+}

@@ -23,15 +23,12 @@
     width: 100%;
 }
 .content p{
-    margin: 1em;
+    margin: 0.5em 1em;
     padding: 0 0.2em;
     white-space: wrap;
     overflow: hidden;
-    text-overflow: ellipsis;
     word-wrap: break-word;
-    overflow-wrap: break-word;
-    word-break: break-all;
-  max-width: 100%;
+    max-width: 100%;
 }
 .profile{
     display: flex;

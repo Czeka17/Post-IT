@@ -2,14 +2,15 @@
 
 .chat {
     position: fixed;
-    height: 90%;
     top: 5em;
     left: 0;
     padding-bottom: 5.2em;
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 20%;
     background: #393E46;
+    overflow: auto;
   }
   
   .messageContainer {
@@ -91,3 +92,8 @@
     background-color: #0d6efd;
   }
   
+  @media(max-width: 1024px){
+    .chat{
+        transform: translate(-102%);
+    }
+}

@@ -94,13 +94,13 @@ function addCommentHandler(commentData:any){
 console.log(posts)
 return <section className={classes.postContainer}>
     {isLoading ? <div className={classes.loading}><p>POST<span>IT</span></p></div> :<div>
-    <div>
-        <NewPost onAddPost={addPostHandler} name={name} userImage={session?.user?.image || ''}/>
-    </div>
     <div className={classes.display}>
         <button onClick={ShowPosts}><HiOutlineClipboardList/></button>
         <button onClick={ShowFriendList}><FaUserFriends /></button>
     </div>
+   {showPosts && <div>
+        <NewPost onAddPost={addPostHandler} name={name} userImage={session?.user?.image || ''}/>
+    </div>}
     <ul className={classes.list}>
     {showPosts && posts.map((post) =>(
         <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList}/>

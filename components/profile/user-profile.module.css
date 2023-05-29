@@ -10,6 +10,7 @@
     justify-content: flex-start;
     width: 100%;
     align-items: center;
+    color: white;
 
 }
 .profile img{
@@ -48,4 +49,14 @@
 .friendList{
     display: flex;
     flex-wrap: wrap;
+}
+@media(max-width: 767px){
+    .container{
+      width: 100%;
+    }
+    .postsList{
+        margin: 0;
+        padding: 0;
+
+    }
 }
