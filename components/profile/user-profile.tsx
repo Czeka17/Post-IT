@@ -26,7 +26,10 @@ interface Like {
 interface Post {
   _id: string;
   message: string;
-  image: string;
+  image: {
+    url: string | undefined,
+    type: 'image' | 'video' | 'gif' | undefined
+  };
   name: string;
   userImage: string;
   createdAt: string;
@@ -44,7 +47,7 @@ interface Comment {
   };
 }
 interface UserProfileProps {
-    image: string;
+    image:string;
     username: string;
     activeUser?: string | null | undefined;
     onChangeProfile: (profile: { image: string; username: string }) => void;
