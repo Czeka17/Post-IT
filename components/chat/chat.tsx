@@ -66,7 +66,7 @@ interface EventData {
 	try {
 	  await axios.post("/api/chat", newMessage);
 	  setMessageInput("");
-	  fetchMessages()
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
 	} catch (error) {
 	  console.error("Error sending message:", error);
 	}
