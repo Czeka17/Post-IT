@@ -9,7 +9,10 @@ import {HiOutlineClipboardList} from 'react-icons/hi'
 interface Post {
     _id: string;
     message: string;
-    image: string;
+    image: {
+        type: 'image' | 'video' | 'gif';
+        url: string;
+      } | null;
     name: string;
     userImage: string;
     createdAt: string;
@@ -30,6 +33,16 @@ interface Post {
       image: string;
     };
   }
+  interface PostData {
+    message: string;
+    name: string;
+    userImage: string;
+    image: {
+      type: 'image' | 'video' | 'gif';
+      url: string;
+    } | null;
+  }
+  
 
   interface PostsListProps {}
 function PostsList(props: PostsListProps){
@@ -56,7 +69,7 @@ function PostsList(props: PostsListProps){
     }, [])
 
 
-function addPostHandler(postData:any) {
+function addPostHandler(postData:PostData) {
     fetch('/api/posts/addPost', {
         method: 'POST',
         body: JSON.stringify(postData),
@@ -103,7 +116,7 @@ return <section className={classes.postContainer}>
     </div>}
     <ul className={classes.list}>
     {showPosts && posts.map((post) =>(
-        <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList}/>
+        <PostItem key={post._id} id={post._id} title={post.message} image={post?.image?.url} type={post?.image?.type} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList}/>
     ))}
     {!showPosts && <UsersList />}
 </ul>

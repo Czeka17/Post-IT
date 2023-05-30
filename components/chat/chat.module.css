@@ -1,17 +1,44 @@
-/* chat.module.css */
-
 .chat {
-    position: fixed;
-    top: 5em;
-    left: 0;
-    padding-bottom: 5.2em;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 20%;
-    background: #393E46;
-    overflow: auto;
+  position: fixed;
+  top: 5em;
+  left: 0;
+  padding-bottom: 5.2em;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 20%;
+  background: #393E46;
+  overflow: auto;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
   }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.chatShow {
+  animation-name: slideIn;
+}
+
+.chatHide {
+  animation-name: slideOut;
+}
+
   
   .messageContainer {
     flex-grow: 1;
@@ -92,8 +119,24 @@
     background-color: #0d6efd;
   }
   
+
+  .chatHandler {
+    position: fixed;
+    bottom: 2px;
+    left: 3px;
+    overflow: visible;
+    z-index: 999;
+    border-radius: 50%;
+    background-color: #00ADB5;
+    padding: 1em;
+  }
+  .chatIcon{
+    fill: white;
+    font-size: 2rem;
+  }
+
   @media(max-width: 1024px){
     .chat{
-        transform: translate(-102%);
+      width: 100%;
     }
 }

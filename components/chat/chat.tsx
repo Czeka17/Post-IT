@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import classes from "./chat.module.css";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import Pusher from "pusher-js";
-
+import {BsFillChatDotsFill} from 'react-icons/bs'
 interface Message {
   id: string;
   user: string;
@@ -22,11 +22,15 @@ interface EventData {
 	timestamp: number;
   }
 
-function Chat() {
+
+  function Chat() {
   const { data: session, status } = useSession();
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-
+  const [showChat, setShowChat] = useState(false)
+  function chatHandler(){
+      setShowChat((prevState) => !prevState)
+  }
   useEffect(() => {
     if (status === "authenticated") {
       fetchMessages();
@@ -116,18 +120,21 @@ function Chat() {
   
     pusher.connection.bind("connected", () => {
       console.log("Connected to Pusher server");
-      // Perform any necessary actions after connecting
+
     });
   
     pusher.connection.bind("error", (error: Error) => {
       console.error("Pusher connection error:", error);
-      // Handle the error
+
     });
   };
   
 
   return (
-    <div className={classes.chat}>
+ <section>
+     <div className={`${classes.chat} ${showChat ? classes.chatShow : classes.chatHide}`}>
+
+
       <div className={classes.messageContainer}>
         {messages?.map((message) => (
           <div key={message.id} className={classes.message}>
@@ -160,6 +167,8 @@ function Chat() {
         </button>
       </div>
     </div>
+      <button className={`${classes.chatHandler} ${showChat ? classes.chatShow : classes.chatHide}`} onClick={chatHandler}><BsFillChatDotsFill className={classes.chatIcon} /></button>
+ </section>
   );
 }
 
