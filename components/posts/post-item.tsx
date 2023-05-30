@@ -1,5 +1,4 @@
 import classes from './post-item.module.css'
-import Image from 'next/image';
 import Comments from './comments';
 import React, { useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';

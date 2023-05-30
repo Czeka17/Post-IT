@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import Pusher from "pusher-js";
 import {BsFillChatDotsFill} from 'react-icons/bs'
+
 interface Message {
   id: string;
   user: string;
@@ -15,7 +16,7 @@ interface Message {
 interface EventData {
 	id: string;
 	username?: string;
-	name?: string;
+	user: string;
 	message: string;
 	userimage?: string;
 	image?: string;
@@ -93,41 +94,45 @@ interface EventData {
   const setupWebSocket = () => {
     const pusher = new Pusher("0b4db96a211280fa4ebb", {
       cluster: "eu",
-      forceTLS: true,
     });
   
     const channel = pusher.subscribe("postIT");
   
     channel.bind("new-message", (data: EventData) => {
       setMessages((prevMessages) => {
-        
         const existingMessage = prevMessages.find((message) => message.id === data.id);
         if (existingMessage) {
-          return prevMessages; 
+          return prevMessages;
         }
-  
+    
         const newMessage: Message = {
           id: data.id,
-          user: data.name!,
+          user: data.user || '',
           message: data.message,
-          image: data.image!,
+          image: data.image || '',
           timestamp: data.timestamp,
         };
-  
-        return [...prevMessages, newMessage];
-      });
-    });
+    
+        const isCurrentUserMessage = newMessage.user === session?.user?.name;
+
+    if (!isCurrentUserMessage) {
+      return [...prevMessages, newMessage];
+    } else {
+      return prevMessages.filter((message) => message.id !== data.id);
+    }
+  });
+});
+    
   
     pusher.connection.bind("connected", () => {
       console.log("Connected to Pusher server");
-
     });
   
     pusher.connection.bind("error", (error: Error) => {
       console.error("Pusher connection error:", error);
-
     });
   };
+  
   
 
   return (

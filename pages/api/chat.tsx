@@ -7,7 +7,6 @@ const pusher = new Pusher({
   key: "0b4db96a211280fa4ebb",
   secret: "8cd09ce3487f3c1cefb3",
   cluster: "eu",
-  useTLS: true,
 });
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -31,10 +30,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       timestamp: Date.now(),
     };
 
-    await collection.insertOne(newMessage);
+    const result = await collection.insertOne(newMessage);
 
+    const insertedMessage = {
+      ...newMessage,
+      id: result.insertedId.toString(), // Use the generated ObjectID as the id
+    };
     // Trigger 'new-message' event using Pusher
-    pusher.trigger("postIT", "new-message", newMessage);
+    pusher.trigger("postIT", "new-message", insertedMessage);
 
     res.status(200).json({ success: true });
   } else {
