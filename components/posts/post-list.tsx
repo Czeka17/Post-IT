@@ -10,9 +10,9 @@ interface Post {
     _id: string;
     message: string;
     image: {
-        type: 'image' | 'video' | 'gif';
-        url: string;
-      } | null;
+        url: string | undefined,
+        type: 'image' | 'video' | 'gif' | undefined
+      };
     name: string;
     userImage: string;
     createdAt: string;
@@ -116,7 +116,7 @@ return <section className={classes.postContainer}>
     </div>}
     <ul className={classes.list}>
     {showPosts && posts.map((post) =>(
-        <PostItem key={post._id} id={post._id} title={post.message} image={post?.image?.url} type={post?.image?.type} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList}/>
+        <PostItem key={post._id} id={post._id} title={post.message} image={post?.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList}/>
     ))}
     {!showPosts && <UsersList />}
 </ul>

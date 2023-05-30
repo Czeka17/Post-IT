@@ -24,8 +24,10 @@ interface Comment {
     profile: string;
     author: string;
     title: string;
-    image: string | undefined;
-    type: 'image' | 'video' | 'gif' | undefined;
+    image: {
+    url: string | undefined,
+    type: 'image' | 'video' | 'gif' | undefined
+  };
     time: string;
     comments?: Comment[];
     likes: Like[]
@@ -207,12 +209,12 @@ if (days > 0) {
                         </div>}
                     </div>
                     <p>{props.title}</p>
-                    {props.type === 'image' || props.type === 'gif' ? <div className={classes.image}>
-                        <img src={props.image} alt={props.title} />
+                    {props.image.type === 'image' || props.image.type === 'gif' ? <div className={classes.image}>
+                        <img src={props.image.url} alt={props.title} />
                     </div> :
-                    props.type === 'video' &&
+                    props.image.type === 'video' &&
                     <video controls className={classes.image}>
-                    <source src={props.image} type="video/mp4" />
+                    <source src={props.image.url} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>}
                 </div>
