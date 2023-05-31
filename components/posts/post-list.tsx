@@ -118,8 +118,8 @@ return <section className={classes.postContainer}>
     {showPosts && posts.map((post) =>(
         <PostItem key={post._id} id={post._id} title={post.message} image={post?.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList}/>
     ))}
-    {!showPosts && <UsersList />}
 </ul>
+{!showPosts && <UsersList />}
     </div>}
 </section>
 }

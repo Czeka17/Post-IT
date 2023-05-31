@@ -140,11 +140,11 @@ function PostItem(props: PostItemProps){
           console.error(error);
         }
       };
-      const deletePostHandler = async (postId:string) => {
+      const deletePostHandler = async () => {
         try {
           const response = await fetch('/api/posts/addPost', {
             method: 'DELETE',
-            body: JSON.stringify({postId}),
+            body: JSON.stringify({postId:props.id}),
             headers: {
               'Content-Type': 'application/json',
             },
@@ -203,8 +203,7 @@ if (days > 0) {
                         </div>
                         </div></Link>
                        {props.author === session?.user?.name && <div>
-                          <button onClick={() => deletePostHandler(props.id)}>DELETE</button>
-                          <p>Edit</p>
+                          <button onClick={deletePostHandler}>DELETE</button>
                         </div>}
                     </div>
                     <p>{props.title}</p>

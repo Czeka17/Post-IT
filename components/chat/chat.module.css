@@ -129,6 +129,16 @@
     border-radius: 50%;
     background-color: #00ADB5;
     padding: 1em;
+    cursor: pointer;
+  }
+  .chatHideHandler{
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
   }
   .chatIcon{
     fill: white;
@@ -139,4 +149,23 @@
     .chat{
       width: 100%;
     }
+}
+
+.chat::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.chat::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+.chat::-webkit-scrollbar-thumb {
+  background: red;
+}
+
+/* Handle on hover */
+.chat::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

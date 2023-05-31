@@ -1,4 +1,4 @@
-import React,{ useEffect, useState } from "react";
+import React,{ useEffect, useState, useRef } from "react";
 import classes from "./chat.module.css";
 import { useSession } from "next-auth/react";
 import axios from "axios";
@@ -29,8 +29,11 @@ interface EventData {
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [showChat, setShowChat] = useState(false)
-  function chatHandler(){
-      setShowChat((prevState) => !prevState)
+  function chatShowHandler(){
+      setShowChat(true)
+  }
+  function chatHideHandler(){
+    setShowChat(false)
   }
   useEffect(() => {
     if (status === "authenticated") {
@@ -41,14 +44,13 @@ interface EventData {
 
   const fetchMessages = async () => {
     try {
-      const response = await fetch("/api/chat");
+      const response = await fetch("/api/chat/chat");
       const data = await response.json();
       setMessages(data.messages);
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
   };
-
 
   const sendMessage = async () => {
 	if (!messageInput.trim()) {
@@ -65,7 +67,7 @@ interface EventData {
 	};
   
 	try {
-	  await axios.post("/api/chat", newMessage);
+	  await axios.post("/api/chat/chat", newMessage);
 	  setMessageInput("");
     setMessages((prevMessages) => [...prevMessages, newMessage]);
 	} catch (error) {
@@ -81,8 +83,13 @@ interface EventData {
     const seconds = Math.floor(timeElapsed / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
-
-    if (hours > 0) {
+    const days = Math.floor(hours / 24); 
+    if(days > 1){
+      return `${days}day's ago`;
+    }
+    else if (days > 0) {
+      return `${days}day ago`;
+    }else if(hours > 0){
       return `${hours}h ago`;
     } else if (minutes > 0) {
       return `${minutes}m ago`;
@@ -171,8 +178,9 @@ interface EventData {
           Send
         </button>
       </div>
+      <button className={classes.chatHideHandler} onClick={chatHideHandler}>X</button>
     </div>
-      <button className={`${classes.chatHandler} ${showChat ? classes.chatShow : classes.chatHide}`} onClick={chatHandler}><BsFillChatDotsFill className={classes.chatIcon} /></button>
+     {!showChat && <button className={`${classes.chatHandler} ${showChat ? classes.chatShow : classes.chatHide}`} onClick={chatShowHandler}><BsFillChatDotsFill className={classes.chatIcon} /></button>}
  </section>
   );
 }

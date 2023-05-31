@@ -5,6 +5,7 @@
     align-items: center;
     max-width: 100%;
     width: 100%;
+    padding: 2em;
 }
 
 .postContainer{
@@ -22,9 +23,12 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  min-width: 100%;
+  width: 100%;
 }
 .display button{
   width: 50%;
+  min-width: 50%;
   margin-bottom: 2em;
 }
 .loading {
@@ -60,6 +64,9 @@
   }
   
   @media(max-width: 1024px){
+    .list{
+      padding: 0em;
+    }
     .postContainer{
       width: 100%;
       max-width: 100%;
