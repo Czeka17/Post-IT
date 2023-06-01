@@ -142,7 +142,7 @@ function PostItem(props: PostItemProps){
       };
       const deletePostHandler = async () => {
         try {
-          const response = await fetch('/api/posts/addPost', {
+          const response = await fetch('/api/posts/deletePost', {
             method: 'DELETE',
             body: JSON.stringify({postId:props.id}),
             headers: {
@@ -207,14 +207,14 @@ if (days > 0) {
                         </div>}
                     </div>
                     <p>{props.title}</p>
-                    {props.image.type === 'image' || props.image.type === 'gif' ? <div className={classes.image}>
+                    {props.image && (props.image.type === 'image' || props.image.type === 'gif') ? <div className={classes.image}>
                         <img src={props.image.url} alt={props.title} />
                     </div> :
-                    props.image.type === 'video' &&
-                    <video controls className={classes.image}>
-                    <source src={props.image.url} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>}
+                    props.image && props.image.type === 'video' &&
+                   <div className={classes.image}> <video controls className={classes.video}>
+                   <source src={props.image.url} type="video/mp4" />
+                   Your browser does not support the video tag.
+                 </video></div>}
                 </div>
                 <div className={classes.reaction}>
                     <div className={classes.like}>

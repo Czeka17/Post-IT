@@ -36,3 +36,14 @@ button {
   padding: 0.5rem 1rem;
   font-weight: bold;
 }
+
+::-webkit-scrollbar{
+  width: 20px;
+}
+::-webkit-scrollbar-thumb{
+  background:#222831;
+  border-radius: 25px;
+}
+::-webkit-scrollbar-track{
+  background: #444952;
+}

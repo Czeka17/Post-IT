@@ -12,12 +12,12 @@
      background-color: #444952;
      border-radius: 10px;
  }
- .comment img{
-     width: 50px;
-     height: 50px;
-     border-radius: 50%;
-     margin-right: 1em;
-     margin-top: 1em;
+ .userImage img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1em;
+    margin-top: 1em;
  }
  .comment button{
     background: transparent;

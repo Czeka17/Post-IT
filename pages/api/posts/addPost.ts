@@ -45,7 +45,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
             res.status(500).json({message: 'Insetring post failed!'})
         }
     }
-    if (req.method === 'GET') {
+    else if (req.method === 'GET') {
         try {
           const db = client.db();
           let posts;
@@ -71,7 +71,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
         }
       }
       
-    if(req.method === 'DELETE'){
+    else if(req.method === 'DELETE'){
         const db = client.db();
         const {postId} = req.body;
         const objectId = new ObjectId(postId)

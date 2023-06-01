@@ -13,6 +13,7 @@
     border-radius: 8px;
     resize: none;
     border: 2px solid #146C94;
+    transition: all 0.3s;
 }
 .buttons {
     display: flex;
@@ -26,3 +27,57 @@
     border-radius: 8px;
     cursor: pointer;
 }
+.mediaPreview{
+    margin: 0 2em;
+    width: 30%;
+    height: 30%;
+}
+.mediaPreview video{
+    width: 100%;
+    height: 100%;
+}
+
+.fileInput {
+    position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  }
+  .fileButton{
+    position: relative;
+    display: inline-block;
+  padding: 8px 16px;
+  background-color: #ebebeb;
+  color: #333;
+  border-radius: 4px;
+  padding: 0.5em 2em;
+  cursor: pointer;
+  }
+
+  .draggingOver{
+    background: gray;
+    opacity: 0.2;
+  }
+
+  .textareaContainer {
+    position: relative;
+  }
+  
+  .textareaContainer .dropIcon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #888;
+    font-size: 2rem;
+  }
+  
+  .textareaContainer .dropIcon,
+  textarea.draggingOver {
+    border: 2px dashed #888;
+    border-radius: 6px;
+    padding: 0.5em;
+  }
