@@ -142,7 +142,7 @@ function PostItem(props: PostItemProps){
       };
       const deletePostHandler = async () => {
         try {
-          const response = await fetch('/api/posts/deletePost', {
+          const response = await fetch('/api/posts/addPost', {
             method: 'DELETE',
             body: JSON.stringify({postId:props.id}),
             headers: {

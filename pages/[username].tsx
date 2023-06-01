@@ -16,8 +16,6 @@ interface ProfilePageProps {
   function ProfilePage(props: ProfilePageProps) {
     const { data: session, status } = useSession();
     const activeUser = session?.user?.name;
-    // const token = session?.accessToken;
-    // console.log(token)
 
     async function changeProfileHandler(image:string, username:string){
         const response = await fetch('/api/user/changeImage', {
@@ -25,7 +23,6 @@ interface ProfilePageProps {
           body: JSON.stringify({image, username}),
           headers: {
             'Content-Type': 'application/json',
-            // Authorization: `Bearer ${token}`
           }
         });
       

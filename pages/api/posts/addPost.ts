@@ -32,8 +32,6 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
             likes: []
         };
 
-        let result;
-
         try{
             const db = client.db();
 
@@ -71,7 +69,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
         }
       }
       
-    else if(req.method === 'DELETE'){
+    else if(req.method === "DELETE"){
         const db = client.db();
         const {postId} = req.body;
         const objectId = new ObjectId(postId)
@@ -86,7 +84,8 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
               client.close()
             }
           } catch (error) {
-            res.status(500).json({ message: "Error deleting post" });
+            console.error(error);
+            res.status(500).json({ message: 'Error deleting post.' });
             client.close()
           }
 

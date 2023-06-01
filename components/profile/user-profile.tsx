@@ -72,10 +72,10 @@ function UserProfile(props: UserProfileProps) {
     setShowPosts(true)
   }
 
-  const friends = useFriendList(props.username)
+  const friends = useFriendList(props.username, [])
   useEffect(() =>
   setFriendList(friends)
-  ,[friends])
+  ,[friends, props.username])
 
 
   function selectImageHandler(e:React.ChangeEvent<HTMLInputElement>) {

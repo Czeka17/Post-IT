@@ -1,4 +1,4 @@
-import React,{ useEffect, useState, useRef } from "react";
+import React,{ useEffect, useState} from "react";
 import classes from "./chat.module.css";
 import { useSession } from "next-auth/react";
 import axios from "axios";
@@ -155,7 +155,7 @@ interface EventData {
               alt="User Avatar"
               className={classes.avatar}
             />
-            <div className={classes.messageContent}>
+            <div className={`${classes.messageContent} ${session?.user?.name === message.user ? classes.currentUserMessage : ''}`}>
               <div className={classes.messageHeader}>
                 <strong className={classes.userName}>{message.user}</strong>
                 <span className={classes.time}>

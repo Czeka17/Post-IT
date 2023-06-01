@@ -63,6 +63,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 100%;
   }
   
   .messageHeader {
@@ -113,10 +114,12 @@
     background-color: #222831;
     color: #fff;
     cursor: pointer;
+    transition: all 0.4s;
   }
   
   .sendButton:hover {
-    background-color: #0d6efd;
+    background-color: white;
+    color:#222831;
   }
   
 
@@ -129,12 +132,15 @@
     border-radius: 50%;
     background-color: #00ADB5;
     padding: 1em;
+    margin: 1em;
     cursor: pointer;
   }
   .chatHideHandler{
     position: fixed;
     top: 0;
     right: 0;
+    padding: 1em;
+    margin: 0 1em;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -144,28 +150,12 @@
     fill: white;
     font-size: 2rem;
   }
+  .currentUserMessage{
+    order: -1;
+  }
 
   @media(max-width: 1024px){
     .chat{
       width: 100%;
     }
-}
-
-.chat::-webkit-scrollbar {
-  width: 10px;
-}
-
-/* Track */
-.chat::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-/* Handle */
-.chat::-webkit-scrollbar-thumb {
-  background: red;
-}
-
-/* Handle on hover */
-.chat::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }
