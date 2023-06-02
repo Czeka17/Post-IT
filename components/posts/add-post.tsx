@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import classes from './add-post.module.css';
 import { Cloudinary } from '@cloudinary/url-gen';
 import FileResizer from 'react-image-file-resizer';
-import {FiDownload, FiLoader} from 'react-icons/fi'
+import {FiDownload} from 'react-icons/fi'
 const cloudName = 'dmn5oy2qa';
 
 const cld = new Cloudinary({ cloud: { cloudName: cloudName } });

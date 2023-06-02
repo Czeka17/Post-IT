@@ -1,4 +1,4 @@
-import React,{ useEffect, useState} from "react";
+import React,{ useEffect, useState, useRef} from "react";
 import classes from "./chat.module.css";
 import { useSession } from "next-auth/react";
 import axios from "axios";
@@ -29,6 +29,7 @@ interface EventData {
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [showChat, setShowChat] = useState(false)
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   function chatShowHandler(){
       setShowChat(true)
   }
@@ -140,14 +141,19 @@ interface EventData {
     });
   };
   
-  
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   return (
  <section>
      <div className={`${classes.chat} ${showChat ? classes.chatShow : classes.chatHide}`}>
-
-
-      <div className={classes.messageContainer}>
+      <div className={classes.messageContainer} ref={chatContainerRef}>
+      <div className={classes.chatBorder}>
+      <button className={classes.chatHideHandler} onClick={chatHideHandler}>X</button>
+      </div>
         {messages?.map((message) => (
           <div key={message.id} className={classes.message}>
             <img
@@ -178,7 +184,6 @@ interface EventData {
           Send
         </button>
       </div>
-      <button className={classes.chatHideHandler} onClick={chatHideHandler}>X</button>
     </div>
      {!showChat && <button className={`${classes.chatHandler} ${showChat ? classes.chatShow : classes.chatHide}`} onClick={chatShowHandler}><BsFillChatDotsFill className={classes.chatIcon} /></button>}
  </section>

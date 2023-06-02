@@ -103,10 +103,13 @@ function addCommentHandler(commentData:any){
     })
 }
 
+if(isLoading){
+  return <div className={classes.loading}><p>POST<span>IT</span></p></div>
+}
 
 console.log(posts)
 return <section className={classes.postContainer}>
-    {isLoading ? <div className={classes.loading}><p>POST<span>IT</span></p></div> :<div>
+    <div>
     <div className={classes.display}>
         <button onClick={ShowPosts}><HiOutlineClipboardList/></button>
         <button onClick={ShowFriendList}><FaUserFriends /></button>
@@ -120,7 +123,7 @@ return <section className={classes.postContainer}>
     ))}
 </ul>
 {!showPosts && <UsersList />}
-    </div>}
+    </div>
 </section>
 }
 

@@ -11,8 +11,8 @@
 .postContainer{
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    /* justify-content: center;
+    align-items: center; */
     max-width: 45%;
     width: 45%;
     background: #393E46;
@@ -32,13 +32,14 @@
   margin-bottom: 2em;
 }
 .loading {
-    background-color: white;
     z-index: 50;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
     font-size: 2rem;
     letter-spacing: 0.1em;
+    color: white;
   }
   
   .loading p {
@@ -47,7 +48,7 @@
   }
   
 .loading span{
-    background: #146C94;
+    background: #00ADB5;
     padding: 0.5em;
 }
 

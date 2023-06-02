@@ -27,9 +27,9 @@ return (
             <h2>Friend List</h2>
         </div>
         <div>
-            <ul>
+            <ul className={classes.list}>
                 {friendList.map((friend: Friend) => (
-                    <li key={friend._id}><Link href={`/${encodeURIComponent(friend.name)}`} className={classes.list}><img src={friend.image} /><p>{friend.name}</p></Link></li>
+                    <li key={friend._id}><Link href={`/${encodeURIComponent(friend.name)}`} className={classes.userlist}><img src={friend.image} /><p>{friend.name}</p></Link></li>
                 ))}
             </ul> 
         </div>

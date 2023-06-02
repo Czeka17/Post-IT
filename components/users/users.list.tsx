@@ -43,13 +43,21 @@ function UsersList() {
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    const handleScrollAndTouchMove = () => {
+      handleScroll();
+    };
+
+    window.addEventListener("scroll", handleScrollAndTouchMove);
+    window.addEventListener("touchmove", handleScrollAndTouchMove);
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScrollAndTouchMove);
+      window.removeEventListener("touchmove", handleScrollAndTouchMove);
     };
   }, []);
   return (
     <section>
+      <h2 className={classes.listName}>User list</h2>
         <div>
           <ul className={classes.userlist}>
             {users.map((user) => (

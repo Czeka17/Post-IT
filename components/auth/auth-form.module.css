@@ -15,7 +15,7 @@
 }
 .auth {
     max-width: 30rem;
-    width: 95%;
+    width: 100%;
     margin: 2em;
     text-align: center;
     border-radius: 8px;
@@ -40,13 +40,14 @@
 }
 
 .control input {
-    padding: 0.5em 2em;
+    padding: 0.5em 1em;
     border-radius: 8px;
     border-color: #F6F1F1;
     text-align: center;
     color: #F6F1F1;
     font-weight: bold;
     background-color: #146b9400;
+    width: 50%;
 }
 .control label {
     margin: 0.5em;
@@ -87,4 +88,10 @@
     border-color: #146C94;
     background-color: #F6F1F1;
     color: #146C94;
+}
+
+@media(max-width:1024px){
+    .introduction{
+        display: none;
+    }
 }

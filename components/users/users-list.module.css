@@ -3,6 +3,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-top: 2em;
+    padding: 2em;
     width: 100%;
+    min-width: 100%;
+}
+.listName{
+    text-align: center;
+    color:white
 }

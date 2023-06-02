@@ -12,7 +12,16 @@
   animation-duration: 2s;
   animation-fill-mode: forwards;
 }
-
+.chatBorder{
+  position: fixed;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #444952;
+}
 @keyframes slideIn {
   from {
     transform: translateX(-100%);
@@ -44,6 +53,7 @@
     flex-grow: 1;
     overflow-y: auto;
     padding: 10px;
+    margin-top: 2.5em;
   }
   
   .message {
@@ -136,20 +146,24 @@
     cursor: pointer;
   }
   .chatHideHandler{
-    position: fixed;
-    top: 0;
-    right: 0;
-    padding: 1em;
-    margin: 0 1em;
     background: transparent;
     border: none;
-    cursor: pointer;
     color: white;
+    cursor: pointer;
+    margin: 0.3em;
+  }
+  .chatHideHandler:hover{
+    transform: scale(1.2);
   }
   .chatIcon{
     fill: white;
     font-size: 2rem;
+    transition: all 0.3s;
   }
+  .chatHandler:hover .chatIcon {
+    font-size: 2.2rem;
+  }
+  
   .currentUserMessage{
     order: -1;
   }
