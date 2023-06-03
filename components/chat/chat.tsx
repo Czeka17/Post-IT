@@ -6,7 +6,7 @@ import Pusher from "pusher-js";
 import {BsFillChatDotsFill} from 'react-icons/bs'
 
 interface Message {
-  id: string;
+  _id: string;
   user: string;
   message: string;
   image: string;
@@ -29,7 +29,15 @@ interface EventData {
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [showChat, setShowChat] = useState(false)
+  const prevScrollHeightRef = useRef<number | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const MESSAGES_PER_PAGE = 10;
+
+
   function chatShowHandler(){
       setShowChat(true)
   }
@@ -38,21 +46,47 @@ interface EventData {
   }
   useEffect(() => {
     if (status === "authenticated") {
-      fetchMessages();
+      fetchInitialMessages(currentPage);
       setupWebSocket();
     }
   }, [status]);
 
-  const fetchMessages = async () => {
+  const fetchInitialMessages = async (page: number) => {
+    setLoading(true);
     try {
-      const response = await fetch("/api/chat/chat");
-      const data = await response.json();
+      const response = await axios.get(`/api/chat/chat?page=${page}`);
+      const data = response.data;
       setMessages(data.messages);
+      if (data.messages.length < MESSAGES_PER_PAGE) {
+        setHasMoreMessages(false);
+      }
     } catch (error) {
-      console.error("Error fetching messages:", error);
+      console.error("Error fetching initial messages:", error);
     }
+    setLoading(false);
   };
+  
 
+  const fetchMoreMessages = async () => {
+    setLoading(true);
+    try {
+      const nextPage = currentPage + 1;
+      const response = await axios.get(`/api/chat/chat?page=${nextPage}`);
+      const data = response.data;
+      const newMessages = data.messages;
+      setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+      if (newMessages.length < MESSAGES_PER_PAGE) {
+        setHasMoreMessages(false);
+      }
+      setCurrentPage(nextPage);
+    } catch (error) {
+      console.error("Error fetching more messages:", error);
+    }
+    setLoading(false);
+  };
+  
+  
+  
   const sendMessage = async () => {
 	if (!messageInput.trim()) {
 	  return;
@@ -60,7 +94,7 @@ interface EventData {
   
 	if(session?.user?.name && session.user.image){
 	const newMessage: Message = {
-	  id: "", 
+	  _id: "", 
 	  user: session.user.name,
 	  message: messageInput,
 	  image: session.user.image,
@@ -70,7 +104,7 @@ interface EventData {
 	try {
 	  await axios.post("/api/chat/chat", newMessage);
 	  setMessageInput("");
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    setMessages((prevMessages) => [newMessage,...prevMessages]);
 	} catch (error) {
 	  console.error("Error sending message:", error);
 	}
@@ -108,13 +142,13 @@ interface EventData {
   
     channel.bind("new-message", (data: EventData) => {
       setMessages((prevMessages) => {
-        const existingMessage = prevMessages.find((message) => message.id === data.id);
+        const existingMessage = prevMessages.find((message) => message._id === data.id);
         if (existingMessage) {
           return prevMessages;
         }
     
         const newMessage: Message = {
-          id: data.id,
+          _id: data.id,
           user: data.user || '',
           message: data.message,
           image: data.image || '',
@@ -126,7 +160,7 @@ interface EventData {
     if (!isCurrentUserMessage) {
       return [...prevMessages, newMessage];
     } else {
-      return prevMessages.filter((message) => message.id !== data.id);
+      return prevMessages.filter((message) => message._id !== data.id);
     }
   });
 });
@@ -142,33 +176,57 @@ interface EventData {
   };
   
   useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    if (chatContainerRef.current && prevScrollHeightRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight - prevScrollHeightRef.current;
     }
   }, [messages]);
 
+  const handleScroll = () => {
+    if (
+      chatContainerRef.current &&
+      chatContainerRef.current.scrollTop === 0 &&
+      hasMoreMessages &&
+      !loading
+    ) {
+      prevScrollHeightRef.current = chatContainerRef.current.scrollHeight;
+      fetchMoreMessages();
+    }
+  };
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      prevScrollHeightRef.current = chatContainerRef.current.scrollHeight;
+    }
+  }, []);
   return (
  <section>
      <div className={`${classes.chat} ${showChat ? classes.chatShow : classes.chatHide}`}>
-      <div className={classes.messageContainer} ref={chatContainerRef}>
+      <div className={classes.messageContainer} ref={chatContainerRef} onScroll={handleScroll}>
       <div className={classes.chatBorder}>
       <button className={classes.chatHideHandler} onClick={chatHideHandler}>X</button>
       </div>
-        {messages?.map((message) => (
-          <div key={message.id} className={classes.message}>
+        {messages.slice().reverse().map((message) => (
+          <div key={message._id} className={classes.message}>
             <img
               src={message.image}
               alt="User Avatar"
               className={classes.avatar}
             />
-            <div className={`${classes.messageContent} ${session?.user?.name === message.user ? classes.currentUserMessage : ''}`}>
-              <div className={classes.messageHeader}>
-                <strong className={classes.userName}>{message.user}</strong>
-                <span className={classes.time}>
+            <div className={`${classes.messageContent} ${session?.user?.name === message.user ? classes.currentUser : ''}`}>
+              {session?.user?.name === message.user ? <div className={classes.messageHeader}>
+              <span className={classes.time}>
                   {formatTimeElapsed(message.timestamp)}
                 </span>
-              </div>
-              <div className={classes.messageText}>{message.message}</div>
+                <strong className={classes.userName}>{message.user}</strong>
+              </div> :
+              <div className={classes.messageHeader}>
+              <strong className={classes.userName}>{message.user}</strong>
+              <span className={classes.time}>
+                {formatTimeElapsed(message.timestamp)}
+              </span>
+            </div>}
+              <div className={`${classes.messageText} ${session?.user?.name === message.user ? classes.currentUserMessage : ''}`}>{message.message}</div>
             </div>
           </div>
         ))}

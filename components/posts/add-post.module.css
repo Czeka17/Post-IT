@@ -9,12 +9,14 @@
     min-width: 100%;
     height: 100px;
     padding: 1em;
-
+    background: #444952;
+    color: #D0D0D0;
     border-radius: 8px;
     resize: none;
-    border: 2px solid #146C94;
+    border: 2px solid #00ADB5;
     transition: all 0.3s;
 }
+
 .buttons {
     display: flex;
     flex-direction: row;

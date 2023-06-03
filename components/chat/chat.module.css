@@ -52,12 +52,15 @@
   .messageContainer {
     flex-grow: 1;
     overflow-y: auto;
-    padding: 10px;
     margin-top: 2.5em;
+    padding: 5px;
+    scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
   }
   
   .message {
     display: flex;
+    justify-content: flex-start;
     align-items: flex-start;
     margin-bottom: 10px;
   }
@@ -66,14 +69,13 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin:0 10px;
   }
   
   .messageContent {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
   }
   
   .messageHeader {
@@ -84,7 +86,7 @@
   
   .userName {
     font-weight: bold;
-    margin-right: 5px;
+    margin: 0 5px ;
     color: white;
   }
   
@@ -99,6 +101,7 @@
     border-radius: 16px;
     word-wrap: break-word;
     max-width: 250px;
+    text-align: left;
   }
   
   .inputContainer {
@@ -114,6 +117,7 @@
     border: none;
     border-radius: 8px;
     outline: none;
+    width: 80%;
   }
   
   .sendButton {
@@ -128,8 +132,7 @@
   }
   
   .sendButton:hover {
-    background-color: white;
-    color:#222831;
+    background-color: #444952;
   }
   
 
@@ -164,12 +167,30 @@
     font-size: 2.2rem;
   }
   
-  .currentUserMessage{
+  .currentUser{
     order: -1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 100%;
+  }
+  .currentUserMessage{
+    text-align: right;
   }
 
   @media(max-width: 1024px){
     .chat{
       width: 100%;
     }
+}
+
+.messageContainer::-webkit-scrollbar{
+  opacity: 0;
+  width: 10px;
+  transition: opacity 0.3s ease-in-out;
+}
+.messageContainer:hover::-webkit-scrollbar-thumb{
+  background:#444952;
+  border-radius: 25px;
+  transition: background 0.3s ease-in-out;
 }

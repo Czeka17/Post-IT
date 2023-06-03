@@ -53,7 +53,6 @@ function NewPost(props: NewPostProps) {
       const fileExtension = file.name.split('.').pop()?.toLowerCase();
   
       if (fileExtension === 'mp4' || fileExtension === 'webm') {
-        // Handle video upload using Cloudinary API
         const formData = new FormData();
         formData.append('file', file);
         formData.append('upload_preset', 'ewqicijo');
@@ -74,7 +73,7 @@ function NewPost(props: NewPostProps) {
             setIsLoading(false);
           });
       } else if (fileExtension === 'gif') {
-        // Handle GIF upload using Cloudinary API
+   
         const formData = new FormData();
         formData.append('file', file);
         formData.append('upload_preset', 'ewqicijo');
@@ -198,7 +197,7 @@ function NewPost(props: NewPostProps) {
             </div>
           )}
           <textarea
-            placeholder="How do you feel today?"
+            placeholder="How are you?"
             id="post"
             rows={5}
             ref={messageInputRef}

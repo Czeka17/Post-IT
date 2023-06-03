@@ -115,6 +115,8 @@
     padding: 1em;
     resize: none;
     border: 2px solid #00ADB5;
+    background-color: #444952;
+    color: #D0D0D0;
     border-radius: 10px;
 }
 .commentForm button {
@@ -145,6 +147,57 @@
     animation: fillHeart 0.5s forwards; 
   }
 
+  .kebabMenu{
+    padding: 1em;
+    position: relative;
+  }
+  .kebabMenu svg{
+    cursor: pointer;
+    transition: fill 0.3s;
+    padding: 0.2em;
+    font-size: 2.4rem;
+    border-radius: 50%;
+  }
+  .kebabMenu svg:hover{
+    fill: #00ADB5;
+    background: #444952;
+  }
+  .options{
+    position: absolute;
+    top: 70%;
+    right: 50%;
+    text-align: center;
+    border-radius: 10px;
+    z-index: 10;
+    padding: 0.5em;
+    background-color: #393E46;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  }
+  .optionButton{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #393E46;
+    border-radius: 100px;
+    padding: 0.5em;
+    margin: 0.5em 0;
+    border: none;
+    color: #EEEEEE;
+    transition: color 0.3s;
+    cursor: pointer;
+    width: 100%;
+  }
+  .optionButton:hover{  
+    color: #00ADB5;
+    background: #444952;
+  }
+  .options hr{
+    margin: 0;
+    padding: 1px;
+    border: none;
+    background-color: #00ADB5;
+  }
 
 @keyframes fillHeart {
     0% {
