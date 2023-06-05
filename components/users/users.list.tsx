@@ -8,11 +8,16 @@ interface user {
     name: string;
     image: string;
   }
-
+  function debounce(func: () => void, delay: number) {
+    let timeoutId: NodeJS.Timeout;
+    return function () {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(func, delay);
+    };
+  }
 function UsersList() {
   const { data: session, status } = useSession();
   const [friendList, setFriendList] = useState<user[]>([]);
-  // const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState<user[]>([]);
   const [page, setPage] = useState<number>(1);
   const listRef = useRef<HTMLUListElement>(null);
@@ -24,6 +29,11 @@ function UsersList() {
   ,[friends])
  }
  
+ const debouncedScrollHandler = useRef(
+  debounce(() => {
+    handleScroll();
+  }, 500)
+).current;
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -47,18 +57,14 @@ function UsersList() {
 
 
   useEffect(() => {
-    const handleScrollAndTouchMove = () => {
-      handleScroll();
-    };
-
-    window.addEventListener("scroll", handleScrollAndTouchMove);
-    window.addEventListener("touchmove", handleScrollAndTouchMove);
+    window.addEventListener("scroll", debouncedScrollHandler);
+    window.addEventListener("touchmove", debouncedScrollHandler);
 
     return () => {
-      window.removeEventListener("scroll", handleScrollAndTouchMove);
-      window.removeEventListener("touchmove", handleScrollAndTouchMove);
+      window.removeEventListener("scroll", debouncedScrollHandler);
+      window.removeEventListener("touchmove", debouncedScrollHandler);
     };
-  }, []);
+  }, [debouncedScrollHandler]);
   return (
     <section>
       <h2 className={classes.listName}>User list</h2>

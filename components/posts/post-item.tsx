@@ -167,11 +167,11 @@ function PostItem(props: PostItemProps) {
 			console.error(error);
 		}
 	};
-	const deletePostHandler = async () => {
+	const deletePostHandler = async (postId:string) => {
 		try {
 			const response = await fetch("/api/posts/addPost", {
 				method: "DELETE",
-				body: JSON.stringify({ postId: props.id }),
+				body: JSON.stringify({postId:postId}),
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -238,7 +238,7 @@ function PostItem(props: PostItemProps) {
 								<div className={classes.options}>
 									<button className={classes.optionButton}><AiOutlineEdit />Edit</button>
                   <hr/>
-									<button className={classes.optionButton} onClick={deletePostHandler}><BsTrash />Delete</button>
+									<button className={classes.optionButton} onClick={() =>deletePostHandler(props.id)}><BsTrash />Delete</button>
 								</div>
 							)}
 						</div>)}

@@ -221,7 +221,7 @@ function NewPost(props: NewPostProps) {
     <div className={classes.bar10}></div>
     <div className={classes.bar11}></div>
     <div className={classes.bar12}></div>
-</div> <p>file</p></div> }
+</div> <p>loading file...</p></div> }
         <div className={classes.buttons}>
           <label htmlFor="file" className={classes.fileButton}>
             Add file

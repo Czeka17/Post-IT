@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 
 async function handler(req:NextApiRequest,res:NextApiResponse){
 
+
     let client;
 
     try{
@@ -82,7 +83,7 @@ res.status(200).json({ posts });
         }
       }
       
-    else if(req.method === "DELETE"){
+    else if(req.method === 'DELETE'){
         const db = client.db();
         const {postId} = req.body;
         const objectId = new ObjectId(postId)

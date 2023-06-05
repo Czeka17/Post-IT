@@ -1,5 +1,4 @@
-import { RootState } from '../../store/friends';
-import { setFriendList } from '../../store/friends';
+import { RootState, addFriend, removeFriend } from '../../store/friends';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import classes from './user.module.css'
@@ -59,33 +58,29 @@ function User(props:UserProps){
     const [newFriendList, setNewFriendList] = useState<Friend[]>(props.friendList);
     const dispatch = useDispatch();
     const friendList = useSelector((state: RootState) => state.friendList);
-  
-    useEffect(() => {
-      dispatch(setFriendList(newFriendList));
-    }, [dispatch, newFriendList]);
-    useEffect(() => {
-      setNewFriendList(props.friendList);
-    }, [props.friendList]);
+
+    useEffect(() =>{
+      setNewFriendList([...props.friendList])
+    },[])
 
     async function friendListHandler(){
       if(!session || !session.user){
         return
       }
       const name = session.user.name as string;
-      if(newFriendList.map(friend => friend.name).includes(props.name)){
-        const result = await deleteUserHandler(name, props.name)
-        const friendToDelete = newFriendList.findIndex(friend => friend.name === props.name)
-        const updatedFriendList = [...newFriendList.slice(0,friendToDelete), ...newFriendList.slice(friendToDelete + 1)]
-        setNewFriendList(updatedFriendList)
-        dispatch(setFriendList(updatedFriendList));
-        return result
+      if (newFriendList.map(friend => friend.name).includes(props.name)) {
+        await deleteUserHandler(name, props.name);
+        const updatedFriendList = newFriendList.filter(
+          (friend) => friend.name !== props.name
+        );
+        setNewFriendList(updatedFriendList);
+        dispatch(removeFriend(props.name));
       }else{
-        const result = await addUserHandler(name, props.name)
-        const newUser: Friend = { _id:'', name: props.name, image: props.userImage };
-        const updatedFriendList = [...newFriendList, newUser]
-        setNewFriendList(updatedFriendList)
-        dispatch(setFriendList(updatedFriendList));
-        return result;
+        await addUserHandler(name, props.name);
+        const newUser: Friend = { _id: '', name: props.name, image: props.userImage };
+        const updatedFriendList = [...newFriendList, newUser];
+        setNewFriendList(updatedFriendList);
+        dispatch(addFriend(newUser));
       }
     }
       const isFriend = newFriendList.some((friend) => friend.name === props.name);

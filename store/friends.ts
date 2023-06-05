@@ -1,4 +1,4 @@
-import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, configureStore } from '@reduxjs/toolkit';
 
 interface Friend {
   _id: string;
@@ -21,15 +21,21 @@ const friendSlice = createSlice({
     setFriendList: (state, action: PayloadAction<Friend[]>) => {
       state.friendList = action.payload;
     },
+    addFriend: (state, action: PayloadAction<Friend>) => {
+      state.friendList.push(action.payload);
+    },
+    removeFriend: (state, action: PayloadAction<string>) => {
+      state.friendList = state.friendList.filter(
+        (friend) => friend.name !== action.payload
+      );
+    },
   },
 });
 
-export const { setFriendList } = friendSlice.actions;
-
-const reducer = friendSlice.reducer;
+export const { setFriendList, addFriend, removeFriend } = friendSlice.actions;
 
 const store = configureStore({
-  reducer,
+  reducer: friendSlice.reducer,
 });
 
 export default store;

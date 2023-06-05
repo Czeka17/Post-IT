@@ -72,10 +72,26 @@ function UserProfile(props: UserProfileProps) {
     setShowPosts(true)
   }
 
-  const friends = useFriendList(props.username, [])
-  useEffect(() =>
-  setFriendList(friends)
-  ,[friends, props.username])
+  useEffect(() => {
+    const fetchFriendList = async () => {
+      const response = await fetch('/api/user/friend-list', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: props.username }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setFriendList(data.filteredFriendUsers);
+      }
+    };
+  
+    if (friendList.length === 0 || props.username !== friendList[0]?.name) {
+      fetchFriendList();
+    }
+  }, [props.username, friendList]);
 
 
   function selectImageHandler(e:React.ChangeEvent<HTMLInputElement>) {

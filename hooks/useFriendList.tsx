@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
-
-const useFriendList = (username:string, initialFriendList = []) => {
-  const [friendList, setFriendList] = useState(initialFriendList);
+interface Friend{
+  name: string,
+  _id: string,
+  image: string
+}
+const useFriendList = (username:string) => {
+  const [friendList, setFriendList] = useState<Friend[]>([]);
 
   useEffect(() => {
     const fetchFriendList = async () => {
