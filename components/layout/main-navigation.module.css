@@ -56,3 +56,17 @@
   .header img:hover{
     opacity: 0.75;
   }
+
+  .logout{
+    border: none;
+    background: transparent;
+  }
+  .logout svg{
+    color: #D0D0D0;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+  }
+  .logout svg:hover{
+    color: red;
+  }

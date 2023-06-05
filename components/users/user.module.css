@@ -36,3 +36,14 @@
   .user button {
     margin-left: 1em; 
   }
+
+  .actions button{
+    background: transparent;
+    border: none;
+    padding: 2em;
+    cursor: pointer;
+  }
+  .actions button svg{
+    color: #D0D0D0;
+    font-size: 2rem;
+  }

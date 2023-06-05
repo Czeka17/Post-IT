@@ -16,7 +16,7 @@ async function handler(req:NextApiRequest, res:NextApiResponse) {
       const db = client.db();
       const page = parseInt(req.query.page as string, 10) || 1; 
       const username = req.query.username
-      const usersPerPage = 5;
+      const usersPerPage = 8;
       const skip = (page - 1) * usersPerPage;
 
       const users = await db

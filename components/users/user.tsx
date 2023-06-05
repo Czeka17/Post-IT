@@ -1,13 +1,22 @@
+import { RootState } from '../../store/friends';
+import { setFriendList } from '../../store/friends';
+import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import classes from './user.module.css'
 import { useSession } from 'next-auth/react';
 import {useState, useEffect} from 'react'
+import {AiOutlineUserAdd,AiOutlineUserDelete} from 'react-icons/ai'
+
 interface UserProps {
     name: string;
-    friendList: { name: string }[];
+    friendList: Friend[];
     userImage: string;
   }
-  
+  interface Friend {
+    _id: string;
+    name: string;
+    image: string;
+  }
 interface user {
   name: string;
 }
@@ -47,11 +56,16 @@ interface user {
   };
 function User(props:UserProps){
     const { data: session, status } = useSession()
-    const [newFriendList, setNewFriendList] = useState<user[]>([])
-      
-    useEffect(() =>{
-      setNewFriendList([...props.friendList]);
-    },[props.friendList])
+    const [newFriendList, setNewFriendList] = useState<Friend[]>(props.friendList);
+    const dispatch = useDispatch();
+    const friendList = useSelector((state: RootState) => state.friendList);
+  
+    useEffect(() => {
+      dispatch(setFriendList(newFriendList));
+    }, [dispatch, newFriendList]);
+    useEffect(() => {
+      setNewFriendList(props.friendList);
+    }, [props.friendList]);
 
     async function friendListHandler(){
       if(!session || !session.user){
@@ -63,12 +77,14 @@ function User(props:UserProps){
         const friendToDelete = newFriendList.findIndex(friend => friend.name === props.name)
         const updatedFriendList = [...newFriendList.slice(0,friendToDelete), ...newFriendList.slice(friendToDelete + 1)]
         setNewFriendList(updatedFriendList)
+        dispatch(setFriendList(updatedFriendList));
         return result
       }else{
         const result = await addUserHandler(name, props.name)
-        const newUser = { name: props.name };
-        const updatedFriendList: {name:string}[] = [...newFriendList, newUser]
+        const newUser: Friend = { _id:'', name: props.name, image: props.userImage };
+        const updatedFriendList = [...newFriendList, newUser]
         setNewFriendList(updatedFriendList)
+        dispatch(setFriendList(updatedFriendList));
         return result;
       }
     }
@@ -80,11 +96,11 @@ function User(props:UserProps){
         <h3>{props.name}</h3>
         </div>
         </Link>
-        <div>
+        <div className={classes.actions}>
         {isFriend ? (
-          <button onClick={friendListHandler}>Unfollow</button>
+          <button onClick={friendListHandler}><AiOutlineUserDelete/></button>
         ) : (
-          <button onClick={friendListHandler}>Follow</button>
+          <button onClick={friendListHandler}><AiOutlineUserAdd/></button>
         )}
         </div>
     </li>

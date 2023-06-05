@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import User from "./user";
 import classes from "./users-list.module.css";
 import { useSession } from "next-auth/react";
@@ -15,6 +15,7 @@ function UsersList() {
   // const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState<user[]>([]);
   const [page, setPage] = useState<number>(1);
+  const listRef = useRef<HTMLUListElement>(null);
 
  if(session && session?.user?.name){
   const friends = useFriendList(session.user.name)
@@ -35,12 +36,15 @@ function UsersList() {
   }, [page]);
 
   const handleScroll = () => {
-    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-
+    const { scrollTop, clientHeight, scrollHeight } =
+      (listRef.current as HTMLElement) || {};
+  
     if (scrollTop + clientHeight >= scrollHeight) {
       setPage((prevPage) => prevPage + 1);
     }
   };
+  
+
 
   useEffect(() => {
     const handleScrollAndTouchMove = () => {
@@ -59,7 +63,7 @@ function UsersList() {
     <section>
       <h2 className={classes.listName}>User list</h2>
         <div>
-          <ul className={classes.userlist}>
+          <ul className={classes.userlist} ref={listRef}>
             {users.map((user) => (
               <User key={user._id} name={user.name} userImage={user.image} friendList={friendList} />
             ))}

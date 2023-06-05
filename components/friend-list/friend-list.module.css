@@ -3,7 +3,8 @@
     height: 100%;
     top: 5em;
     right: 0;
-    padding: 0 2em;
+    padding:1em 2em;
+    padding-bottom: 4em;
     margin-bottom: 2em;
     background-color: #393E46;
     color: #D0D0D0;
@@ -18,7 +19,7 @@
     flex-direction: row;
     align-items: center;
     padding: 0.5em;
-    margin: 2px;
+    margin:2px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: 0.5s;
 }
