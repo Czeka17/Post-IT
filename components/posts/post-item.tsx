@@ -6,6 +6,7 @@ import { AiOutlineSend, AiFillHeart, AiOutlineEdit, AiOutlineComment } from "rea
 import {BsTrash} from 'react-icons/bs'
 import { GoKebabHorizontal } from "react-icons/go";
 import Link from "next/link";
+import PostModal from "../layout/post-modal";
 
 interface Comment {
 	userId: string;
@@ -44,11 +45,18 @@ function PostItem(props: PostItemProps) {
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [showComments, setShowComments] = useState(false);
 	const [likesCount, setLikesCount] = useState(props.likes.length);
+	const [showModal, setShowModal] = useState(false)
 	const [isLikedByUser, setIsLikedByUser] = useState(
 		props.likes.some((item) => item.likedBy === session?.user?.name)
 	);
 	const [showOptions, setShowOptions] = useState(false);
 
+	function handleShowModal(){
+		setShowModal(true)
+	}
+	function handleHideModal(){
+		setShowModal(false)
+	}
 	const handleKebabMenuClick = () => {
 		setShowOptions(!showOptions);
 	};
@@ -236,7 +244,7 @@ function PostItem(props: PostItemProps) {
 							<GoKebabHorizontal onClick={handleKebabMenuClick} />
 							{showOptions && (
 								<div className={classes.options}>
-									<button className={classes.optionButton}><AiOutlineEdit />Edit</button>
+									<button className={classes.optionButton} onClick={handleShowModal}><AiOutlineEdit />Edit</button>
                   <hr/>
 									<button className={classes.optionButton} onClick={() =>deletePostHandler(props.id)}><BsTrash />Delete</button>
 								</div>
@@ -314,6 +322,7 @@ function PostItem(props: PostItemProps) {
 					/>
 				)}
 			</div>
+				{showModal && <PostModal image={props.image} title={props.title} id={props.id} onHideModal={handleHideModal} />}
 		</li>
 	);
 }

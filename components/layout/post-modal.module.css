@@ -1,0 +1,85 @@
+.postModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+  
+  .postContent {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #222831;
+    padding: 3em;
+    border-radius: 8px;
+  }
+  .postContent textarea {
+    margin-bottom: 1em;
+    width: 100%;
+    color: #D0D0D0;
+    background-color: #393E46;
+    border: none;
+    border-radius: 8px;
+    padding: 1em;
+    resize: none;
+  }
+  
+  .postContent video {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+  }
+  .closeButton{
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  .videoContainer{
+    position: relative;
+  }
+  .videoContainer button{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: transparent;
+    border: none;
+    color: red;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+  .videoContainer video{
+    transition: all 0.3s;
+  }
+  .imageContainer:hover img,
+  .videoContainer:hover video {
+    filter: brightness(50%);
+  }
+  
+  .file{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border: none;
+    background: transparent;
+    color: #00ADB5;
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+    padding: 0.5em;
+    cursor: pointer;
+  }
+
+  .fileButton{
+    position: relative;
+    cursor: pointer;
+    }
+    .file:hover{
+      transform: scale(1.1);
+    }

@@ -103,6 +103,20 @@ res.status(200).json({ posts });
             client.close()
           }
 
+    }else if(req.method === 'PATCH'){
+      const db = client.db()
+      const {postId, message, image} = req.body;
+      const objectId = new ObjectId(postId)
+      const postsCollection = db.collection('posts');
+      try{
+        const result = await postsCollection.findOneAndUpdate(
+          { _id: objectId },
+          { $set: { message: message, image:image} }
+        );
+        res.status(200).json({ message: 'Post updated successfully' });
+      } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+      }
     }
 
     client.close();
