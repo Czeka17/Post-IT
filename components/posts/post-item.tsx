@@ -2,7 +2,7 @@ import classes from "./post-item.module.css";
 import Comments from "./comments";
 import React, { useRef, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { AiOutlineSend, AiFillHeart, AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineSend, AiFillHeart, AiOutlineEdit, AiOutlineComment } from "react-icons/ai";
 import {BsTrash} from 'react-icons/bs'
 import { GoKebabHorizontal } from "react-icons/go";
 import Link from "next/link";
@@ -284,10 +284,10 @@ function PostItem(props: PostItemProps) {
 					</div>
 					<div className={classes.showComment}>
 						{showComments ? (
-							<button onClick={hideCommentsHandler}>Hide Comments</button>
+							<button onClick={hideCommentsHandler}><AiOutlineComment/> ({commentsLength})</button>
 						) : (
 							<button onClick={showCommentsHandler}>
-								Show comments ({commentsLength})
+								<AiOutlineComment/> ({commentsLength})
 							</button>
 						)}
 					</div>

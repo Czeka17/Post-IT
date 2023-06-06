@@ -8,7 +8,7 @@
     width: 100%;
     min-width: 100%;
     height: 100px;
-    padding: 1em;
+    padding: 1em 2em 2em 3em;
     background: #444952;
     color: #D0D0D0;
     border-radius: 8px;
@@ -17,18 +17,6 @@
     transition: all 0.3s;
 }
 
-.buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-.buttons button {
-    width: 50%;
-    margin: 0.5em 1em;
-    border-radius: 8px;
-    cursor: pointer;
-}
 .mediaPreview{
     margin: 0 2em;
     width: 30%;
@@ -38,25 +26,36 @@
     width: 100%;
     height: 100%;
 }
-
+.file{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border: none;
+  background: transparent;
+  color: #00ADB5;
+  font-size: 1.2rem;
+  transition: transform 0.3s;
+  padding: 0.5em;
+  cursor: pointer;
+}
 .fileInput {
-    position: absolute;
+  position: absolute;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   opacity: 0;
   width: 100%;
   height: 100%;
   cursor: pointer;
+  padding: 0.5em;
   }
   .fileButton{
-    position: relative;
-    display: inline-block;
-  padding: 8px 16px;
-  background-color: #ebebeb;
-  color: #333;
-  border-radius: 4px;
-  padding: 0.5em 2em;
+  position: relative;
   cursor: pointer;
+  }
+  .file:hover{
+    transform: scale(1.1);
   }
 
   .draggingOver{
@@ -67,6 +66,21 @@
   .textareaContainer {
     position: relative;
   }
+  .submitButton{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    color: #00ADB5;
+    cursor: pointer;
+    padding: 0.5em 1.2em;
+    transition: all 0.3s;
+}
+.submitButton:hover{
+  transform: scale(1.1);
+}
   
   .textareaContainer .dropIcon {
     position: absolute;

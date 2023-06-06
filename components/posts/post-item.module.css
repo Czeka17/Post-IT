@@ -105,6 +105,23 @@
     justify-content: center;
     align-items: center;
 }
+.showComment button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border: none;
+    color: #D0D0D0;
+    cursor: pointer;
+}
+.showComment button svg{
+    font-size: 1.6rem;
+    transition: transform 0.3s;
+}
+.showComment button svg:hover{
+    transform: scale(1.1);
+}
 .commentForm{
     position: relative;
     margin: 1em;
@@ -137,7 +154,7 @@
 .heart-icon{
     font-size: 1.5rem;
     cursor: pointer;
-    transition: all 1s;
+    transition: all 0.3s;
     fill: white;
 }
 .heart-icon:hover{

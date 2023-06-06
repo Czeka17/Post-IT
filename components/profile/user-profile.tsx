@@ -209,7 +209,7 @@ function addCommentHandler(commentData:any){
       ) : null}
       <h2>{props.username}</h2>
     </div>
-    <div className={classes.buttons}>
+    <div className={classes.actions}>
       <button onClick={ShowPosts}>
       <HiOutlineClipboardList/>
       </button>

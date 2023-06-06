@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import Pusher from "pusher-js";
 import {BsFillChatDotsFill} from 'react-icons/bs'
-
+import {AiOutlineCloseCircle} from 'react-icons/ai'
 interface Message {
   _id: string;
   user: string;
@@ -204,7 +204,7 @@ interface EventData {
      <div className={`${classes.chat} ${showChat ? classes.chatShow : classes.chatHide}`}>
       <div className={classes.messageContainer} ref={chatContainerRef} onScroll={handleScroll}>
       <div className={classes.chatBorder}>
-      <button className={classes.chatHideHandler} onClick={chatHideHandler}>X</button>
+      <button className={classes.chatHideHandler} onClick={chatHideHandler}><AiOutlineCloseCircle/></button>
       </div>
         {messages.slice().reverse().map((message) => (
           <div key={message._id} className={classes.message}>

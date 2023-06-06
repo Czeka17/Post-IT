@@ -3,6 +3,7 @@ import classes from './add-post.module.css';
 import { Cloudinary } from '@cloudinary/url-gen';
 import FileResizer from 'react-image-file-resizer';
 import {FiDownload} from 'react-icons/fi'
+import { AiOutlineSend,AiFillFileAdd } from "react-icons/ai";
 const cloudName = 'dmn5oy2qa';
 
 const cld = new Cloudinary({ cloud: { cloudName: cloudName } });
@@ -207,6 +208,13 @@ function NewPost(props: NewPostProps) {
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
           ></textarea>
+          <button className={classes.submitButton}><AiOutlineSend /></button>
+          <div className={classes.file}>
+          <label htmlFor="file" className={classes.fileButton}>
+            <AiFillFileAdd/>
+          <input type="file" name="file" ref={fileInputRef} onChange={addMediaHandler}className={classes.fileInput} ></input>
+          </label>
+          </div>
         </div>
         {isLoading && <div className={classes.loadingContainer}><div className={classes.loader}>
     <div className={classes.bar1}></div>
@@ -222,13 +230,6 @@ function NewPost(props: NewPostProps) {
     <div className={classes.bar11}></div>
     <div className={classes.bar12}></div>
 </div> <p>loading file...</p></div> }
-        <div className={classes.buttons}>
-          <label htmlFor="file" className={classes.fileButton}>
-            Add file
-          <input type="file" name="file" ref={fileInputRef} onChange={addMediaHandler}className={classes.fileInput} ></input>
-          </label>
-          <button>Add post</button>
-        </div>
         {media && media.type != null && (
           <div className={classes.mediaPreview}>
             {media.type === 'image' && <div><img src={media.url} alt="Post Media" /> <p onClick={deleteMedia}>X</p></div>}
