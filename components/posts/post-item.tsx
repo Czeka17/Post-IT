@@ -38,6 +38,8 @@ interface PostItemProps {
 		username: string;
 		postId: string;
 	}) => void;
+	onDeletePost: (postId: string) => void;
+	onUpdatePost: (postId: string, newTitle: string, newImage: { url: string | undefined, type: "image" | "video" | "gif" | undefined }) => void;
 }
 function PostItem(props: PostItemProps) {
 	const commentInputRef = useRef<HTMLTextAreaElement>(null);
@@ -50,7 +52,6 @@ function PostItem(props: PostItemProps) {
 		props.likes.some((item) => item.likedBy === session?.user?.name)
 	);
 	const [showOptions, setShowOptions] = useState(false);
-
 	function handleShowModal(){
 		setShowModal(true)
 	}
@@ -88,6 +89,7 @@ function PostItem(props: PostItemProps) {
 			username: user,
 			postId: props.id,
 		});
+		setComments(comments);
 
 		commentInputRef.current.value = "";
 	}
@@ -188,6 +190,7 @@ function PostItem(props: PostItemProps) {
 			if (response.ok) {
 				const data = await response.json();
 				console.log(data);
+				props.onDeletePost(postId);
 			} else {
 				const errorData = await response.json();
 				throw new Error(errorData.message || "Something went wrong!");
@@ -322,7 +325,7 @@ function PostItem(props: PostItemProps) {
 					/>
 				)}
 			</div>
-				{showModal && <PostModal image={props.image} title={props.title} id={props.id} onHideModal={handleHideModal} />}
+				{showModal && <PostModal image={props.image} title={props.title} id={props.id} onHideModal={handleHideModal} onUpdatePost={props.onUpdatePost} />}
 		</li>
 	);
 }

@@ -35,7 +35,6 @@ async function handler(req:NextApiRequest, res:NextApiResponse) {
 
     const commentList = post.commentList;
 
-    // Retrieve user information for each comment
     const usersCollection = db.collection("users");
     const commentsWithUser = await Promise.all(
       commentList.map(async (comment:Comment) => {

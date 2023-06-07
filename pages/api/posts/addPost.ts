@@ -18,7 +18,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
         const {name, message, image} = req.body;
 
         if(
-            !message || message.trim() === ''
+            !message && !image || message.trim() === '' && !image
         ){
             res.status(422).json({message: 'Invalid input.'});
             client.close();

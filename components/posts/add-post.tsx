@@ -10,7 +10,7 @@ interface NewPostProps {
 }
 
 interface PostData {
-  message: string;
+  message: string | undefined;
   name: string;
   userImage: string;
   image: {
@@ -27,14 +27,12 @@ function NewPost(props: NewPostProps) {
     setMedia(null);
   }
 
-  function sendPostHandler() {
-    if (!messageInputRef.current) {
-      return;
-    }
+  function sendPostHandler(e:any) {
+    e.preventDefault()
 
-    const enteredMessage = messageInputRef.current.value;
+    const enteredMessage = messageInputRef.current?.value;
 
-    if (!enteredMessage || enteredMessage.trim() === '') {
+    if (!enteredMessage && media === null || enteredMessage?.trim() === '' && media === null) {
       return;
     }
 
@@ -44,15 +42,15 @@ function NewPost(props: NewPostProps) {
       userImage: props.userImage,
       image: media,
     });
-
+    if(messageInputRef.current?.value){
     messageInputRef.current.value = '';
+    }
     setMedia(null);
   }
 
   function handleUpload(media: { type: 'image' | 'video' | 'gif'; url: string }) {
     setMedia(media);
   }
-
 
   return (
     <form onSubmit={sendPostHandler}>

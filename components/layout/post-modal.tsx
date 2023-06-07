@@ -10,6 +10,7 @@ interface PostItemProps {
 		type: "image" | "video" | "gif" | undefined;
 	};
     onHideModal: () => void;
+    onUpdatePost: (postId: string, newTitle: string, newImage: { url: string | undefined, type: "image" | "video" | "gif" | undefined }) => void;
 }
 
 
@@ -43,6 +44,7 @@ function PostModal(props: PostItemProps){
           .then(response => response.json())
           .then(data => {
             console.log(data);
+            props.onUpdatePost(props.id, inputValue, image);
             props.onHideModal();
           })
           .catch(error => {

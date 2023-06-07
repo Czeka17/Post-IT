@@ -34,7 +34,7 @@ interface Post {
     };
   }
   interface PostData {
-    message: string;
+    message: string | undefined;
     name: string;
     userImage: string;
     image: {
@@ -54,7 +54,24 @@ function PostsList(props: PostsListProps){
     const [currentPage, setCurrentPage] = useState(1);
     const sentinelRef = useRef<HTMLDivElement>(null);
     const name = session?.user?.name || ''
-
+    const updatePost = (postId: string, newTitle: string, newImage: { url: string | undefined, type: "image" | "video" | "gif" | undefined }) => {
+      setPosts(prevPosts => {
+        const postIndex = prevPosts.findIndex(post => post._id === postId);
+        if (postIndex === -1) {
+          return prevPosts;
+        }
+        
+        const updatedPosts = [...prevPosts];
+        updatedPosts[postIndex] = {
+          ...updatedPosts[postIndex],
+          message: newTitle,
+          image: newImage
+        };
+    
+        return updatedPosts;
+      });
+    };
+    
     function ShowFriendList(){
         setShowPosts(false)
       }
@@ -65,6 +82,11 @@ function PostsList(props: PostsListProps){
       function loadMorePosts() {
         setCurrentPage((prevPage) => prevPage + 1);
       }
+      const deletePostHandler = (postId:string) => {
+        setPosts((prevPosts) =>
+          prevPosts.filter((post) => post._id !== postId)
+        );
+      };
     useEffect(() => {
         fetch(`/api/posts/addPost?page=${currentPage}`).then(response => response.json()).then((data) => {
           setPosts((prevPosts) => [...prevPosts, ...data.posts]);
@@ -110,7 +132,17 @@ function addPostHandler(postData:PostData) {
         return response.json().then(data => {
             throw new Error(data.message || 'Something went wrong!')
           })
+    }).then(() => {
+      fetch(`/api/posts/addPost?page=${currentPage}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setPosts((prevPosts) => [...prevPosts, ...data.posts]);
+          setCurrentPage(1); 
+        });
     })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
 function addCommentHandler(commentData:any){
@@ -166,8 +198,8 @@ return <section className={classes.postContainer}>
         <NewPost onAddPost={addPostHandler} name={name} userImage={session?.user?.image || ''}/>
     </div>}
     <ul className={classes.list}>
-    {showPosts && posts.map((post) =>(
-        <PostItem key={post._id} id={post._id} title={post.message} image={post?.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList}/>
+    {showPosts && posts?.map((post) =>(
+        <PostItem key={post._id} id={post._id} title={post.message} image={post?.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList} onDeletePost={deletePostHandler} onUpdatePost={updatePost}/>
     ))}
 </ul>
 {!showPosts && <UsersList />}

@@ -64,13 +64,24 @@ function UserProfile(props: UserProfileProps) {
     })
     setIsLoading(false)
 }, [props.username])
-
+const deletePostHandler = (postId:string) => {
+  setPosts((prevPosts) =>
+    prevPosts.filter((post) => post._id !== postId)
+  );
+};
   function ShowFriendList(){
     setShowPosts(false)
   }
   function ShowPosts(){
     setShowPosts(true)
   }
+  const updatePost = (postId: string, newTitle: string, newImage: { url: string | undefined, type: "image" | "video" | "gif" | undefined }) => {
+    setPosts(prevPost => ({
+      ...prevPost,
+      title: newTitle,
+      image: newImage
+    }));
+  };
 
   useEffect(() => {
     const fetchFriendList = async () => {
@@ -220,7 +231,7 @@ function addCommentHandler(commentData:any){
     <div>
       {!isLoading && <ul className={classes.postsList}>
         {showPosts && posts?.map((post) =>(
-          <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList}/>
+          <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList} onDeletePost={deletePostHandler} onUpdatePost={updatePost}/>
         ))}
       </ul>}
       <ul className={classes.friendList}>{!showPosts && friendList?.map((friend) =>(
