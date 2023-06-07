@@ -1,12 +1,13 @@
-import { Fragment } from "react";
-import MainDisplay from "../components/layout/Main";
+import classes from './index.module.css'
 import { getSession } from 'next-auth/react';
 import { GetServerSidePropsContext } from "next";
-
+import PostsList from "../components/posts/post-list";
+import Chat from "../components/chat/chat";
 function HomePage() {
-return <Fragment>
-    <MainDisplay />
-</Fragment>
+return <section className={classes.position}>
+    <PostsList />
+        <Chat />
+</section>
 }
 
 

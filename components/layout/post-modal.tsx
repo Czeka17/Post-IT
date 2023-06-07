@@ -56,15 +56,16 @@ return(
           value={inputValue}
           onChange={handleChange}
         />
+        <div className={classes.actions}>
+        <button className={classes.file}>Add/Change file
         <div>
-        <button>Add/Change file</button>
-        <div className={classes.file}>
             <label htmlFor="file" className={classes.fileButton}>
               <AiFillFileAdd />
               <CloudinaryUploader onUpload={handleImageUpload} />
             </label>
           </div>
-        {props.image && <button onClick={handleImageDelete}>Delete file</button>}
+          </button>
+        {props.image && <button className={classes.deleteButton} onClick={handleImageDelete}>Delete file</button>}
         </div>
         {image &&
 					(image.type === "image" || image.type === "gif") ? (
@@ -73,6 +74,7 @@ return(
 								src={image.url}
 								alt={props.title}
 							/>
+              <button onClick={handleImageDelete}>X</button>
 						</div>
 					) : (
 						image &&
@@ -93,8 +95,8 @@ return(
 						)
 					)}
                     <button className={classes.closeButton} onClick={props.onHideModal}>X</button>
-                    <div>
-                        <button onClick={handleSubmit}>Submit</button>
+                    <div className={classes.submitContainer}>
+                        <button className={classes.submitButton} onClick={handleSubmit}>Submit</button>
                     </div>
         </div>
     </div>

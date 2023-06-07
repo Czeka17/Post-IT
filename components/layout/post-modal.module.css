@@ -9,6 +9,7 @@
     align-items: center;
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
+    padding: 1em;
   }
   
   .postContent {
@@ -37,10 +38,39 @@
     max-width: 500px;
     height: auto;
   }
+  .postContent img {
+    width: 100%;
+    max-width: 500px;
+    max-height: 25rem;
+    height: auto;
+  }
+  .actions{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+  }
   .closeButton{
     position: absolute;
     top: 0;
     right: 0;
+    padding: 1em;
+    border: none;
+    background: transparent;
+    color: #D0D0D0;
+    cursor: pointer;
+  }
+  .deleteButton{
+    background: transparent;
+    color: #00ADB5;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.5em;
+    transition: transform 0.3s;
+  }
+  .deleteButton:hover{
+    transform: scale(1.1);
   }
   .videoContainer{
     position: relative;
@@ -52,21 +82,21 @@
     background: transparent;
     border: none;
     color: red;
-    font-size: 2rem;
     cursor: pointer;
   }
   .videoContainer video{
     transition: all 0.3s;
   }
-  .imageContainer:hover img,
+  .videoContainer img{
+    transition: all 0.3s;
+  }
+  .videoContainer:hover img,
   .videoContainer:hover video {
     filter: brightness(50%);
   }
   
   .file{
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    position: relative;
     border: none;
     background: transparent;
     color: #00ADB5;
@@ -75,11 +105,14 @@
     padding: 0.5em;
     cursor: pointer;
   }
-
-  .fileButton{
-    position: relative;
-    cursor: pointer;
-    }
     .file:hover{
       transform: scale(1.1);
+    }
+    .submitButton{
+      margin-top: 2em;
+      padding: 1em 2em;
+      background: #393E46;
+      color: #00ADB5;
+      border: 1px solid #00ADB5;
+      cursor: pointer;
     }

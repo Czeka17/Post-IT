@@ -2,7 +2,7 @@ import {useRef, useState } from 'react';
 import classes from './add-post.module.css';
 import { AiOutlineSend, AiFillFileAdd } from 'react-icons/ai';
 import CloudinaryUploader from './cloudinary-uploader';
-
+import {FiDownload, FiLoader} from 'react-icons/fi'
 interface NewPostProps {
   onAddPost: (postData: PostData) => void;
   name: string;
@@ -53,12 +53,13 @@ function NewPost(props: NewPostProps) {
     setMedia(media);
   }
 
+
   return (
     <form onSubmit={sendPostHandler}>
       <div className={classes.container}>
         <div className={classes.textareaContainer}>
           <textarea
-            placeholder="How are you?"
+            placeholder="How do you feel today?"
             id="post"
             rows={5}
             ref={messageInputRef}

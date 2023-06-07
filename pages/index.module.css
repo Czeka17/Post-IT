@@ -4,6 +4,7 @@
     align-items: center;
     padding: 6em 0;
 }
+
 @media (max-width:1024px){
     .position{
         padding: 5em 0;
