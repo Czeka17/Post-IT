@@ -1,0 +1,84 @@
+.profileContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.profile{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 1em;
+}
+.profile img {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    margin-right: 1em;
+    align-self: center;
+    border: 1px solid #146C94;
+    transition: opacity 0.3s;
+}
+.profile img:hover{
+    opacity: 0.75;
+} 
+.postAuthor{
+    display: flex;
+    flex-direction: column;
+}
+.postDate{
+    opacity: 0.75;
+    z-index: 0;
+}
+  .kebabMenu{
+    padding: 1em;
+    position: relative;
+  }
+  .kebabMenu svg{
+    cursor: pointer;
+    transition: fill 0.3s;
+    padding: 0.2em;
+    font-size: 2.4rem;
+    border-radius: 50%;
+  }
+  .kebabMenu svg:hover{
+    fill: #00ADB5;
+    background: #444952;
+  }
+    .options{
+    position: absolute;
+    top: 70%;
+    right: 50%;
+    text-align: center;
+    border-radius: 10px;
+    z-index: 10;
+    padding: 0.5em;
+    background-color: #393E46;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  }
+  .optionButton{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #393E46;
+    border-radius: 100px;
+    padding: 0.5em;
+    margin: 0.5em 0;
+    border: none;
+    color: #EEEEEE;
+    transition: color 0.3s;
+    cursor: pointer;
+    width: 100%;
+  }
+  .optionButton:hover{  
+    color: #00ADB5;
+    background: #444952;
+  }
+  .options hr{
+    margin: 0;
+    padding: 1px;
+    border: none;
+    background-color: #00ADB5;
+  }

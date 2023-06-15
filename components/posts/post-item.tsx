@@ -1,12 +1,12 @@
 import classes from "./post-item.module.css";
 import Comments from "./comments";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import { AiOutlineSend, AiFillHeart, AiOutlineEdit, AiOutlineComment } from "react-icons/ai";
-import {BsTrash} from 'react-icons/bs'
-import { GoKebabHorizontal } from "react-icons/go";
-import Link from "next/link";
+import { AiOutlineSend } from "react-icons/ai";
+
 import PostModal from "../layout/post-modal";
+import PostActions from "./post-actions";
+import PostAuthor from "./post-author";
 
 interface Comment {
 	userId: string;
@@ -16,6 +16,7 @@ interface Comment {
 	};
 	_id: string;
 	message: string;
+	createdAt: string;
 }
 interface Like {
 	likedBy: string;
@@ -44,161 +45,56 @@ interface PostItemProps {
 function PostItem(props: PostItemProps) {
 	const commentInputRef = useRef<HTMLTextAreaElement>(null);
 	const { data: session, status } = useSession();
-	const [comments, setComments] = useState<Comment[]>([]);
+	const [comments, setComments] = useState<Comment[]>(props.comments || []);
 	const [showComments, setShowComments] = useState(false);
-	const [likesCount, setLikesCount] = useState(props.likes.length);
 	const [showModal, setShowModal] = useState(false)
-	const [isLikedByUser, setIsLikedByUser] = useState(
-		props.likes.some((item) => item.likedBy === session?.user?.name)
-	);
-	const [showOptions, setShowOptions] = useState(false);
 	function handleShowModal(){
 		setShowModal(true)
 	}
 	function handleHideModal(){
 		setShowModal(false)
 	}
-	const handleKebabMenuClick = () => {
-		setShowOptions(!showOptions);
-	};
-  const kebabMenuRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (kebabMenuRef.current && !kebabMenuRef.current.contains(event.target as Node)) {
-        setShowOptions(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleOutsideClick);
-
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, []);
 	const user = session?.user?.name || "";
+
+
 	function sendCommentHandler(event: React.FormEvent<HTMLFormElement>) {
-		event.preventDefault();
+    event.preventDefault();
 
-		const enteredComment = commentInputRef.current?.value;
+    const enteredComment = commentInputRef.current?.value;
 
-		if (!enteredComment || enteredComment.trim() === "") {
-			return;
-		}
-		props.onAddComment({
-			message: enteredComment,
-			username: user,
-			postId: props.id,
-		});
-		setComments(comments);
+    if (!enteredComment || enteredComment.trim() === "") {
+      return;
+    }
 
-		commentInputRef.current.value = "";
-	}
+    const newComment: Comment = {
+      userId: "",
+      user: {
+        name: session?.user?.name || "",
+        image: session?.user?.image || "",
+      },
+      _id: "",
+      message: enteredComment,
+	  createdAt: ''
+    };
+
+    setComments((prevComments) => [...prevComments, newComment]);
+    props.onAddComment({
+      message: enteredComment,
+      username: user,
+      postId: props.id,
+    });
+
+    commentInputRef.current.value = "";
+  }
 
 	function hideCommentsHandler() {
 		setShowComments(false);
 	}
-
-	async function likePostHandler() {
-		try {
-			const response = await fetch("/api/posts/postLikes", {
-				method: "POST",
-				body: JSON.stringify({
-					postId: props.id,
-					username: session?.user?.name,
-				}),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-			if (response.ok) {
-				const data = await response.json();
-				if (isLikedByUser) {
-					setLikesCount((prevCount) => prevCount - 1);
-					setIsLikedByUser(false);
-				} else {
-					setLikesCount((prevCount) => prevCount + 1);
-					setIsLikedByUser(true);
-				}
-			}
-		} catch (error) {
-			console.log(error);
-		}
+	function showCommentList(comments:Comment[]){
+		setComments(comments)
+		setShowComments(true)
 	}
 
-	async function showCommentsHandler(
-		event: React.MouseEvent<HTMLButtonElement>
-	) {
-		event.preventDefault();
-
-		try {
-			const response = await fetch("/api/posts/getComments", {
-				method: "POST",
-				body: JSON.stringify({ postId: props.id }),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-
-			if (response.ok) {
-				const data = await response.json();
-				console.log(data);
-				const comments = data.commentList;
-				setComments(comments);
-				setShowComments(true);
-			} else {
-				const errorData = await response.json();
-				throw new Error(errorData.message || "Something went wrong!");
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	}
-
-	const deleteCommentHandler = async (commentId: string) => {
-		try {
-			const response = await fetch("/api/posts/deleteComment", {
-				method: "DELETE",
-				body: JSON.stringify({ postId: props.id, commentId }),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-
-			if (response.ok) {
-				const data = await response.json();
-				console.log(data);
-				const comments = data.commentList;
-				setComments(comments);
-			} else {
-				const errorData = await response.json();
-				throw new Error(errorData.message || "Something went wrong!");
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	};
-	const deletePostHandler = async (postId:string) => {
-		try {
-			const response = await fetch("/api/posts/addPost", {
-				method: "DELETE",
-				body: JSON.stringify({postId:postId}),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-
-			if (response.ok) {
-				const data = await response.json();
-				console.log(data);
-				props.onDeletePost(postId);
-			} else {
-				const errorData = await response.json();
-				throw new Error(errorData.message || "Something went wrong!");
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	};
 
 	const commentsLength = props.comments?.length ?? 0;
 
@@ -229,31 +125,7 @@ function PostItem(props: PostItemProps) {
 		<li className={classes.item}>
 			<div>
 				<div className={classes.content}>
-					<div className={classes.profileContainer}>
-						<Link href={`/${encodeURIComponent(props.author)}`}>
-							<div className={classes.profile}>
-								<img
-									src={props.profile}
-									alt={props.author}
-								/>
-								<div className={classes.postAuthor}>
-									<span>{props.author}</span>
-									<span className={classes.postDate}>{formattedTime}</span>
-								</div>
-							</div>
-						</Link>
-						{props.author === session?.user?.name && (
-						<div className={classes.kebabMenu} ref={kebabMenuRef}>
-							<GoKebabHorizontal onClick={handleKebabMenuClick} />
-							{showOptions && (
-								<div className={classes.options}>
-									<button className={classes.optionButton} onClick={handleShowModal}><AiOutlineEdit />Edit</button>
-                  <hr/>
-									<button className={classes.optionButton} onClick={() =>deletePostHandler(props.id)}><BsTrash />Delete</button>
-								</div>
-							)}
-						</div>)}
-					</div>
+					<PostAuthor author={props.author} profile={props.profile} formattedTime={formattedTime} onDeletePost={props.onDeletePost} id={props.id} handleShowModal={handleShowModal} />
 					<p>{props.title}</p>
 					{props.image &&
 					(props.image.type === "image" || props.image.type === "gif") ? (
@@ -282,27 +154,7 @@ function PostItem(props: PostItemProps) {
 						)
 					)}
 				</div>
-				<div className={classes.reaction}>
-					<div className={classes.like}>
-						<button onClick={likePostHandler}>
-							<AiFillHeart
-								className={`${classes["heart-icon"]} ${
-									isLikedByUser ? classes["liked"] : "disliked"
-								} `}
-							/>
-							<p>{likesCount}</p>
-						</button>
-					</div>
-					<div className={classes.showComment}>
-						{showComments ? (
-							<button onClick={hideCommentsHandler}><AiOutlineComment/> ({commentsLength})</button>
-						) : (
-							<button onClick={showCommentsHandler}>
-								<AiOutlineComment/> ({commentsLength})
-							</button>
-						)}
-					</div>
-				</div>
+				<PostActions id={props.id} likes={props.likes} hideCommentsHandler={hideCommentsHandler} commentsLength={commentsLength} showCommentList={showCommentList} showComments={showComments} />
 				<form
 					className={classes.commentForm}
 					onSubmit={sendCommentHandler}
@@ -321,7 +173,7 @@ function PostItem(props: PostItemProps) {
 					<Comments
 						comments={comments}
 						user={user}
-						onDeleteComment={deleteCommentHandler}
+						id={props.id} showCommentList={showCommentList}
 					/>
 				)}
 			</div>

@@ -88,7 +88,7 @@ function User(props:UserProps){
         <Link href={`/${encodeURIComponent(props.name)}`}>
         <div className={classes.userContent} >
         <img src={props.userImage} alt={props.name} />
-        <h3>{props.name}</h3>
+        <span>{props.name}</span>
         </div>
         </Link>
         <div className={classes.actions}>

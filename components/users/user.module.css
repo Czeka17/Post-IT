@@ -7,8 +7,6 @@
     border-radius: 8px;
     padding: 1em 0.5em;
     margin: 1em 0.5em;
-    /* padding: 1em 3em; */
-    /* margin: 1em; */
     background-color: #444952;
     color: white;
   }
@@ -22,8 +20,8 @@
     margin-right: 1em;
   }
   
-  .user h3 {
-    margin-right: 1em;
+  .user span {
+    font-weight: bold;
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis;
@@ -48,4 +46,10 @@
   .actions button svg{
     color: #D0D0D0;
     font-size: 2rem;
+  }
+
+  @media(max-width:768px){
+    .actions button{
+      padding: 1em;
+    }
   }

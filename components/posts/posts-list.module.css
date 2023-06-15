@@ -13,6 +13,7 @@
     flex-direction: column;
     max-width: 45%;
     width: 45%;
+    min-width: 45%;
     background: #393E46;
     border-radius: 8px;
     max-width: max-content;
@@ -88,4 +89,26 @@
       width: 100%;
       max-width: 100%;
     }
+}
+
+.postanimationEnter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.postanimationEnterActive {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.postanimationExit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.postanimationExitActive {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 300ms, transform 300ms;
 }

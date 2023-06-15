@@ -32,11 +32,12 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
         }
 
         const userId = user._id
-
+        const currentDate = new Date();
         const newComment = {
             _id: new ObjectId(),
             userId,
-            message
+            message,
+            createdAt: currentDate.toISOString(),
         }
         const commentList = post.commentList || []
 

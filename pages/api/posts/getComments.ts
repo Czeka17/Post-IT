@@ -10,6 +10,7 @@ interface Comment {
     };
     _id: string;
     message: string;
+    createdAt: string;
   }
 
 async function handler(req:NextApiRequest, res:NextApiResponse) {
@@ -44,7 +45,8 @@ async function handler(req:NextApiRequest, res:NextApiResponse) {
           userId: comment.userId,
           _id: comment._id,
           message: comment.message,
-          user: user ? { name: user.name, image: user.image } : null
+          user: user ? { name: user.name, image: user.image } : null,
+          createdAt: comment.createdAt
         };
       })
     );

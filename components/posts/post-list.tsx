@@ -6,6 +6,8 @@ import { useEffect, useState,useRef } from "react"
 import UsersList from "../users/users.list"
 import {FaUserFriends} from 'react-icons/fa'
 import {HiOutlineClipboardList} from 'react-icons/hi'
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
 interface Post {
     _id: string;
     message: string;
@@ -32,6 +34,7 @@ interface Post {
       name: string;
       image: string;
     };
+    createdAt: string;
   }
   interface PostData {
     message: string | undefined;
@@ -136,7 +139,7 @@ function addPostHandler(postData:PostData) {
       fetch(`/api/posts/addPost?page=${currentPage}`)
         .then((response) => response.json())
         .then((data) => {
-          setPosts((prevPosts) => [...prevPosts, ...data.posts]);
+          setPosts((prevPosts) => [...data.posts,...prevPosts]);
           setCurrentPage(1); 
         });
     })
@@ -198,9 +201,20 @@ return <section className={classes.postContainer}>
         <NewPost onAddPost={addPostHandler} name={name} userImage={session?.user?.image || ''}/>
     </div>}
     <ul className={classes.list}>
-    {showPosts && posts?.map((post) =>(
+    {showPosts && (
+  <TransitionGroup component={null}>
+    {posts?.map((post) => (
+      <CSSTransition key={post._id} classNames={{
+        enter: classes.postanimationEnter,
+        enterActive: classes.postanimationEnterActive,
+        exit: classes.postanimationExit,
+        exitActive: classes.postanimationExitActive,
+      }} timeout={300}>
         <PostItem key={post._id} id={post._id} title={post.message} image={post?.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList} onDeletePost={deletePostHandler} onUpdatePost={updatePost}/>
+      </CSSTransition>
     ))}
+  </TransitionGroup>
+)}
 </ul>
 {!showPosts && <UsersList />}
 <div ref={sentinelRef} />
