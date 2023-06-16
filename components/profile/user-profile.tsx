@@ -45,6 +45,7 @@ interface Comment {
     name: string;
     image: string;
   };
+  createdAt: string;
 }
 interface UserProfileProps {
     image:string;
