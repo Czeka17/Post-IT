@@ -91,7 +91,7 @@ function User(props:UserProps){
         <span>{props.name}</span>
         </div>
         </Link>
-        <div className={classes.actions}>
+        <div className={`${isFriend ? classes.isFriend : ''} ${classes.actions}`}>
         {isFriend ? (
           <button onClick={friendListHandler}><AiOutlineUserDelete/></button>
         ) : (

@@ -44,10 +44,13 @@
     cursor: pointer;
   }
   .actions button svg{
-    color: #D0D0D0;
+    fill: #D0D0D0;
     font-size: 2rem;
+    transition: fill 5s;
   }
-
+  .isFriend button svg{
+    fill: #00ADB5 ;
+  }
   @media(max-width:768px){
     .actions button{
       padding: 1em;

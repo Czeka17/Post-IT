@@ -37,8 +37,10 @@ interface Comment {
         formattedTime = `${hours} hour${hours > 1 ? "s" : ""} ago`;
       } else if (minutes > 0) {
         formattedTime = `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-      } else {
+      } else if (seconds>0){
         formattedTime = `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
+      }else{
+        formattedTime = 'Now'
       }
     
       return formattedTime;

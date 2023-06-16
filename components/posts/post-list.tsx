@@ -55,7 +55,6 @@ function PostsList(props: PostsListProps){
     const { data: session, status } = useSession()
     const [showPosts, setShowPosts] = useState(true)
     const [currentPage, setCurrentPage] = useState(1);
-    const sentinelRef = useRef<HTMLDivElement>(null);
     const name = session?.user?.name || ''
     const updatePost = (postId: string, newTitle: string, newImage: { url: string | undefined, type: "image" | "video" | "gif" | undefined }) => {
       setPosts(prevPosts => {
@@ -82,9 +81,6 @@ function PostsList(props: PostsListProps){
       function ShowPosts(){
         setShowPosts(true)
       }
-      function loadMorePosts() {
-        setCurrentPage((prevPage) => prevPage + 1);
-      }
       const deletePostHandler = (postId:string) => {
         setPosts((prevPosts) =>
           prevPosts.filter((post) => post._id !== postId)
@@ -96,30 +92,6 @@ function PostsList(props: PostsListProps){
             setIsLoading(false)
         })
     }, [currentPage])
-
-    useEffect(() => {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            loadMorePosts();
-          }
-        },
-        {
-          rootMargin: '0px',
-          threshold: 0.001,
-        }
-      );
-    
-      if (sentinelRef.current) {
-        observer.observe(sentinelRef.current);
-      }
-    
-      return () => {
-        if (sentinelRef.current) {
-          observer.unobserve(sentinelRef.current);
-        }
-      };
-    }, []);
 
 function addPostHandler(postData:PostData) {
     fetch('/api/posts/addPost', {
@@ -167,25 +139,23 @@ function addCommentHandler(commentData:any){
 
 const handleScroll = () => {
   const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+  const isScrolledToMiddle = scrollTop + clientHeight >= scrollHeight / 2;
 
-  if (scrollTop + clientHeight >= scrollHeight) {
+  if (isScrolledToMiddle && !isLoading) {
     setCurrentPage(prevPage => prevPage + 1);
   }
 };
 
 useEffect(() => {
-  const handleScrollAndTouchMove = () => {
-    handleScroll();
-  };
-
-  window.addEventListener('scroll', handleScrollAndTouchMove);
-  window.addEventListener('touchmove', handleScrollAndTouchMove);
+  window.addEventListener('scroll', handleScroll);
+  window.addEventListener('touchmove', handleScroll);
 
   return () => {
-    window.removeEventListener('scroll', handleScrollAndTouchMove);
-    window.removeEventListener('touchmove', handleScrollAndTouchMove);
+    window.removeEventListener('scroll', handleScroll);
+    window.removeEventListener('touchmove', handleScroll);
   };
-}, []);
+}, [isLoading]);
+
 
 if(isLoading){
   return <div className={classes.loading}><p>POST<span>IT</span></p></div>
@@ -217,7 +187,6 @@ return <section className={classes.postContainer}>
 )}
 </ul>
 {!showPosts && <UsersList />}
-<div ref={sentinelRef} />
     </div>
 </section>
 }

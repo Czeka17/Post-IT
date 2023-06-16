@@ -3,7 +3,7 @@ import Comments from "./comments";
 import React, { useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { AiOutlineSend } from "react-icons/ai";
-
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 import PostModal from "../layout/post-modal";
 import PostActions from "./post-actions";
 import PostAuthor from "./post-author";
@@ -177,7 +177,30 @@ function PostItem(props: PostItemProps) {
 					/>
 				)}
 			</div>
-				{showModal && <PostModal image={props.image} title={props.title} id={props.id} onHideModal={handleHideModal} onUpdatePost={props.onUpdatePost} />}
+			<TransitionGroup>
+  <div>
+    {showModal && (
+      <CSSTransition
+	  in={showModal}
+        classNames={{
+          enter: classes.modalanimationEnter,
+          enterActive: classes.modalanimationEnterActive,
+        }}
+        timeout={300}
+
+      >
+        <PostModal
+          image={props.image}
+          title={props.title}
+          id={props.id}
+          onHideModal={handleHideModal}
+          onUpdatePost={props.onUpdatePost}
+        />
+      </CSSTransition>
+    )}
+  </div>
+</TransitionGroup>
+
 		</li>
 	);
 }
