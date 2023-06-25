@@ -17,6 +17,7 @@ interface Comment {
 	_id: string;
 	message: string;
 	createdAt: string;
+	likes:Like[]
 }
 interface Like {
 	likedBy: string;
@@ -74,7 +75,8 @@ function PostItem(props: PostItemProps) {
       },
       _id: "",
       message: enteredComment,
-	  createdAt: ''
+	  createdAt: '',
+	  likes: []
     };
 
     setComments((prevComments) => [...prevComments, newComment]);

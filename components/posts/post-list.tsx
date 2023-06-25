@@ -35,6 +35,7 @@ interface Post {
       image: string;
     };
     createdAt: string;
+    likes: Like[]
   }
   interface PostData {
     message: string | undefined;
@@ -137,25 +138,24 @@ function addCommentHandler(commentData:any){
     })
 }
 
-const handleScroll = () => {
+const handleScroll = useRef(() => {
   const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
   const isScrolledToMiddle = scrollTop + clientHeight >= scrollHeight / 2;
 
   if (isScrolledToMiddle && !isLoading) {
     setCurrentPage(prevPage => prevPage + 1);
   }
-};
+});
 
 useEffect(() => {
-  window.addEventListener('scroll', handleScroll);
-  window.addEventListener('touchmove', handleScroll);
+  window.addEventListener('scroll', handleScroll.current);
+  window.addEventListener('touchmove', handleScroll.current);
 
   return () => {
-    window.removeEventListener('scroll', handleScroll);
-    window.removeEventListener('touchmove', handleScroll);
+    window.removeEventListener('scroll', handleScroll.current);
+    window.removeEventListener('touchmove', handleScroll.current);
   };
 }, [isLoading]);
-
 
 if(isLoading){
   return <div className={classes.loading}><p>POST<span>IT</span></p></div>

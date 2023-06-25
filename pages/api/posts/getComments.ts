@@ -2,6 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/db";
 import { ObjectId } from "mongodb";
 
+interface Like{
+  likedBy: string
+}
 interface Comment {
     userId: string;
     user: {
@@ -11,6 +14,7 @@ interface Comment {
     _id: string;
     message: string;
     createdAt: string;
+    likes: Like[]
   }
 
 async function handler(req:NextApiRequest, res:NextApiResponse) {
@@ -46,7 +50,8 @@ async function handler(req:NextApiRequest, res:NextApiResponse) {
           _id: comment._id,
           message: comment.message,
           user: user ? { name: user.name, image: user.image } : null,
-          createdAt: comment.createdAt
+          createdAt: comment.createdAt,
+          likes: comment.likes
         };
       })
     );

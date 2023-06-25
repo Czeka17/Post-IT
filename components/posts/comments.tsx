@@ -1,6 +1,11 @@
 import classes from './comments.module.css'
-import {BsTrash3Fill} from 'react-icons/bs'
 
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import UserComment from './comment';
+interface Like {
+    likedBy: string;
+  }
 interface Comment {
     userId: string;
     user: {
@@ -10,6 +15,7 @@ interface Comment {
     _id: string;
     message: string;
     createdAt: string;
+    likes: Like[]
   }
 
   interface CommentsProps {
@@ -19,38 +25,13 @@ interface Comment {
     showCommentList: (comments:Comment[]) => void
   }
   function Comments(props: CommentsProps) {
-
-    function formatCommentCreatedAt(createdAt: string): string {
-      const createdDate = new Date(createdAt);
-    
-      const currentDate = new Date();
-      const timeDiff = currentDate.getTime() - createdDate.getTime();
-      const seconds = Math.floor(timeDiff / 1000);
-      const minutes = Math.floor(seconds / 60);
-      const hours = Math.floor(minutes / 60);
-      const days = Math.floor(hours / 24);
-    
-      let formattedTime = "";
-      if (days > 0) {
-        formattedTime = `${days} day${days > 1 ? "s" : ""} ago`;
-      } else if (hours > 0) {
-        formattedTime = `${hours} hour${hours > 1 ? "s" : ""} ago`;
-      } else if (minutes > 0) {
-        formattedTime = `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-      } else if (seconds>0){
-        formattedTime = `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
-      }else{
-        formattedTime = 'Now'
-      }
-    
-      return formattedTime;
-    }
-    
+    const { data: session, status } = useSession();
+  
     const deleteCommentHandler = async (commentId: string) => {
       try {
         const response = await fetch("/api/posts/deleteComment", {
           method: "DELETE",
-          body: JSON.stringify({ postId: props.id, commentId }),
+          body: JSON.stringify({ postId: props.id, commentId, username: session?.user?.name }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -76,21 +57,7 @@ interface Comment {
       <div className={classes.comments}>
         <ul>
           {props.comments?.map((comment) => (
-            <li key={comment.userId} className={classes.comment}>
-              <div className={classes.userImageContainer}>
-                <img className={classes.userImage} src={comment.user.image} alt={comment.user.name}/>
-              </div>
-              <div>
-                <div className={classes.commentContent}>
-                  <h4>{comment.user.name}</h4>
-                  <p>{comment.message}</p>
-                </div>
-                <div className={classes.timestamp}>
-      <p>{formatCommentCreatedAt(comment.createdAt)}</p>
-    </div>
-                {props.user === comment.user.name && <button onClick={() => deleteCommentHandler(comment._id)}><BsTrash3Fill/></button>}
-              </div>
-            </li>
+           <UserComment comment={comment} id={props.id} deleteCommentHandler={deleteCommentHandler} />
           ))}
         </ul>
       </div>

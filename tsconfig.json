@@ -1,29 +1,31 @@
 {
-	"compilerOptions": {
-		"target": "es6",
-		"lib": ["dom", "dom.iterable", "esnext"],
-		"skipLibCheck": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"strict": true,
-		"forceConsistentCasingInFileNames": true,
-		"noFallthroughCasesInSwitch": true,
-		"module": "esnext",
-		"moduleResolution": "node",
-		"resolveJsonModule": true,
-		"isolatedModules": true,
-		"noEmit": true,
-		"jsx": "preserve",
-		"allowJs": true,
-		"incremental": true,
-		"typeRoots": ["@types", "node_modules/@types"]
-	},
-	"include": [
-		"pages",
-		"components",
-		"../my-page/pages/app.test.tsx",
-		"pages/api/server",
-		"socket.ts"
-	],
-	"exclude": ["node_modules"]
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "allowJs": true,
+    "incremental": true,
+    "typeRoots": ["@types", "node_modules/@types"]
+  },
+  "include": [
+    "pages",
+    "components",
+    "pages/api/server",
+    "socket.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "coverage"
+  ]
 }

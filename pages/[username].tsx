@@ -4,7 +4,6 @@ import { connectToDatabase } from "../lib/db";
 import { useSession,getSession } from "next-auth/react";
 import classes from './[username].module.css'
 
-
 interface ProfilePageProps {
     userData: {
       id: string;

@@ -3,6 +3,25 @@
     box-shadow: 2px 2px 10px;
     border-radius: 8px;
 }
+.loading {
+    z-index: 50;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    color: white;
+  }
+  .loading p {
+    animation: pulse 3s ease-out infinite;
+    display: inline-block;
+  }
+  
+.loading span{
+    background: #00ADB5;
+    padding: 0.5em;
+}
 .profile{
     padding-top: 5em;
     display: flex;
@@ -74,3 +93,17 @@
         margin:4em 0 2em ;
     }
 }
+
+
+
+@keyframes pulse {
+    0% {
+      transform:scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100%{
+        transform: scale(1);
+    }
+  }

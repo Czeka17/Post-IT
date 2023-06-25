@@ -62,8 +62,8 @@ function UserProfile(props: UserProfileProps) {
   useEffect(() => {
     fetch(`/api/posts/addPost?author=${props.username}`).then(response => response.json()).then((data) => {
         setPosts(data.posts);
+        setIsLoading(false)
     })
-    setIsLoading(false)
 }, [props.username])
 const deletePostHandler = (postId:string) => {
   setPosts((prevPosts) =>
@@ -201,7 +201,9 @@ function addCommentHandler(commentData:any){
           })
     })
 }
-
+if(isLoading){
+  return <div className={classes.loading}><p>POST<span>IT</span></p></div>
+}
   return (
     <section className={classes.container}>
      <div className={classes.profile}>

@@ -38,6 +38,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
             userId,
             message,
             createdAt: currentDate.toISOString(),
+            likes: []
         }
         const commentList = post.commentList || []
 
