@@ -7,7 +7,7 @@ import UsersList from "../users/users.list"
 import {FaUserFriends} from 'react-icons/fa'
 import {HiOutlineClipboardList} from 'react-icons/hi'
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-
+import InfiniteScroll from 'react-infinite-scroll-component';
 interface Post {
     _id: string;
     message: string;
@@ -50,13 +50,31 @@ interface Post {
 
   interface PostsListProps {}
 function PostsList(props: PostsListProps){
-
     const [posts, setPosts] = useState<Post[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const [hasMore, setHasMore] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
     const { data: session, status } = useSession()
     const [showPosts, setShowPosts] = useState(true)
-    const [currentPage, setCurrentPage] = useState(1);
     const name = session?.user?.name || ''
+
+    const fetchMoreData = () => {
+      // Fetch additional data based on the current page
+      fetch(`/api/posts/addPost?page=${currentPage + 1}`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.posts.length > 0) {
+            setPosts((prevPosts) => [...prevPosts, ...data.posts]);
+            setCurrentPage((prevPage) => prevPage + 1);
+          } else {
+            setHasMore(false); // No more data available
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+    
     const updatePost = (postId: string, newTitle: string, newImage: { url: string | undefined, type: "image" | "video" | "gif" | undefined }) => {
       setPosts(prevPosts => {
         const postIndex = prevPosts.findIndex(post => post._id === postId);
@@ -88,11 +106,11 @@ function PostsList(props: PostsListProps){
         );
       };
     useEffect(() => {
-        fetch(`/api/posts/addPost?page=${currentPage}`).then(response => response.json()).then((data) => {
+        fetch(`/api/posts/addPost`).then(response => response.json()).then((data) => {
           setPosts((prevPosts) => [...prevPosts, ...data.posts]);
             setIsLoading(false)
         })
-    }, [currentPage])
+    }, [])
 
 function addPostHandler(postData:PostData) {
     fetch('/api/posts/addPost', {
@@ -109,11 +127,10 @@ function addPostHandler(postData:PostData) {
             throw new Error(data.message || 'Something went wrong!')
           })
     }).then(() => {
-      fetch(`/api/posts/addPost?page=${currentPage}`)
+      fetch(`/api/posts/addPost`)
         .then((response) => response.json())
         .then((data) => {
           setPosts((prevPosts) => [...data.posts,...prevPosts]);
-          setCurrentPage(1); 
         });
     })
     .catch((error) => {
@@ -138,24 +155,6 @@ function addCommentHandler(commentData:any){
     })
 }
 
-const handleScroll = useRef(() => {
-  const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-  const isScrolledToMiddle = scrollTop + clientHeight >= scrollHeight / 2;
-
-  if (isScrolledToMiddle && !isLoading) {
-    setCurrentPage(prevPage => prevPage + 1);
-  }
-});
-
-useEffect(() => {
-  window.addEventListener('scroll', handleScroll.current);
-  window.addEventListener('touchmove', handleScroll.current);
-
-  return () => {
-    window.removeEventListener('scroll', handleScroll.current);
-    window.removeEventListener('touchmove', handleScroll.current);
-  };
-}, [isLoading]);
 
 if(isLoading){
   return <div className={classes.loading}><p>POST<span>IT</span></p></div>
@@ -172,7 +171,15 @@ return <section className={classes.postContainer}>
     </div>}
     <ul className={classes.list}>
     {showPosts && (
-  <TransitionGroup component={null}>
+  <TransitionGroup component='div' style={{width: '100%'}}>
+     <InfiniteScroll
+                dataLength={posts.length}
+                next={fetchMoreData}
+                hasMore={hasMore}
+                loader={<h4 className={classes.loadingPosts}>Loading...</h4>}
+                endMessage={<p className={classes.noMorePosts}>No more posts to load.</p>}
+                style={{ overflow: 'visible',minWidth: '100%' }}
+              >
     {posts?.map((post) => (
       <CSSTransition key={post._id} classNames={{
         enter: classes.postanimationEnter,
@@ -183,6 +190,7 @@ return <section className={classes.postContainer}>
         <PostItem key={post._id} id={post._id} title={post.message} image={post?.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList} onDeletePost={deletePostHandler} onUpdatePost={updatePost}/>
       </CSSTransition>
     ))}
+    </InfiniteScroll>
   </TransitionGroup>
 )}
 </ul>

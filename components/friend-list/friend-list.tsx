@@ -46,6 +46,7 @@ function FriendList(props: FriendListProps) {
                   </Link>
                 </li>
               ))}
+              {friendList.length === 0 && <p className={classes.friendListIsEmpty}>You'r friendList is empty!</p>}
             </ul>
           </div>
         </div>

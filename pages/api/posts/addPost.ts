@@ -65,7 +65,7 @@ if (author) {
 } else {
   posts = await db
     .collection('posts')
-    .find()
+    .find({})
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(postsPerPage)

@@ -6,9 +6,10 @@ import React, {useState, useEffect} from 'react';
 import FileResizer from 'react-image-file-resizer';
 import PostItem from '../posts/post-item';
 import User from '../users/user';
-import useFriendList from '../../hooks/useFriendList';
 import {FaUserFriends} from 'react-icons/fa'
 import {HiOutlineClipboardList} from 'react-icons/hi'
+import InfiniteScroll from 'react-infinite-scroll-component';
+
 const cloudName = 'dmn5oy2qa';
 
 const cld = new Cloudinary({ cloud: { cloudName: cloudName } });
@@ -20,7 +21,6 @@ interface Friend{
   image: string
 }
 interface Like {
-  likes: number;
   likedBy: string;
 }
 interface Post {
@@ -46,6 +46,7 @@ interface Comment {
     image: string;
   };
   createdAt: string;
+  likes: Like[]
 }
 interface UserProfileProps {
     image:string;
@@ -55,16 +56,52 @@ interface UserProfileProps {
   }
 function UserProfile(props: UserProfileProps) {
   const [posts, setPosts] = useState<Post[]>([])
-  const [isLoading, setIsLoading] = useState(true)
   const [showPosts, setShowPosts] = useState(true)
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [friendList, setFriendList] = useState<Friend[]>([])
   const [selectedImage, setSelectedImage] = useState<string>('');
+
   useEffect(() => {
-    fetch(`/api/posts/addPost?author=${props.username}`).then(response => response.json()).then((data) => {
-        setPosts(data.posts);
-        setIsLoading(false)
-    })
-}, [props.username])
+    setPage(1);
+    setPosts([]);
+    setIsLoading(true);
+    setHasMore(true);
+  }, [props.username]);
+  
+  useEffect(() => {
+    fetchPosts();
+  }, [props.username]);
+const fetchPosts = async () => {
+  try {
+    const response = await fetch(`/api/posts/addPost?author=${props.username}&page=${page}`);
+    if (response.ok) {
+      const data = await response.json();
+      const newPosts = data.posts;
+      if (newPosts.length === 0) {
+        setHasMore(false);
+      } else {
+        const filteredPosts = newPosts.filter((post: Post) => post.name.toLowerCase() === props.username.toLowerCase());
+        if (page === 1) {
+          setPosts(filteredPosts);
+        } else {
+          setPosts((prevPosts) => [...prevPosts, ...filteredPosts]);
+        }
+        setPage((prevPage) => prevPage + 1);
+      }
+    } else {
+      throw new Error('Failed to fetch posts');
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+const fetchMoreData = () => {
+  fetchPosts();
+};
 const deletePostHandler = (postId:string) => {
   setPosts((prevPosts) =>
     prevPosts.filter((post) => post._id !== postId)
@@ -233,14 +270,22 @@ if(isLoading){
     </div>
     <div>
       {!isLoading && <ul className={classes.postsList}>
+      <InfiniteScroll
+                dataLength={posts.length}
+                next={fetchMoreData}
+                hasMore={hasMore}
+                loader={<h4 className={classes.loadingPosts}>Loading...</h4>}
+                endMessage={<p className={classes.noMorePosts}>No more posts to load.</p>}
+                style={{ overflow: 'visible',minWidth: '100%' }}
+              >
         {showPosts && posts?.map((post) =>(
           <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList} onDeletePost={deletePostHandler} onUpdatePost={updatePost}/>
         ))}
+        </InfiniteScroll>
       </ul>}
       <ul className={classes.friendList}>{!showPosts && friendList?.map((friend) =>(
         <User key={friend._id} name={friend.name} userImage={friend.image} friendList={friendList} />
       ))}</ul>
-      {!isLoading && posts.length === 0 && <p>This user dont have any posts!</p>}
     </div>
     </section>
   );

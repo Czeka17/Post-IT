@@ -80,6 +80,11 @@
     display: flex;
     flex-wrap: wrap;
 }
+.loadingPosts, .noMorePosts{
+    text-align: center;
+    color: #00ADB5;
+}
+
 @media(max-width: 768px){
     .container{
       width: 100%;

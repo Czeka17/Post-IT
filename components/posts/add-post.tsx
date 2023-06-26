@@ -1,4 +1,4 @@
-import {useRef, useState } from 'react';
+import {useRef, useState, useEffect } from 'react';
 import classes from './add-post.module.css';
 import { AiOutlineSend, AiFillFileAdd } from 'react-icons/ai';
 import CloudinaryUploader from './cloudinary-uploader';
@@ -22,7 +22,13 @@ interface PostData {
 function NewPost(props: NewPostProps) {
   const [media, setMedia] = useState<{ type: 'image' | 'video' | 'gif'; url: string } | null>(null);
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
-
+  const placeholderOptions = [
+    "Share your thoughts...",
+    "Write something interesting...",
+    "Tell us your story...",
+    "Ask a question or start a discussion...",
+    "Share a funny joke or meme...",
+  ];
   function deleteMedia() {
     setMedia(null);
   }
@@ -51,13 +57,18 @@ function NewPost(props: NewPostProps) {
   function handleUpload(media: { type: 'image' | 'video' | 'gif'; url: string }) {
     setMedia(media);
   }
+  function getRandomPlaceholder() {
+    const randomIndex = Math.floor(Math.random() * placeholderOptions.length);
+    return placeholderOptions[randomIndex];
+  }
+  const placeholder = getRandomPlaceholder();
 
   return (
     <form onSubmit={sendPostHandler}>
       <div className={classes.container}>
         <div className={classes.textareaContainer}>
           <textarea
-            placeholder="How do you feel today?"
+            placeholder={placeholder}
             id="post"
             rows={5}
             ref={messageInputRef}

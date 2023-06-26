@@ -112,3 +112,12 @@
   transform: translateY(20px);
   transition: opacity 300ms, transform 300ms;
 }
+.loadingPosts{
+  text-align: center;
+  color: #00ADB5;
+}
+.noMorePosts{
+  text-align: center;
+  color: #00ADB5;
+  margin-top: 2em;
+}
