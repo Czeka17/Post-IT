@@ -270,7 +270,7 @@ if(isLoading){
     </div>
     <div>
       {!isLoading && <ul className={classes.postsList}>
-      <InfiniteScroll
+      {showPosts && <InfiniteScroll
                 dataLength={posts.length}
                 next={fetchMoreData}
                 hasMore={hasMore}
@@ -278,10 +278,10 @@ if(isLoading){
                 endMessage={<p className={classes.noMorePosts}>No more posts to load.</p>}
                 style={{ overflow: 'visible',minWidth: '100%' }}
               >
-        {showPosts && posts?.map((post) =>(
+         {posts?.map((post) =>(
           <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList} onDeletePost={deletePostHandler} onUpdatePost={updatePost}/>
         ))}
-        </InfiniteScroll>
+        </InfiniteScroll>}
       </ul>}
       <ul className={classes.friendList}>{!showPosts && friendList?.map((friend) =>(
         <User key={friend._id} name={friend.name} userImage={friend.image} friendList={friendList} />

@@ -3,6 +3,7 @@ import UserProfile from "../components/profile/user-profile";
 import { connectToDatabase } from "../lib/db";
 import { useSession,getSession } from "next-auth/react";
 import classes from './[username].module.css'
+import Head from "next/head";
 
 interface ProfilePageProps {
     userData: {
@@ -30,7 +31,10 @@ interface ProfilePageProps {
       }
       
 
-    return <section className={classes.wrapper}><UserProfile username={props.userData.name}  onChangeProfile={(profile: { image: string; username: string }) =>
+    return <section className={classes.wrapper}>   <Head>
+    <title>{props.userData.name}</title>
+    <meta name="description" content="Informations about exact user you want" />
+    </Head><UserProfile username={props.userData.name}  onChangeProfile={(profile: { image: string; username: string }) =>
       changeProfileHandler(profile.image, profile.username)
     } activeUser={activeUser} image={props.userData.image} />
     </section>

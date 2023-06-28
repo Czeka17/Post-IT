@@ -61,7 +61,7 @@ function User(props:UserProps){
 
     useEffect(() =>{
       setNewFriendList([...props.friendList])
-    },[])
+    },[props.friendList])
 
     async function friendListHandler(){
       if(!session || !session.user){
@@ -84,6 +84,7 @@ function User(props:UserProps){
       }
     }
       const isFriend = newFriendList.some((friend) => friend.name === props.name);
+
     return <li className={classes.user}>
         <Link href={`/${encodeURIComponent(props.name)}`}>
         <div className={classes.userContent} >
