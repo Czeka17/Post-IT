@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent } from 'react';
 import { Cloudinary } from '@cloudinary/url-gen';
 import FileResizer from 'react-image-file-resizer';
 import classes from './cloudinary-uploader.module.css'
@@ -7,15 +7,16 @@ const cld = new Cloudinary({ cloud: { cloudName: cloudName } });
 
 interface CloudinaryUploaderProps {
   onUpload: (media: { type: 'image' | 'video' | 'gif'; url: string }) => void;
+  onLoading: () => void;
+  onLoadingEnd: () => void;
 }
 
-function CloudinaryUploader({ onUpload }: CloudinaryUploaderProps) {
-  const [isLoading, setIsLoading] = useState(false);
+function CloudinaryUploader({ onUpload, onLoading, onLoadingEnd }: CloudinaryUploaderProps) {
 
   function addMediaHandler(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      setIsLoading(true);
+      onLoading()
       const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
       if (fileExtension === 'mp4' || fileExtension === 'webm') {
@@ -31,11 +32,11 @@ function CloudinaryUploader({ onUpload }: CloudinaryUploaderProps) {
           .then((data) => {
             const videoUrl = cld.video(data.public_id).toURL();
             onUpload({ type: 'video', url: videoUrl });
-            setIsLoading(false);
+            onLoadingEnd()
           })
           .catch((error) => {
             console.log('Upload error:', error);
-            setIsLoading(false);
+            onLoadingEnd()
           });
       } else if (fileExtension === 'gif') {
         const formData = new FormData();
@@ -51,11 +52,11 @@ function CloudinaryUploader({ onUpload }: CloudinaryUploaderProps) {
           .then((data) => {
             const gifUrl = cld.image(data.public_id).toURL();
             onUpload({ type: 'gif', url: gifUrl });
-            setIsLoading(false);
+            onLoadingEnd()
           })
           .catch((error) => {
             console.log('Upload error:', error);
-            setIsLoading(false);
+            onLoadingEnd()
           });
       } else {
         FileResizer.imageFileResizer(
@@ -86,17 +87,17 @@ function CloudinaryUploader({ onUpload }: CloudinaryUploaderProps) {
                   .then((data) => {
                     const imageUrl = cld.image(data.public_id).toURL();
                     onUpload({ type: 'image', url: imageUrl });
-                    setIsLoading(false);
+                    onLoadingEnd()
                   })
                   .catch((error) => {
                     console.log('Upload error:', error);
-                    setIsLoading(false);
+                    onLoadingEnd()
                   });
               };
               reader.readAsDataURL(resizedImage);
             } else {
               console.log('Invalid resized image type:', typeof resizedImage);
-              setIsLoading(false);
+              onLoadingEnd()
             }
           },
           'blob'

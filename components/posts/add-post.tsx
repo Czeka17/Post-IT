@@ -21,6 +21,7 @@ interface PostData {
 
 function NewPost(props: NewPostProps) {
   const [media, setMedia] = useState<{ type: 'image' | 'video' | 'gif'; url: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(false)
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
   const placeholderOptions = [
     "Share your thoughts...",
@@ -31,6 +32,12 @@ function NewPost(props: NewPostProps) {
   ];
   function deleteMedia() {
     setMedia(null);
+  }
+  function MediaLoaderShow(){
+    setIsLoading(true)
+  }
+  function MediaLoaderHide(){
+    setIsLoading(false)
   }
 
   function sendPostHandler(e:any) {
@@ -77,7 +84,7 @@ function NewPost(props: NewPostProps) {
           <div className={classes.file}>
             <label htmlFor="file" className={classes.fileButton}>
               <AiFillFileAdd />
-              <CloudinaryUploader onUpload={handleUpload} />
+              <CloudinaryUploader onUpload={handleUpload} onLoading={MediaLoaderShow} onLoadingEnd={MediaLoaderHide} />
             </label>
           </div>
         </div>
@@ -100,6 +107,7 @@ function NewPost(props: NewPostProps) {
             {media.type === 'gif' && <img src={media.url} alt="Post Media" />}
           </div>
         )}
+        {isLoading && <div className={classes.loader}></div>}
       </div>
     </form>
   );
