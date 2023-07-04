@@ -17,10 +17,16 @@ interface PostItemProps {
 function PostModal(props: PostItemProps){
     const [inputValue, setInputValue] = useState(props.title);
     const [image, setImage] = useState(props.image)
+    const [isLoading, setIsLoading] = useState(false)
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setInputValue(event.target.value);
       };
-
+      function MediaLoaderShow(){
+        setIsLoading(true)
+      }
+      function MediaLoaderHide(){
+        setIsLoading(false)
+      }
     const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (event.target === event.currentTarget) {
           props.onHideModal();
@@ -63,12 +69,13 @@ return(
         <div>
             <label htmlFor="file" className={classes.fileButton}>
               <AiFillFileAdd />
-              <CloudinaryUploader onUpload={handleImageUpload} />
+              <CloudinaryUploader onUpload={handleImageUpload} onLoading={MediaLoaderShow} onLoadingEnd={MediaLoaderHide} />
             </label>
           </div>
           </button>
         {props.image && <button className={classes.deleteButton} onClick={handleImageDelete}>Delete file</button>}
         </div>
+        {isLoading && <div className={classes.loader}></div>}
         {image &&
 					(image.type === "image" || image.type === "gif") ? (
 						<div className={classes.videoContainer}>
