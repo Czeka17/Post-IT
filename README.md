@@ -1,6 +1,6 @@
 ****PostIT - facebook clone****
 
-LIVE - [https://netflix-clone-fawn-sigma.vercel.app/auth](https://facebook-clone-nine-chi.vercel.app)
+LIVE - [[https://netflix-clone-fawn-sigma.vercel.app/auth](https://facebook-clone-nine-chi.vercel.app/auth)]
 
 test account: 
 username: test
