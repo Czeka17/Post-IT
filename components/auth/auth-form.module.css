@@ -3,7 +3,9 @@
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
-    padding-top: 5em;
+    height: 100vh;
+    padding-top: 2em;
+    padding-bottom: 2em;
     color: white;
 }
 .introduction h1{
@@ -33,24 +35,22 @@
 }
 
 .control{
-    margin: 1em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    margin: 1em 0em;
+    width: 100%;
 }
+
 
 .control input {
     padding: 0.5em 1em;
+    margin: 0.5em 0;
     border-radius: 8px;
     border-color: #F6F1F1;
-    text-align: center;
     color: #F6F1F1;
     font-weight: bold;
     background-color: #146b9400;
-    width: 50%;
+    width: 100%;
 }
 .control label {
-    margin: 0.5em;
     font-size: 1.2rem;
 }
 .actions {
@@ -74,7 +74,7 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
     background-color: transparent;
     color: #F6F1F1;
-    transition: all 1s;
+    transition: all 0.3s;
     cursor: pointer;
 }
 
@@ -84,14 +84,15 @@
     border-color: #000000;
 }
 
-.actions .switch{
-    border-color: #146C94;
-    background-color: #F6F1F1;
-    color: #146C94;
-}
+
+
 
 @media(max-width:1024px){
-    .introduction{
-        display: none;
+    .placing{
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2em 1em;
     }
 }

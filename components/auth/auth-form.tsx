@@ -162,6 +162,10 @@ function AuthForm() {
 							{isLogin ? "Create new account" : "Login with existing account"}
 						</button>
 					</div>
+					<div>
+						<p>Name: test</p>
+						<p>Password: test123</p>
+					</div>
 				</form>
 			</section>
            {notification &&  <Notification status={notification.status} title={notification.title} message={notification.message}/>}

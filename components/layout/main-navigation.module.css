@@ -37,7 +37,7 @@
     align-items: center;
     margin: 0 1rem;
     color:#F6F1F1;
-    transition: color 1s;
+    transition: color 0.3s;
     font-weight: bold;
   }
 

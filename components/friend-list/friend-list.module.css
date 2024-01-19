@@ -27,7 +27,7 @@
     padding: 0.5em;
     margin:2px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    transition: 0.5s;
+    transition: 0.3s;
 }
 .userlist:hover{
     transform: scale(1.1);
