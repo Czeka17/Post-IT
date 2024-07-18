@@ -2,8 +2,8 @@ import classes from './index.module.css'
 import { getSession } from 'next-auth/react';
 import { GetServerSidePropsContext } from "next";
 import PostsList from "../components/posts/post-list";
-import Chat from "../components/chat/chat";
 import Head from 'next/head';
+import ChatContainer from '../components/chat/chat-container';
 function HomePage() {
 return <section className={classes.position}>
    <Head>
@@ -11,7 +11,7 @@ return <section className={classes.position}>
         <meta name="description" content='Browse through posts of other users, chat live, add others to your friendlist!' />
         </Head>
     <PostsList />
-        <Chat />
+        <ChatContainer />
 </section>
 }
 

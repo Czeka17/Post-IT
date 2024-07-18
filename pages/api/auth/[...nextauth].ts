@@ -35,9 +35,9 @@ export default NextAuth({
                 }
                 
                 client.close();
-                const userid = new ObjectId(user._id)
+                const userid = new ObjectId(user._id).toString()
                 return{
-                    id: userid.toString(),
+                    id: userid,
                     name: user.name,
                     email: user.email,
                     image: user.image

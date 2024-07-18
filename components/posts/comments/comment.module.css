@@ -43,10 +43,14 @@
    flex-direction: column;
    justify-content: flex-start;
    align-items: flex-start;
-   padding: 0.5em 2em;
+   padding: 0.5em 1em;
    background-color: #393E46;
    border-radius: 10px;
   }
+  .commentContent h4{
+    margin: 0;
+    padding-bottom: 0.5em;
+    }
   .commentLike{
     margin: 0 0.5em;
     padding: 0.5em;

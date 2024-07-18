@@ -15,6 +15,10 @@ interface PostAuthorProps{
 }
 function PostAuthor(props : PostAuthorProps){
     const [showOptions, setShowOptions] = useState(false);
+    const [postIsDeleted, setPostIsDeleted] = useState(false);
+    const [deletingStatus,setDeletingStatus] = useState('');
+    const [title,setTitle] = useState('')
+    const [message,setMessage] = useState('')
     const { data: session, status } = useSession();
 
     const handleKebabMenuClick = () => {
@@ -37,6 +41,10 @@ function PostAuthor(props : PostAuthorProps){
 
 
     const deletePostHandler = async (postId:string) => {
+      setPostIsDeleted(true)
+      setTitle('Deleting post...')
+      setMessage('Please wait')
+      setDeletingStatus('pending')
 		try {
 			const response = await fetch("/api/posts/addPost", {
 				method: "DELETE",
@@ -47,17 +55,35 @@ function PostAuthor(props : PostAuthorProps){
 			});
 
 			if (response.ok) {
+        setTitle('Post has been deleted!')
+      setMessage('Success!')
+      setDeletingStatus('success')
+      
 				const data = await response.json();
 				console.log(data);
 				props.onDeletePost(postId);
 			} else {
+        setTitle('Deleting post failed!')
+      setMessage('Please try again later!')
+      setDeletingStatus('error')
+      
 				const errorData = await response.json();
 				throw new Error(errorData.message || "Something went wrong!");
 			}
 		} catch (error) {
+      setTitle('Deleting post failed!')
+      setMessage('Please try again later!')
+      setDeletingStatus('error')
 			console.error(error);
 		}
 	};
+  useEffect(() => {
+    if(deletingStatus === 'error' || deletingStatus === 'success'){
+      setTimeout(() =>{
+        setPostIsDeleted(false)
+      },3000)
+    }
+  },[deletingStatus])
 
 
 return <div className={classes.profileContainer}>
@@ -83,6 +109,7 @@ return <div className={classes.profileContainer}>
             <button className={classes.optionButton} onClick={() =>deletePostHandler(props.id)}><BsTrash />Delete</button>
         </div>
     )}
+    
 </div>)}
 </div>
 }

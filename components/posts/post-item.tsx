@@ -1,10 +1,10 @@
 import classes from "./post-item.module.css";
-import Comments from "./comments";
+import Comments from "./comments/comments";
 import React, { useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { AiOutlineSend } from "react-icons/ai";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import PostModal from "../layout/post-modal";
+import PostModal from "./post-modal";
 import PostActions from "./post-actions";
 import PostAuthor from "./post-author";
 
@@ -17,7 +17,7 @@ interface Comment {
 	_id: string;
 	message: string;
 	createdAt: string;
-	likes:Like[]
+	likes: Like[];
 }
 interface Like {
 	likedBy: string;
@@ -41,62 +41,67 @@ interface PostItemProps {
 		postId: string;
 	}) => void;
 	onDeletePost: (postId: string) => void;
-	onUpdatePost: (postId: string, newTitle: string, newImage: { url: string | undefined, type: "image" | "video" | "gif" | undefined }) => void;
+	onUpdatePost: (
+		postId: string,
+		newTitle: string,
+		newImage: {
+			url: string | undefined;
+			type: "image" | "video" | "gif" | undefined;
+		}
+	) => void;
 }
 function PostItem(props: PostItemProps) {
 	const commentInputRef = useRef<HTMLTextAreaElement>(null);
 	const { data: session, status } = useSession();
 	const [comments, setComments] = useState<Comment[]>(props.comments || []);
 	const [showComments, setShowComments] = useState(false);
-	const [showModal, setShowModal] = useState(false)
-	function handleShowModal(){
-		setShowModal(true)
+	const [showModal, setShowModal] = useState(false);
+	function handleShowModal() {
+		setShowModal(true);
 	}
-	function handleHideModal(){
-		setShowModal(false)
+	function handleHideModal() {
+		setShowModal(false);
 	}
 	const user = session?.user?.name || "";
 
-
 	function sendCommentHandler(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+		event.preventDefault();
 
-    const enteredComment = commentInputRef.current?.value;
+		const enteredComment = commentInputRef.current?.value;
 
-    if (!enteredComment || enteredComment.trim() === "") {
-      return;
-    }
+		if (!enteredComment || enteredComment.trim() === "") {
+			return;
+		}
 
-    const newComment: Comment = {
-      userId: "",
-      user: {
-        name: session?.user?.name || "",
-        image: session?.user?.image || "",
-      },
-      _id: "",
-      message: enteredComment,
-	  createdAt: '',
-	  likes: []
-    };
+		const newComment: Comment = {
+			userId: "",
+			user: {
+				name: session?.user?.name || "",
+				image: session?.user?.image || "",
+			},
+			_id: "",
+			message: enteredComment,
+			createdAt: "",
+			likes: [],
+		};
 
-    setComments((prevComments) => [...prevComments, newComment]);
-    props.onAddComment({
-      message: enteredComment,
-      username: user,
-      postId: props.id,
-    });
+		setComments((prevComments) => [...prevComments, newComment]);
+		props.onAddComment({
+			message: enteredComment,
+			username: user,
+			postId: props.id,
+		});
 
-    commentInputRef.current.value = "";
-  }
+		commentInputRef.current.value = "";
+	}
 
 	function hideCommentsHandler() {
 		setShowComments(false);
 	}
-	function showCommentList(comments:Comment[]){
-		setComments(comments)
-		setShowComments(true)
+	function showCommentList(comments: Comment[]) {
+		setComments(comments);
+		setShowComments(true);
 	}
-
 
 	const commentsLength = props.comments?.length ?? 0;
 
@@ -127,7 +132,14 @@ function PostItem(props: PostItemProps) {
 		<li className={classes.item}>
 			<div>
 				<div className={classes.content}>
-					<PostAuthor author={props.author} profile={props.profile} formattedTime={formattedTime} onDeletePost={props.onDeletePost} id={props.id} handleShowModal={handleShowModal} />
+					<PostAuthor
+						author={props.author}
+						profile={props.profile}
+						formattedTime={formattedTime}
+						onDeletePost={props.onDeletePost}
+						id={props.id}
+						handleShowModal={handleShowModal}
+					/>
 					<p>{props.title}</p>
 					{props.image &&
 					(props.image.type === "image" || props.image.type === "gif") ? (
@@ -156,7 +168,14 @@ function PostItem(props: PostItemProps) {
 						)
 					)}
 				</div>
-				<PostActions id={props.id} likes={props.likes} hideCommentsHandler={hideCommentsHandler} commentsLength={commentsLength} showCommentList={showCommentList} showComments={showComments} />
+				<PostActions
+					id={props.id}
+					likes={props.likes}
+					hideCommentsHandler={hideCommentsHandler}
+					commentsLength={commentsLength}
+					showCommentList={showCommentList}
+					showComments={showComments}
+				/>
 				<form
 					className={classes.commentForm}
 					onSubmit={sendCommentHandler}
@@ -175,34 +194,33 @@ function PostItem(props: PostItemProps) {
 					<Comments
 						comments={comments}
 						user={user}
-						id={props.id} showCommentList={showCommentList}
+						id={props.id}
+						showCommentList={showCommentList}
 					/>
 				)}
 			</div>
 			<TransitionGroup>
-  <div>
-    {showModal && (
-      <CSSTransition
-	  in={showModal}
-        classNames={{
-          enter: classes.modalanimationEnter,
-          enterActive: classes.modalanimationEnterActive,
-        }}
-        timeout={300}
-
-      >
-        <PostModal
-          image={props.image}
-          title={props.title}
-          id={props.id}
-          onHideModal={handleHideModal}
-          onUpdatePost={props.onUpdatePost}
-        />
-      </CSSTransition>
-    )}
-  </div>
-</TransitionGroup>
-
+				<div>
+					{showModal && (
+						<CSSTransition
+							in={showModal}
+							classNames={{
+								enter: classes.modalanimationEnter,
+								enterActive: classes.modalanimationEnterActive,
+							}}
+							timeout={300}
+						>
+							<PostModal
+								image={props.image}
+								title={props.title}
+								id={props.id}
+								onHideModal={handleHideModal}
+								onUpdatePost={props.onUpdatePost}
+							/>
+						</CSSTransition>
+					)}
+				</div>
+			</TransitionGroup>
 		</li>
 	);
 }

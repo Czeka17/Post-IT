@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
 import classes from './auth.module.css'
 import Head from 'next/head';
+import AuthFormContainer from '../components/auth/auth-form-container';
 function AuthPage() {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
@@ -36,7 +37,7 @@ function AuthPage() {
          <meta name='keywords' content='PostIT, Social media, upload photos, chat online'/>
          <meta name='author' content='Jakub Czekański' />
          </Head>
-     <AuthForm />
+     <AuthFormContainer />
      </>
     }
 

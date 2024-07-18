@@ -4,7 +4,7 @@ import { SessionProvider } from 'next-auth/react';
 import { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
 import store from '../store/friends'
-import Layout from '../components/layout/Layout';
+import Layout from '../components/layout/layout';
 export default function App({ Component, pageProps: {session, ...pageProps} }: AppProps<{session: Session}>) {
 
   return (
