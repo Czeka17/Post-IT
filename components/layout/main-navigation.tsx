@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import classes from './main-navigation.module.css'
 import {FiLogOut} from 'react-icons/fi'

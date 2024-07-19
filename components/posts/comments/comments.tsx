@@ -6,10 +6,8 @@ interface Like {
 }
 interface Comment {
 	userId: string;
-	user: {
-		name: string;
-		image: string;
-	};
+	userImg:string;
+    userName:string;
 	_id: string;
 	message: string;
 	createdAt: string;
@@ -42,7 +40,7 @@ function Comments(props: CommentsProps) {
 			if (response.ok) {
 				const data = await response.json();
 				console.log(data);
-				const comments = props.comments.filter(
+				const comments = props.comments!.filter(
 					(comment) => comment._id !== commentId
 				);
 				props.showCommentList(comments);

@@ -5,15 +5,13 @@ import { useSession } from "next-auth/react";
 import { AiOutlineSend } from "react-icons/ai";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import PostModal from "./post-modal";
-import PostActions from "./post-actions";
 import PostAuthor from "./post-author";
+import PostActions from "./post-actions/post-actions";
 
 interface Comment {
 	userId: string;
-	user: {
-		name: string;
-		image: string;
-	};
+	userImg:string;
+    userName:string;
 	_id: string;
 	message: string;
 	createdAt: string;
@@ -33,7 +31,7 @@ interface PostItemProps {
 		type: "image" | "video" | "gif" | undefined;
 	};
 	time: string;
-	comments?: Comment[];
+	comments: Comment[];
 	likes: Like[];
 	onAddComment: (comment: {
 		message: string;
@@ -53,7 +51,6 @@ interface PostItemProps {
 function PostItem(props: PostItemProps) {
 	const commentInputRef = useRef<HTMLTextAreaElement>(null);
 	const { data: session, status } = useSession();
-	const [comments, setComments] = useState<Comment[]>(props.comments || []);
 	const [showComments, setShowComments] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	function handleShowModal() {
@@ -75,17 +72,14 @@ function PostItem(props: PostItemProps) {
 
 		const newComment: Comment = {
 			userId: "",
-			user: {
-				name: session?.user?.name || "",
-				image: session?.user?.image || "",
-			},
+			userName: session?.user?.name || "",
+			userImg: session?.user?.image || "",
 			_id: "",
 			message: enteredComment,
 			createdAt: "",
 			likes: [],
 		};
 
-		setComments((prevComments) => [...prevComments, newComment]);
 		props.onAddComment({
 			message: enteredComment,
 			username: user,
@@ -98,8 +92,7 @@ function PostItem(props: PostItemProps) {
 	function hideCommentsHandler() {
 		setShowComments(false);
 	}
-	function showCommentList(comments: Comment[]) {
-		setComments(comments);
+	function showCommentList() {
 		setShowComments(true);
 	}
 
@@ -192,7 +185,7 @@ function PostItem(props: PostItemProps) {
 				</form>
 				{showComments && (
 					<Comments
-						comments={comments}
+						comments={props.comments}
 						user={user}
 						id={props.id}
 						showCommentList={showCommentList}

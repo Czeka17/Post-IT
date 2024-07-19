@@ -1,6 +1,5 @@
 
 import classes from './user-profile.module.css';
-
 import { Cloudinary } from '@cloudinary/url-gen';
 import React, {useState, useEffect} from 'react';
 import FileResizer from 'react-image-file-resizer';
@@ -9,6 +8,7 @@ import User from '../users/user';
 import {FaUserFriends} from 'react-icons/fa'
 import {HiOutlineClipboardList} from 'react-icons/hi'
 import InfiniteScroll from 'react-infinite-scroll-component';
+import usePosts from '../../hooks/usePosts';
 
 const cloudName = 'dmn5oy2qa';
 
@@ -37,17 +37,17 @@ interface Post {
   likes: Like[]
 }
 
+
 interface Comment {
   _id: string;
   userId: string;
   message: string;
-  user: {
-    name: string;
-    image: string;
-  };
+  userImg:string;
+  userName:string;
   createdAt: string;
-  likes: Like[]
+  likes: Like[];
 }
+
 interface UserProfileProps {
     image:string;
     username: string;
@@ -55,71 +55,22 @@ interface UserProfileProps {
     onChangeProfile: (profile: { image: string; username: string }) => void;
   }
 function UserProfile(props: UserProfileProps) {
-  const [posts, setPosts] = useState<Post[]>([])
+  const {posts,fetchPosts,fetchMoreData, isLoading,updatePost,addComment,deletePost,hasMore} = usePosts()
   const [showPosts, setShowPosts] = useState(true)
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
   const [friendList, setFriendList] = useState<Friend[]>([])
   const [selectedImage, setSelectedImage] = useState<string>('');
-
-  useEffect(() => {
-    setPage(1);
-    setPosts([]);
-    setIsLoading(true);
-    setHasMore(true);
-  }, [props.username]);
   
   useEffect(() => {
     fetchPosts();
   }, [props.username]);
-const fetchPosts = async () => {
-  try {
-    const response = await fetch(`/api/posts/addPost?author=${props.username}&page=${page}`);
-    if (response.ok) {
-      const data = await response.json();
-      const newPosts = data.posts;
-      if (newPosts.length === 0) {
-        setHasMore(false);
-      } else {
-        const filteredPosts = newPosts.filter((post: Post) => post.name.toLowerCase() === props.username.toLowerCase());
-        if (page === 1) {
-          setPosts(filteredPosts);
-        } else {
-          setPosts((prevPosts) => [...prevPosts, ...filteredPosts]);
-        }
-        setPage((prevPage) => prevPage + 1);
-      }
-    } else {
-      throw new Error('Failed to fetch posts');
-    }
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setIsLoading(false);
-  }
-};
-const fetchMoreData = () => {
-  fetchPosts();
-};
-const deletePostHandler = (postId:string) => {
-  setPosts((prevPosts) =>
-    prevPosts.filter((post) => post._id !== postId)
-  );
-};
+
   function ShowFriendList(){
     setShowPosts(false)
   }
   function ShowPosts(){
     setShowPosts(true)
   }
-  const updatePost = (postId: string, newTitle: string, newImage: { url: string | undefined, type: "image" | "video" | "gif" | undefined }) => {
-    setPosts(prevPost => ({
-      ...prevPost,
-      title: newTitle,
-      image: newImage
-    }));
-  };
+  
 
   useEffect(() => {
     const fetchFriendList = async () => {
@@ -222,22 +173,7 @@ const deletePostHandler = (postId:string) => {
     }
   }, [selectedImage]);
 
-function addCommentHandler(commentData:any){
-    fetch('/api/posts/addComment', {
-        method: 'POST',
-        body: JSON.stringify(commentData),
-        headers: {
-            'Content-Type': 'application/json'
-          }
-    }).then(response => {
-        if(response.ok){
-            return response.json()
-        }
-        return response.json().then(data => {
-            throw new Error(data.message || 'Something went wrong!')
-          })
-    })
-}
+
 if(isLoading){
   return <div className={classes.loading}><p>POST<span>IT</span></p></div>
 }
@@ -279,7 +215,7 @@ if(isLoading){
                 style={{ overflow: 'visible',minWidth: '100%' }}
               >
          {posts?.map((post) =>(
-          <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addCommentHandler} comments={post.commentList} onDeletePost={deletePostHandler} onUpdatePost={updatePost}/>
+          <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addComment} comments={post.commentList} onDeletePost={deletePost} onUpdatePost={updatePost}/>
         ))}
         </InfiniteScroll>}
       </ul>}

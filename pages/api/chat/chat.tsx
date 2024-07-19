@@ -50,3 +50,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(405).json({ success: false, error: "Method not allowed" });
   }
 };
+

@@ -80,6 +80,10 @@ for (const post of posts) {
 res.status(200).json({ posts });
         } catch (error) {
           res.status(500).json({ message: 'Getting posts failed.' });
+        }finally {
+          if (client) {
+            client.close();
+          }
         }
       }
       

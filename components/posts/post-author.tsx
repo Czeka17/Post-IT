@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { GoKebabHorizontal } from "react-icons/go";
 import {useState, useRef, useEffect} from 'react';
 import {AiOutlineEdit} from "react-icons/ai";
+import usePosts from "../../hooks/usePosts";
 interface PostAuthorProps{
     author: string;
     profile: string;
@@ -14,11 +15,8 @@ interface PostAuthorProps{
     handleShowModal: () => void
 }
 function PostAuthor(props : PostAuthorProps){
+  const {deletePost} = usePosts()
     const [showOptions, setShowOptions] = useState(false);
-    const [postIsDeleted, setPostIsDeleted] = useState(false);
-    const [deletingStatus,setDeletingStatus] = useState('');
-    const [title,setTitle] = useState('')
-    const [message,setMessage] = useState('')
     const { data: session, status } = useSession();
 
     const handleKebabMenuClick = () => {
@@ -39,51 +37,6 @@ function PostAuthor(props : PostAuthorProps){
     };
   }, []);
 
-
-    const deletePostHandler = async (postId:string) => {
-      setPostIsDeleted(true)
-      setTitle('Deleting post...')
-      setMessage('Please wait')
-      setDeletingStatus('pending')
-		try {
-			const response = await fetch("/api/posts/addPost", {
-				method: "DELETE",
-				body: JSON.stringify({postId:postId}),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-
-			if (response.ok) {
-        setTitle('Post has been deleted!')
-      setMessage('Success!')
-      setDeletingStatus('success')
-      
-				const data = await response.json();
-				console.log(data);
-				props.onDeletePost(postId);
-			} else {
-        setTitle('Deleting post failed!')
-      setMessage('Please try again later!')
-      setDeletingStatus('error')
-      
-				const errorData = await response.json();
-				throw new Error(errorData.message || "Something went wrong!");
-			}
-		} catch (error) {
-      setTitle('Deleting post failed!')
-      setMessage('Please try again later!')
-      setDeletingStatus('error')
-			console.error(error);
-		}
-	};
-  useEffect(() => {
-    if(deletingStatus === 'error' || deletingStatus === 'success'){
-      setTimeout(() =>{
-        setPostIsDeleted(false)
-      },3000)
-    }
-  },[deletingStatus])
 
 
 return <div className={classes.profileContainer}>
@@ -106,7 +59,7 @@ return <div className={classes.profileContainer}>
         <div className={classes.options}>
             <button className={classes.optionButton} onClick={props.handleShowModal}><AiOutlineEdit />Edit</button>
 <hr/>
-            <button className={classes.optionButton} onClick={() =>deletePostHandler(props.id)}><BsTrash />Delete</button>
+            <button className={classes.optionButton} onClick={() =>deletePost(props.id)}><BsTrash />Delete</button>
         </div>
     )}
     

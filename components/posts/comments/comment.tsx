@@ -8,10 +8,8 @@ interface Like {
   }
 interface Comment {
     userId: string;
-    user: {
-      name: string;
-      image: string;
-    };
+    userImg:string;
+    userName:string;
     _id: string;
     message: string;
     createdAt: string;
@@ -82,11 +80,11 @@ function UserComment({comment,deleteCommentHandler,id}:UserCommentProps){
       }
     return  <li key={comment.userId} className={classes.comment}>
     <div className={classes.userImageContainer}>
-      <img className={classes.userImage} src={comment.user.image} alt={comment.user.name}/>
+      <img className={classes.userImage} src={comment.userImg} alt={comment.userName}/>
     </div>
     <div>
       <div className={classes.commentContent}>
-        <h4>{comment.user.name}</h4>
+        <h4>{comment.userName}</h4>
         <p>{comment.message}</p>
       </div>
       <div className={classes.timestamp}>
@@ -95,7 +93,7 @@ function UserComment({comment,deleteCommentHandler,id}:UserCommentProps){
           isLikedByUser ? classes["liked"] : "disliked"
       } `} /> ({likesCount})</button>
 </div>
-      {session?.user?.name === comment.user.name && <button className={classes.commentDelete} onClick={() => deleteCommentHandler(comment._id)}><BsTrash3Fill/></button>}
+      {session?.user?.name === comment.userName && <button className={classes.commentDelete} onClick={() => deleteCommentHandler(comment._id)}><BsTrash3Fill/></button>}
     </div>
   </li>
 }

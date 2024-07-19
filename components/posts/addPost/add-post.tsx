@@ -1,11 +1,10 @@
 import { useRef, useState } from "react";
 import AddPostForm from "./add-post-form";
 import CloudinaryUploader from "./cloudinary-uploader";
+import { useSession } from "next-auth/react";
 
 interface NewPostProps {
 	onAddPost: (postData: PostData) => void;
-	name: string;
-	userImage: string;
 }
 
 interface PostData {
@@ -19,6 +18,7 @@ interface PostData {
 }
 
 function NewPost(props: NewPostProps) {
+	const { data: session, status } = useSession();
 	const [media, setMedia] = useState<{
 		type: "image" | "video" | "gif";
 		url: string;
@@ -54,12 +54,14 @@ function NewPost(props: NewPostProps) {
 			return;
 		}
 
-		props.onAddPost({
-			message: enteredMessage,
-			name: props.name,
-			userImage: props.userImage,
-			image: media,
-		});
+		if(session?.user?.name && session?.user?.image){
+			props.onAddPost({
+				message: enteredMessage,
+				name: session!.user!.name,
+				userImage: session.user.image,
+				image: media,
+			});
+		}
 		if (messageInputRef.current?.value) {
 			messageInputRef.current.value = "";
 		}

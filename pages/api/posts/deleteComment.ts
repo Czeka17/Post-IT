@@ -9,11 +9,10 @@ async function handler(req:NextApiRequest, res:NextApiResponse) {
     res.status(405).json({ message: "Method not allowed!" });
     return;
   }
-
+  const client = await connectToDatabase();
   try {
     const {postId, commentId } = req.body;
 
-    const client = await connectToDatabase();
     const db = client.db();
     const objectId = new ObjectId(postId);
 
@@ -41,6 +40,10 @@ async function handler(req:NextApiRequest, res:NextApiResponse) {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  }finally {
+    if (client) {
+      client.close();
+    }
   }
 }
 

@@ -6,10 +6,9 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
         res.status(405).json({message: 'Method not allowed!'})
         return
     }
-
+    const client = await connectToDatabase();
     try{
         const {postId,username, message} = req.body;
-        const client = await connectToDatabase();
 
         const db = client.db();
         const objectId = new ObjectId(postId);
@@ -31,11 +30,13 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
             return
         }
 
-        const userId = user._id
+        const userImg = user.image
+        const userName = user.name
         const currentDate = new Date();
         const newComment = {
             _id: new ObjectId(),
-            userId,
+            userName,
+            userImg,
             message,
             createdAt: currentDate.toISOString(),
             likes: []
@@ -54,7 +55,11 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
     }catch(error){
         console.error(error);
     res.status(500).json({ message: 'Internal1 Server Error' });
-    }
+    }finally {
+        if (client) {
+          client.close();
+        }
+      }
 }
 
 export default handler;
