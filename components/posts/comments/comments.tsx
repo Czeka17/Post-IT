@@ -21,37 +21,7 @@ interface CommentsProps {
 	showCommentList: (comments: Comment[]) => void;
 }
 function Comments(props: CommentsProps) {
-	const { data: session, status } = useSession();
 
-	const deleteCommentHandler = async (commentId: string) => {
-		try {
-			const response = await fetch("/api/posts/deleteComment", {
-				method: "DELETE",
-				body: JSON.stringify({
-					postId: props.id,
-					commentId,
-					username: session?.user?.name,
-				}),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-
-			if (response.ok) {
-				const data = await response.json();
-				console.log(data);
-				const comments = props.comments!.filter(
-					(comment) => comment._id !== commentId
-				);
-				props.showCommentList(comments);
-			} else {
-				const errorData = await response.json();
-				throw new Error(errorData.message || "Something went wrong!");
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	};
 	if (props.comments?.length === 0) {
 		return <p>No comments found</p>;
 	}
@@ -62,7 +32,6 @@ function Comments(props: CommentsProps) {
 					<UserComment
 						comment={comment}
 						id={props.id}
-						deleteCommentHandler={deleteCommentHandler}
 					/>
 				))}
 			</ul>

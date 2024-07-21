@@ -59,7 +59,7 @@ return <div className={classes.profileContainer}>
         <div className={classes.options}>
             <button className={classes.optionButton} onClick={props.handleShowModal}><AiOutlineEdit />Edit</button>
 <hr/>
-            <button className={classes.optionButton} onClick={() =>deletePost(props.id)}><BsTrash />Delete</button>
+            <button className={classes.optionButton} onClick={() => deletePost(props.id)}><BsTrash />Delete</button>
         </div>
     )}
     

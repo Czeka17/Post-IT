@@ -17,17 +17,11 @@ interface user {
   }
 function UsersList() {
   const { data: session, status } = useSession();
-  const [friendList, setFriendList] = useState<user[]>([]);
+  const {friendList} = useFriendList(session?.user?.name)
   const [users, setUsers] = useState<user[]>([]);
   const [page, setPage] = useState<number>(1);
   const listRef = useRef<HTMLUListElement>(null);
 
- if(session && session?.user?.name){
-  const friends = useFriendList(session.user.name)
-  useEffect(() =>
-  setFriendList(friends)
-  ,[friends])
- }
  
  const debouncedScrollHandler = useRef(
   debounce(() => {

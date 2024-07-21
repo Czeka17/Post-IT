@@ -16,3 +16,36 @@ export async function createUser(email:string,name:string,password:string){
 	return data;
 }
 
+export async function addUserHandler(username:string, friendname:string) {
+    try {
+      const response = await fetch('/api/user/add-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, friendname })
+      });
+      const data = await response.json();
+      console.log(data); 
+  
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  export async function deleteUserHandler(username:string, friendname:string)  {
+    try {
+      const response = await fetch('/api/user/add-user', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, friendname})
+      });
+  
+      const data = await response.json();
+      console.log(data); 
+  
+    } catch (error) {
+      console.error(error);
+    }
+  };

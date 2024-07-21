@@ -7,7 +7,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import PostModal from "./post-modal";
 import PostAuthor from "./post-author";
 import PostActions from "./post-actions/post-actions";
-
+import {formatDate} from '../../lib/formatTime'
 interface Comment {
 	userId: string;
 	userImg:string;
@@ -21,34 +21,32 @@ interface Like {
 	likedBy: string;
 }
 
-interface PostItemProps {
-	id: string;
-	profile: string;
-	author: string;
-	title: string;
+
+interface Post {
+	_id: string;
+	message: string;
 	image: {
 		url: string | undefined;
 		type: "image" | "video" | "gif" | undefined;
 	};
-	time: string;
-	comments: Comment[];
+	name: string;
+	userImage: string;
+	createdAt: string;
 	likes: Like[];
+	commentList: Comment[];
+  }
+  
+interface PostItemProps {
+	post:Post
 	onAddComment: (comment: {
 		message: string;
 		username: string;
 		postId: string;
 	}) => void;
 	onDeletePost: (postId: string) => void;
-	onUpdatePost: (
-		postId: string,
-		newTitle: string,
-		newImage: {
-			url: string | undefined;
-			type: "image" | "video" | "gif" | undefined;
-		}
-	) => void;
 }
 function PostItem(props: PostItemProps) {
+	const { _id, message, image, name, userImage, createdAt, likes, commentList } = props.post;
 	const commentInputRef = useRef<HTMLTextAreaElement>(null);
 	const { data: session, status } = useSession();
 	const [showComments, setShowComments] = useState(false);
@@ -83,7 +81,7 @@ function PostItem(props: PostItemProps) {
 		props.onAddComment({
 			message: enteredComment,
 			username: user,
-			postId: props.id,
+			postId:_id,
 		});
 
 		commentInputRef.current.value = "";
@@ -96,55 +94,34 @@ function PostItem(props: PostItemProps) {
 		setShowComments(true);
 	}
 
-	const commentsLength = props.comments?.length ?? 0;
+	const commentsLength = commentList?.length ?? 0;
 
-	const createdAt = props.time;
 
-	const createdDate = new Date(createdAt);
-
-	const currentDate = new Date();
-	const timeDiff = currentDate.getTime() - createdDate.getTime();
-
-	const seconds = Math.floor(timeDiff / 1000);
-	const minutes = Math.floor(seconds / 60);
-	const hours = Math.floor(minutes / 60);
-	const days = Math.floor(hours / 24);
-
-	let formattedTime = "";
-	if (days > 0) {
-		formattedTime = `${days} day${days > 1 ? "s" : ""} ago`;
-	} else if (hours > 0) {
-		formattedTime = `${hours} hour${hours > 1 ? "s" : ""} ago`;
-	} else if (minutes > 0) {
-		formattedTime = `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-	} else {
-		formattedTime = `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
-	}
 
 	return (
 		<li className={classes.item}>
 			<div>
 				<div className={classes.content}>
 					<PostAuthor
-						author={props.author}
-						profile={props.profile}
-						formattedTime={formattedTime}
+						author={name}
+						profile={userImage}
+						formattedTime={formatDate(createdAt)}
 						onDeletePost={props.onDeletePost}
-						id={props.id}
+						id={_id}
 						handleShowModal={handleShowModal}
 					/>
-					<p>{props.title}</p>
-					{props.image &&
-					(props.image.type === "image" || props.image.type === "gif") ? (
+					<p>{message}</p>
+					{image &&
+					(image.type === "image" || image.type === "gif") ? (
 						<div className={classes.image}>
 							<img
-								src={props.image.url}
-								alt={props.title}
+								src={image.url}
+								alt={message}
 							/>
 						</div>
 					) : (
-						props.image &&
-						props.image.type === "video" && (
+						image &&
+						image.type === "video" && (
 							<div className={classes.image}>
 								{" "}
 								<video
@@ -152,7 +129,7 @@ function PostItem(props: PostItemProps) {
 									className={classes.video}
 								>
 									<source
-										src={props.image.url}
+										src={image.url}
 										type='video/mp4'
 									/>
 									Your browser does not support the video tag.
@@ -162,8 +139,8 @@ function PostItem(props: PostItemProps) {
 					)}
 				</div>
 				<PostActions
-					id={props.id}
-					likes={props.likes}
+					id={_id}
+					likes={likes}
 					hideCommentsHandler={hideCommentsHandler}
 					commentsLength={commentsLength}
 					showCommentList={showCommentList}
@@ -185,9 +162,9 @@ function PostItem(props: PostItemProps) {
 				</form>
 				{showComments && (
 					<Comments
-						comments={props.comments}
+						comments={commentList}
 						user={user}
-						id={props.id}
+						id={_id}
 						showCommentList={showCommentList}
 					/>
 				)}
@@ -204,11 +181,10 @@ function PostItem(props: PostItemProps) {
 							timeout={300}
 						>
 							<PostModal
-								image={props.image}
-								title={props.title}
-								id={props.id}
+								image={image}
+								title={message}
+								id={_id}
 								onHideModal={handleHideModal}
-								onUpdatePost={props.onUpdatePost}
 							/>
 						</CSSTransition>
 					)}

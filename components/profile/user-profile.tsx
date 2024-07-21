@@ -9,6 +9,7 @@ import {FaUserFriends} from 'react-icons/fa'
 import {HiOutlineClipboardList} from 'react-icons/hi'
 import InfiniteScroll from 'react-infinite-scroll-component';
 import usePosts from '../../hooks/usePosts';
+import useFriendList from '../../hooks/useFriendList';
 
 const cloudName = 'dmn5oy2qa';
 
@@ -55,43 +56,13 @@ interface UserProfileProps {
     onChangeProfile: (profile: { image: string; username: string }) => void;
   }
 function UserProfile(props: UserProfileProps) {
-  const {posts,fetchPosts,fetchMoreData, isLoading,updatePost,addComment,deletePost,hasMore} = usePosts()
-  const [showPosts, setShowPosts] = useState(true)
-  const [friendList, setFriendList] = useState<Friend[]>([])
+  const {posts,fetchMoreData, isLoading,updatePost,addComment,deletePost,hasMore, showPosts, ShowFriendList, ShowPostsList} = usePosts()
+  const {friendList} = useFriendList(props.username)
+
   const [selectedImage, setSelectedImage] = useState<string>('');
   
-  useEffect(() => {
-    fetchPosts();
-  }, [props.username]);
 
-  function ShowFriendList(){
-    setShowPosts(false)
-  }
-  function ShowPosts(){
-    setShowPosts(true)
-  }
-  
 
-  useEffect(() => {
-    const fetchFriendList = async () => {
-      const response = await fetch('/api/user/friend-list', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username: props.username }),
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        setFriendList(data.filteredFriendUsers);
-      }
-    };
-  
-    if (friendList.length === 0 || props.username !== friendList[0]?.name) {
-      fetchFriendList();
-    }
-  }, [props.username, friendList]);
 
 
   function selectImageHandler(e:React.ChangeEvent<HTMLInputElement>) {
@@ -197,7 +168,7 @@ if(isLoading){
       <h2>{props.username}</h2>
     </div>
     <div className={classes.actions}>
-      <button onClick={ShowPosts}>
+      <button onClick={ShowPostsList}>
       <HiOutlineClipboardList/>
       </button>
       <button onClick={ShowFriendList}>
@@ -215,7 +186,7 @@ if(isLoading){
                 style={{ overflow: 'visible',minWidth: '100%' }}
               >
          {posts?.map((post) =>(
-          <PostItem key={post._id} id={post._id} title={post.message} image={post.image} author={post.name} profile={post.userImage} time={post.createdAt} likes={post.likes} onAddComment={addComment} comments={post.commentList} onDeletePost={deletePost} onUpdatePost={updatePost}/>
+          <PostItem key={post._id} post={post}  onAddComment={addComment}  onDeletePost={deletePost} />
         ))}
         </InfiniteScroll>}
       </ul>}

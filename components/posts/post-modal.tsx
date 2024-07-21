@@ -2,6 +2,7 @@ import classes from "./post-modal.module.css";
 import { useState } from "react";
 import CloudinaryUploader from "./addPost/cloudinary-uploader";
 import { AiOutlineSend, AiFillFileAdd } from "react-icons/ai";
+import usePosts from "../../hooks/usePosts";
 interface PostItemProps {
 	id: string;
 	title: string;
@@ -10,17 +11,10 @@ interface PostItemProps {
 		type: "image" | "video" | "gif" | undefined;
 	};
 	onHideModal: () => void;
-	onUpdatePost: (
-		postId: string,
-		newTitle: string,
-		newImage: {
-			url: string | undefined;
-			type: "image" | "video" | "gif" | undefined;
-		}
-	) => void;
 }
 
 function PostModal(props: PostItemProps) {
+	const {updatePost} = usePosts()
 	const [inputValue, setInputValue] = useState(props.title);
 	const [image, setImage] = useState(props.image);
 	const [isLoading, setIsLoading] = useState(false);
@@ -48,28 +42,10 @@ function PostModal(props: PostItemProps) {
 		setImage({ url: undefined, type: undefined });
 	}
 
-	function handleSubmit() {
-		fetch("/api/posts/addPost", {
-			method: "PATCH",
-			body: JSON.stringify({
-				message: inputValue,
-				postId: props.id,
-				image: image,
-			}),
-			headers: {
-				"Content-Type": "application/json",
-			},
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				console.log(data);
-				props.onUpdatePost(props.id, inputValue, image);
-				props.onHideModal();
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-	}
+	const handleSubmit = () => {
+		updatePost(props.id, inputValue, image);
+		props.onHideModal();
+	  };
 	return (
 		<div
 			className={classes.postModal}

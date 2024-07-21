@@ -1,8 +1,6 @@
 import PostItem from "./post-item";
 import classes from "./posts-list.module.css";
 import NewPost from "./addPost/add-post";
-import { useSession } from "next-auth/react";
-import { useEffect, useState} from "react";
 import UsersList from "../users/users.list";
 import { FaUserFriends } from "react-icons/fa";
 import { HiOutlineClipboardList } from "react-icons/hi";
@@ -11,20 +9,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import usePosts from '../../hooks/usePosts'
 
 function PostsList() {
-	const { posts, isLoading, hasMore, fetchMoreData, addPost, updatePost, deletePost, addComment } = usePosts();
-	const { data: session, status } = useSession();
-	const [showPosts, setShowPosts] = useState(true);
-	const name = session?.user?.name || "";
-
-	useEffect(() =>{
-		console.log(posts)
-	},[posts])
-	function ShowFriendList() {
-		setShowPosts(false);
-	}
-	function ShowPosts() {
-		setShowPosts(true);
-	}
+	const { posts, isLoading, hasMore, fetchMoreData, addPost, deletePost, addComment,showPosts,ShowPostsList,ShowFriendList } = usePosts();
+	
 
 	if (isLoading) {
 		return (
@@ -40,7 +26,7 @@ function PostsList() {
 		<section className={classes.postContainer}>
 			<div>
 				<div className={classes.display}>
-					<button onClick={ShowPosts}>
+					<button onClick={ShowPostsList}>
 						Posts <HiOutlineClipboardList />
 					</button>
 					<button onClick={ShowFriendList}>
@@ -83,17 +69,9 @@ function PostsList() {
 									>
 										<PostItem
 											key={post._id}
-											id={post._id}
-											title={post.message}
-											image={post?.image}
-											author={post.name}
-											profile={post.userImage}
-											time={post.createdAt}
-											likes={post.likes}
+											post={post}
 											onAddComment={addComment}
-											comments={post.commentList}
 											onDeletePost={deletePost}
-											onUpdatePost={updatePost}
 										/>
 									</CSSTransition>
 								))}

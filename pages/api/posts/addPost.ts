@@ -122,8 +122,10 @@ res.status(200).json({ posts });
         res.status(500).json({ error: 'Internal server error' });
       }
     }
-
-    client.close();
+      if (client) {
+        client.close();
+      }
+    
 }
 
 export default handler;

@@ -33,25 +33,27 @@ const usePosts = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showPosts, setShowPosts] = useState(true);
+
+	function ShowFriendList() {
+		setShowPosts(false);
+	}
+	function ShowPostsList() {
+		setShowPosts(true);
+	}
 
   useEffect(() => {
-    fetch(`/api/posts/addPost`)
-      .then((response) => response.json())
-      .then((data) => {
-        setPosts(data.posts);
-        setIsLoading(false);
-      });
+    const fetchPosts = async () => {
+      fetch(`/api/posts/addPost`)
+        .then((response) => response.json())
+        .then((data) => {
+          setPosts(data.posts);
+          setIsLoading(false);
+        });
+    }
+    fetchPosts()
   }, []);
   
-
-  const fetchPosts = async () => {
-    fetch(`/api/posts/addPost`)
-      .then((response) => response.json())
-      .then((data) => {
-        setPosts(data.posts);
-        setIsLoading(false);
-      });
-  }
 
   const fetchMoreData = async () => {
     try {
@@ -129,28 +131,39 @@ const usePosts = () => {
     }
   };
 
-  const addComment = async (commentData: any) => {
+  const addComment = async (comment: { message: string; username: string; postId: string }) => {
+    const { postId, ...commentData } = comment;
     try {
-        fetch("/api/posts/addComment", {
-			method: "POST",
-			body: JSON.stringify(commentData),
-			headers: {
-				"Content-Type": "application/json",
-			},
-		}).then((response) => {
-			if (response.ok) {
-				return response.json();
-			}
-			return response.json().then((data) => {
-				throw new Error(data.message || "Something went wrong!");
-			});
-		});
+      const response = await fetch("/api/posts/addComment", {
+        method: "POST",
+        body: JSON.stringify({ postId, ...commentData }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Something went wrong!");
+      }
+      const data = await response.json();
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                commentList: [...post.commentList, data.comment],
+              }
+            : post
+        )
+      );
     } catch (error) {
       console.error(error);
     }
   };
+  
+  
 
-  const deleteComment = async (postId: string, commentId: string, username: string | undefined) => {
+  const deleteComment = async (postId: string, commentId: string, username: string | undefined | null) => {
     try {
       const response = await fetch("/api/posts/deleteComment", {
         method: "DELETE",
@@ -217,9 +230,57 @@ const usePosts = () => {
     }
   };
 
+  const likeComment = async (postId: string, commentId: string, username?: string | undefined | null) => {
+    try {
+      const response = await fetch("/api/posts/commentLikes", {
+        method: "POST",
+        body: JSON.stringify({ postId, commentId, username }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPosts((prevPosts) => {
+          const postIndex = prevPosts.findIndex((post) => post._id === postId);
+          if (postIndex === -1) {
+            return prevPosts;
+          }
+
+          const updatedPosts = [...prevPosts];
+          const post = updatedPosts[postIndex];
+          const commentIndex = post.commentList.findIndex((comment) => comment._id === commentId);
+
+          if (commentIndex === -1) {
+            return updatedPosts;
+          }
+
+          const updatedCommentList = [...post.commentList];
+          const comment = updatedCommentList[commentIndex];
+
+          if (data.isLiked) {
+            comment.likes.push({ likedBy: username! });
+          } else {
+            comment.likes = comment.likes.filter((like) => like.likedBy !== username);
+          }
+
+          updatedCommentList[commentIndex] = comment;
+          updatedPosts[postIndex].commentList = updatedCommentList;
+
+          return updatedPosts;
+        });
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Something went wrong!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return {
     posts,
-    fetchPosts,
     isLoading,
     hasMore,
     fetchMoreData,
@@ -228,7 +289,11 @@ const usePosts = () => {
     deletePost,
     addComment,
     deleteComment,
-    likePost
+    likePost,
+    showPosts,
+    ShowFriendList,
+    ShowPostsList,
+    likeComment
   };
 };
 

@@ -5,6 +5,7 @@ import classes from './user.module.css'
 import { useSession } from 'next-auth/react';
 import {useState, useEffect} from 'react'
 import {AiOutlineUserAdd,AiOutlineUserDelete} from 'react-icons/ai'
+import { addUserHandler, deleteUserHandler } from '../../lib/api';
 
 interface UserProps {
     name: string;
@@ -20,39 +21,6 @@ interface user {
   name: string;
 }
 
-  async function addUserHandler(username:string, friendname:string) {
-    try {
-      const response = await fetch('/api/user/add-user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, friendname })
-      });
-      const data = await response.json();
-      console.log(data); 
-  
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  async function deleteUserHandler(username:string, friendname:string)  {
-    try {
-      const response = await fetch('/api/user/add-user', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, friendname})
-      });
-  
-      const data = await response.json();
-      console.log(data); 
-  
-    } catch (error) {
-      console.error(error);
-    }
-  };
 function User(props:UserProps){
     const { data: session, status } = useSession()
     const [newFriendList, setNewFriendList] = useState<Friend[]>(props.friendList);

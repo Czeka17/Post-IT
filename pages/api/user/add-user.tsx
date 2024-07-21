@@ -81,6 +81,10 @@ async function handler(req:NextApiRequest, res:NextApiResponse) {
     }catch(error){
       console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
+    }finally {
+      if (client) {
+        client.close();
+      }
     }
 }
 }

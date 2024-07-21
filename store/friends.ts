@@ -6,6 +6,7 @@ interface Friend {
   image: string;
 }
 
+
 interface RootState {
   friendList: Friend[];
 }

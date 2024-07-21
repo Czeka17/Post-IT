@@ -31,8 +31,9 @@ async function handler(req:NextApiRequest, res:NextApiResponse) {
       res.status(500).json({ message: "Getting users failed." });
     }
   }
-
-  client.close();
+    if (client) {
+      client.close();
+    }
 }
 
 export default handler;
