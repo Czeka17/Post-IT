@@ -1,18 +1,14 @@
-import { useEffect } from 'react';
 import classes from './friend-list.module.css';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 import useFriendList from '../../hooks/useFriendList';
-
+import User from '../users/user';
 interface Friend {
   _id: string;
   name: string;
   image: string;
 }
 
-interface FriendListProps {}
-
-function FriendList(props: FriendListProps) {
+function FriendList() {
   const { data: session } = useSession();
   const { friendList, isLoading, error } = useFriendList(session?.user?.name || '');
 
@@ -37,15 +33,7 @@ function FriendList(props: FriendListProps) {
         <div>
           <ul className={classes.list}>
             {friendList.map((friend: Friend) => (
-              <li key={friend._id}>
-                <Link
-                  href={`/${encodeURIComponent(friend.name)}`}
-                  className={classes.userlist}
-                >
-                  <img src={friend.image} alt={friend.name} />
-                  <p>{friend.name}</p>
-                </Link>
-              </li>
+              <User name={friend.name} userImage={friend.image} friendList={friendList} friend={"yes"}/>
             ))}
             {friendList.length === 0 && (
               <p className={classes.friendListIsEmpty}>

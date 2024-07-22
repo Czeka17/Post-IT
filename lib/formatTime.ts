@@ -1,4 +1,4 @@
-export const formatDate = (createdAt: string): string => {
+export const formatDate = (createdAt: string | number): string => {
     const createdDate = new Date(createdAt);
     const currentDate = new Date();
     const timeDiff = currentDate.getTime() - createdDate.getTime();

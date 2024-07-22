@@ -5,13 +5,14 @@ import { useSession } from "next-auth/react";
 import { AiOutlineSend } from "react-icons/ai";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import PostModal from "./post-modal";
-import PostAuthor from "./post-author";
 import PostActions from "./post-actions/post-actions";
-import {formatDate} from '../../lib/formatTime'
+import { formatDate } from "../../lib/formatTime";
+import PostAuthorContainer from "./post-author/post-author-container";
+import usePosts from "../../hooks/usePosts";
 interface Comment {
 	userId: string;
-	userImg:string;
-    userName:string;
+	userImg: string;
+	userName: string;
 	_id: string;
 	message: string;
 	createdAt: string;
@@ -20,7 +21,6 @@ interface Comment {
 interface Like {
 	likedBy: string;
 }
-
 
 interface Post {
 	_id: string;
@@ -34,19 +34,23 @@ interface Post {
 	createdAt: string;
 	likes: Like[];
 	commentList: Comment[];
-  }
-  
+}
+
 interface PostItemProps {
-	post:Post
-	onAddComment: (comment: {
-		message: string;
-		username: string;
-		postId: string;
-	}) => void;
-	onDeletePost: (postId: string) => void;
+	post: Post;
 }
 function PostItem(props: PostItemProps) {
-	const { _id, message, image, name, userImage, createdAt, likes, commentList } = props.post;
+	const {
+		_id,
+		message,
+		image,
+		name,
+		userImage,
+		createdAt,
+		likes,
+		commentList,
+	} = props.post;
+	const { addComment } = usePosts();
 	const commentInputRef = useRef<HTMLTextAreaElement>(null);
 	const { data: session, status } = useSession();
 	const [showComments, setShowComments] = useState(false);
@@ -68,20 +72,10 @@ function PostItem(props: PostItemProps) {
 			return;
 		}
 
-		const newComment: Comment = {
-			userId: "",
-			userName: session?.user?.name || "",
-			userImg: session?.user?.image || "",
-			_id: "",
-			message: enteredComment,
-			createdAt: "",
-			likes: [],
-		};
-
-		props.onAddComment({
+		addComment({
 			message: enteredComment,
 			username: user,
-			postId:_id,
+			postId: _id,
 		});
 
 		commentInputRef.current.value = "";
@@ -96,23 +90,19 @@ function PostItem(props: PostItemProps) {
 
 	const commentsLength = commentList?.length ?? 0;
 
-
-
 	return (
 		<li className={classes.item}>
 			<div>
 				<div className={classes.content}>
-					<PostAuthor
+					<PostAuthorContainer
 						author={name}
 						profile={userImage}
 						formattedTime={formatDate(createdAt)}
-						onDeletePost={props.onDeletePost}
 						id={_id}
 						handleShowModal={handleShowModal}
 					/>
 					<p>{message}</p>
-					{image &&
-					(image.type === "image" || image.type === "gif") ? (
+					{image && (image.type === "image" || image.type === "gif") ? (
 						<div className={classes.image}>
 							<img
 								src={image.url}
@@ -169,27 +159,16 @@ function PostItem(props: PostItemProps) {
 					/>
 				)}
 			</div>
-			<TransitionGroup>
-				<div>
-					{showModal && (
-						<CSSTransition
-							in={showModal}
-							classNames={{
-								enter: classes.modalanimationEnter,
-								enterActive: classes.modalanimationEnterActive,
-							}}
-							timeout={300}
-						>
-							<PostModal
-								image={image}
-								title={message}
-								id={_id}
-								onHideModal={handleHideModal}
-							/>
-						</CSSTransition>
-					)}
-				</div>
-			</TransitionGroup>
+			<div>
+				{showModal && (
+					<PostModal
+						image={image}
+						title={message}
+						id={_id}
+						onHideModal={handleHideModal}
+					/>
+				)}
+			</div>
 		</li>
 	);
 }

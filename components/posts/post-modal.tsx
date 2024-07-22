@@ -1,6 +1,6 @@
 import classes from "./post-modal.module.css";
 import { useState } from "react";
-import CloudinaryUploader from "./addPost/cloudinary-uploader";
+import CloudinaryUploader from "./add-post/cloudinary-uploader";
 import { AiOutlineSend, AiFillFileAdd } from "react-icons/ai";
 import usePosts from "../../hooks/usePosts";
 interface PostItemProps {
@@ -14,7 +14,7 @@ interface PostItemProps {
 }
 
 function PostModal(props: PostItemProps) {
-	const {updatePost} = usePosts()
+	const { updatePost } = usePosts();
 	const [inputValue, setInputValue] = useState(props.title);
 	const [image, setImage] = useState(props.image);
 	const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +45,7 @@ function PostModal(props: PostItemProps) {
 	const handleSubmit = () => {
 		updatePost(props.id, inputValue, image);
 		props.onHideModal();
-	  };
+	};
 	return (
 		<div
 			className={classes.postModal}

@@ -16,27 +16,12 @@ interface ProfilePageProps {
   function ProfilePage(props: ProfilePageProps) {
     const { data: session, status } = useSession();
     const activeUser = session?.user?.name;
-
-    async function changeProfileHandler(image:string, username:string){
-        const response = await fetch('/api/user/changeImage', {
-          method: 'POST',
-          body: JSON.stringify({image, username}),
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
-      
-        const data = await response.json();
-
-      }
       
 
     return <section className={classes.wrapper}>   <Head>
     <title>{props.userData.name}</title>
     <meta name="description" content="Informations about exact user you want" />
-    </Head><UserProfile username={props.userData.name}  onChangeProfile={(profile: { image: string; username: string }) =>
-      changeProfileHandler(profile.image, profile.username)
-    } activeUser={activeUser} image={props.userData.image} />
+    </Head><UserProfile username={props.userData.name}  activeUser={activeUser} image={props.userData.image} />
     </section>
 }
 

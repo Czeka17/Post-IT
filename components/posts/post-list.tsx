@@ -1,16 +1,23 @@
 import PostItem from "./post-item";
 import classes from "./posts-list.module.css";
-import NewPost from "./addPost/add-post";
+import NewPost from "./add-post/add-post";
 import UsersList from "../users/users.list";
 import { FaUserFriends } from "react-icons/fa";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import InfiniteScroll from "react-infinite-scroll-component";
-import usePosts from '../../hooks/usePosts'
+import usePosts from "../../hooks/usePosts";
 
 function PostsList() {
-	const { posts, isLoading, hasMore, fetchMoreData, addPost, deletePost, addComment,showPosts,ShowPostsList,ShowFriendList } = usePosts();
-	
+	const {
+		posts,
+		isLoading,
+		hasMore,
+		fetchMoreData,
+		showPosts,
+		ShowPostsList,
+		ShowFriendList,
+	} = usePosts();
 
 	if (isLoading) {
 		return (
@@ -35,9 +42,7 @@ function PostsList() {
 				</div>
 				{showPosts && (
 					<div>
-						<NewPost
-							onAddPost={addPost}
-						/>
+						<NewPost />
 					</div>
 				)}
 				<ul className={classes.list}>
@@ -70,8 +75,6 @@ function PostsList() {
 										<PostItem
 											key={post._id}
 											post={post}
-											onAddComment={addComment}
-											onDeletePost={deletePost}
 										/>
 									</CSSTransition>
 								))}
