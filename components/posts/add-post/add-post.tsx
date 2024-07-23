@@ -2,10 +2,13 @@ import { useRef, useState } from "react";
 import AddPostForm from "./add-post-form";
 import CloudinaryUploader from "./cloudinary-uploader";
 import { useSession } from "next-auth/react";
-import usePosts from "../../../hooks/usePosts";
-
+import { usePostsStore } from "../../../store/usePostsStore";
 function NewPost() {
-	const {addPost} =usePosts()
+	const {
+		addPost
+	  } = usePostsStore(state => ({
+		addPost: state.addPost
+	  }));
 	const { data: session, status } = useSession();
 	const [media, setMedia] = useState<{
 		type: "image" | "video" | "gif";
@@ -30,7 +33,7 @@ function NewPost() {
 		setIsLoading(false);
 	}
 
-	function sendPostHandler(e: any) {
+	async function sendPostHandler(e:React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
 		const enteredMessage = messageInputRef.current?.value;
@@ -43,10 +46,10 @@ function NewPost() {
 		}
 
 		if(session?.user?.name && session?.user?.image){
-			addPost({
+			await addPost({
 				message: enteredMessage,
 				name: session!.user!.name,
-				userImage: session.user.image,
+				userImage: session!.user!.image,
 				image: media,
 			});
 		}

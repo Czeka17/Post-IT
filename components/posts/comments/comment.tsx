@@ -2,8 +2,8 @@ import classes from './comment.module.css'
 import { useSession } from 'next-auth/react';
 import {BsTrash3Fill} from 'react-icons/bs'
 import { AiFillHeart } from 'react-icons/ai';
-import usePosts from '../../../hooks/usePosts';
 import { formatDate } from '../../../lib/formatTime';
+import { usePostsStore } from '../../../store/usePostsStore';
 interface Like {
     likedBy: string;
   }
@@ -22,7 +22,11 @@ interface Comment {
   }
 
 function UserComment({comment,id}:UserCommentProps){
-  const {deleteComment,likeComment} = usePosts()
+
+  const { deleteComment,likeComment } = usePostsStore(state => ({
+		deleteComment:state.deleteComment,
+    likeComment:state.likeComment
+	  }));
     const { data: session, status } = useSession();
     const likesCount = (comment.likes?.length ?? 0)
     const isLikedByUser = comment.likes?.some((like) => like.likedBy === session?.user?.name)

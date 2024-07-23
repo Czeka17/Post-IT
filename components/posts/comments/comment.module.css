@@ -74,3 +74,33 @@
   .disliked{
    fill: #D0D0D0;
   }
+
+  .commentForm{
+    position: relative;
+    margin: 1em;
+}
+.commentForm textarea{
+    width: 100%;
+    max-width: 100%;
+    padding: 1em;
+    resize: none;
+    border: 2px solid #00ADB5;
+    background-color: #444952;
+    color: #D0D0D0;
+    border-radius: 10px;
+}
+.commentForm button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    color: #00ADB5;
+    cursor: pointer;
+    padding: 0.5em;
+    transition: all 0.3s;
+}
+.commentForm button:hover{
+    transform: scale(1.1);
+}

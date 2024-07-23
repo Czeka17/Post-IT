@@ -40,7 +40,8 @@
     "swr": "^2.1.5",
     "url": "^0.11.0",
     "uuid": "^9.0.0",
-    "ws": "^8.13.0"
+    "ws": "^8.13.0",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@testing-library/user-event": "^14.4.3",

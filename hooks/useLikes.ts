@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import usePosts from "./usePosts";
+import { usePostsStore } from "../store/usePostsStore";
 
 interface Like {
     likedBy: string;
 }
 
 const useLike = (postId: string, initialLikes: Like[]) => {
-    const { likePost } = usePosts();
+    const {  likePost } = usePostsStore(state => ({
+		likePost:state.likePost
+	  }));
     const { data: session } = useSession();
     const [likesCount, setLikesCount] = useState(initialLikes?.length || 0);
     const [isLikedByUser, setIsLikedByUser] = useState(false);
@@ -25,7 +27,7 @@ const useLike = (postId: string, initialLikes: Like[]) => {
             if (isLikedByUser) {
                 setIsLikedByUser(false);
                 setLikesCount((prevLikes) => prevLikes - 1);
-            } else {
+            } else if(!isLikedByUser) {
                 setIsLikedByUser(true);
                 setLikesCount((prevLikes) => prevLikes + 1);
             }

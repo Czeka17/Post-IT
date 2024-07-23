@@ -1,24 +1,34 @@
-import PostItem from "./post-item";
+import PostItem from "../post-item/post-item";
 import classes from "./posts-list.module.css";
-import NewPost from "./add-post/add-post";
-import UsersList from "../users/users.list";
+import NewPost from "../add-post/add-post";
+import UsersList from "../../users/users.list";
 import { FaUserFriends } from "react-icons/fa";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import InfiniteScroll from "react-infinite-scroll-component";
-import usePosts from "../../hooks/usePosts";
-
+import { usePostsStore } from "../../../store/usePostsStore";
+import { useEffect, useState } from "react";
+import FeedbackModal from "../../layout/feedback-modal/feedback-modal";
 function PostsList() {
-	const {
-		posts,
-		isLoading,
-		hasMore,
-		fetchMoreData,
-		showPosts,
-		ShowPostsList,
-		ShowFriendList,
-	} = usePosts();
+	const [showPosts, setShowPosts] = useState(true);
 
+	function ShowFriendList() {
+		setShowPosts(false);
+	}
+	function ShowPostsList() {
+		setShowPosts(true);
+	}
+	const { posts, isLoading, initializePosts, fetchMoreData, hasMore } =
+		usePostsStore((state) => ({
+			posts: state.posts,
+			isLoading: state.isLoading,
+			initializePosts: state.initializePosts,
+			fetchMoreData: state.fetchMoreData,
+			hasMore: state.hasMore,
+		}));
+	useEffect(() => {
+		initializePosts();
+	}, [initializePosts]);
 	if (isLoading) {
 		return (
 			<div className={classes.loading}>
@@ -84,6 +94,7 @@ function PostsList() {
 				</ul>
 				{!showPosts && <UsersList />}
 			</div>
+			{<FeedbackModal />}
 		</section>
 	);
 }

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { signIn } from 'next-auth/react';
-import Notification from "../layout/notification";
+import Notification from "../layout/notification/notification";
 import AuthForm from "./auth-form";
 import { createUser } from '../../lib/api';
 

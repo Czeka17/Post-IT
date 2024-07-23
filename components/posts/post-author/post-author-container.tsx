@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
-import usePosts from "../../../hooks/usePosts";
 import PostAuthor from "./post-author";
+import { usePostsStore } from "../../../store/usePostsStore";
 interface PostAuthorProps {
 	author:string;
 	profile:string;
@@ -10,7 +10,10 @@ interface PostAuthorProps {
 	id: string;
 }
 function PostAuthorContainer(props:PostAuthorProps) {
-	const { deletePost } = usePosts();
+	const { deletePost } = usePostsStore(state => ({
+		deletePost:state.deletePost
+	  }));
+
 	const [showOptions, setShowOptions] = useState(false);
 	const { data: session, status } = useSession();
 

@@ -1,14 +1,14 @@
 import classes from "./post-item.module.css";
-import Comments from "./comments/comments";
+import Comments from "../comments/comments";
 import React, { useRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import { AiOutlineSend } from "react-icons/ai";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
-import PostModal from "./post-modal";
-import PostActions from "./post-actions/post-actions";
-import { formatDate } from "../../lib/formatTime";
-import PostAuthorContainer from "./post-author/post-author-container";
-import usePosts from "../../hooks/usePosts";
+import PostActions from "../post-actions/post-actions";
+import { formatDate } from "../../../lib/formatTime";
+import PostAuthorContainer from "../post-author/post-author-container";
+import CommentForm from "../comments/comment-form";
+import PostModalContainer from "../post-modal/post-modal-container";
+import PostImage from "../post-image/post-image";
+import { usePostsStore } from "../../../store/usePostsStore";
 interface Comment {
 	userId: string;
 	userImg: string;
@@ -50,7 +50,10 @@ function PostItem(props: PostItemProps) {
 		likes,
 		commentList,
 	} = props.post;
-	const { addComment } = usePosts();
+
+	const {  addComment } = usePostsStore(state => ({
+		addComment:state.addComment
+	  }));
 	const commentInputRef = useRef<HTMLTextAreaElement>(null);
 	const { data: session, status } = useSession();
 	const [showComments, setShowComments] = useState(false);
@@ -102,31 +105,7 @@ function PostItem(props: PostItemProps) {
 						handleShowModal={handleShowModal}
 					/>
 					<p>{message}</p>
-					{image && (image.type === "image" || image.type === "gif") ? (
-						<div className={classes.image}>
-							<img
-								src={image.url}
-								alt={message}
-							/>
-						</div>
-					) : (
-						image &&
-						image.type === "video" && (
-							<div className={classes.image}>
-								{" "}
-								<video
-									controls
-									className={classes.video}
-								>
-									<source
-										src={image.url}
-										type='video/mp4'
-									/>
-									Your browser does not support the video tag.
-								</video>
-							</div>
-						)
-					)}
+					<PostImage image={image} />
 				</div>
 				<PostActions
 					id={_id}
@@ -136,20 +115,10 @@ function PostItem(props: PostItemProps) {
 					showCommentList={showCommentList}
 					showComments={showComments}
 				/>
-				<form
-					className={classes.commentForm}
-					onSubmit={sendCommentHandler}
-				>
-					<textarea
-						placeholder='comment'
-						id='comment'
-						ref={commentInputRef}
-						rows={2}
-					></textarea>
-					<button>
-						<AiOutlineSend />
-					</button>
-				</form>
+				<CommentForm
+					sendCommentHandler={sendCommentHandler}
+					commentInputRef={commentInputRef}
+				/>
 				{showComments && (
 					<Comments
 						comments={commentList}
@@ -161,7 +130,7 @@ function PostItem(props: PostItemProps) {
 			</div>
 			<div>
 				{showModal && (
-					<PostModal
+					<PostModalContainer
 						image={image}
 						title={message}
 						id={_id}
