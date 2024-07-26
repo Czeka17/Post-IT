@@ -26,7 +26,7 @@ const useChat = () =>{
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
-    const MESSAGES_PER_PAGE = 10;
+    const MESSAGES_PER_PAGE = 20;
 
 
     useEffect(() =>{
@@ -64,7 +64,6 @@ const useChat = () =>{
     
         try {
           await axios.post("/api/chat/chat", newMessage);
-          setMessages((prevMessages) => [newMessage, ...prevMessages]);
         } catch (error) {
           console.error("Error sending message:", error);
         }
@@ -110,13 +109,8 @@ const useChat = () =>{
               timestamp: data.timestamp,
             };
         
-            const isCurrentUserMessage = newMessage.user === session?.user?.name;
+            return [ newMessage,...prevMessages];
     
-        if (!isCurrentUserMessage) {
-          return [...prevMessages, newMessage];
-        } else {
-          return prevMessages.filter((message) => message._id !== data.id);
-        }
       });
     });
         

@@ -93,7 +93,7 @@ export const usePostsStore = create<PostsState>()(
         try {
             
             set((state) => ({
-                showFeedbackModal:{show:true, title:'Publishing your post!', message:'Please wait'}
+                showFeedbackModal:{show:true, title:'Please wait', message:'Publishing your post!'}
             }))
             const response = await fetch('/api/posts/addPost', {
                 method: 'POST',
@@ -121,6 +121,9 @@ export const usePostsStore = create<PostsState>()(
 
     updatePost: async (postId: string, newTitle: string, newImage: { url: string | undefined; type: 'image' | 'video' | 'gif' | undefined }) => {
         try {
+            set((state) => ({
+                showFeedbackModal:{show:true, title:'Please wait', message:'Updating your post!'}
+            }))
             const response = await fetch('/api/posts/addPost', {
                 method: 'PATCH',
                 body: JSON.stringify({ postId, message: newTitle, image: newImage }),
@@ -128,21 +131,32 @@ export const usePostsStore = create<PostsState>()(
                     'Content-Type': 'application/json',
                 },
             });
+            set((state) => ({
+                showFeedbackModal:{show:true, title:'Success!', message:'Your post has been updated!'},
+            }))
             set((state) => {
+                
                 const updatedPosts = state.posts.map((post) =>
                     post._id === postId
                         ? { ...post, message: newTitle, image: newImage }
                         : post
                 );
+                
                 return { posts: updatedPosts };
             });
         } catch (error) {
+            set((state) => ({
+                showFeedbackModal:{show:true, title:'Opps!', message:'Something went wrong, please try again later'}
+            }))
             console.error(error);
         }
     },
 
     deletePost: async (postId: string) => {
         try {
+            set((state) => ({
+                showFeedbackModal:{show:true, title:'Please wait', message:'Deleting your post'}
+            }))
             const response = await fetch(`/api/posts/addPost`, {
                 method: 'DELETE',
                 body: JSON.stringify({postId:postId}),
@@ -152,9 +166,13 @@ export const usePostsStore = create<PostsState>()(
             });
             if (response.ok) {
                 set((state) => ({
+                    showFeedbackModal:{show:true, title:'Success!', message:'Deleted your post!'},
                     posts: state.posts.filter((post) => post._id !== postId)
                 }));
             } else {
+                set((state) => ({
+                    showFeedbackModal:{show:true, title:'Opps!', message:'Something went wrong, please try again later'}
+                }))
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Something went wrong!');
             }
@@ -165,6 +183,9 @@ export const usePostsStore = create<PostsState>()(
 
     addComment: async (comment: { message: string; username: string; postId: string }) => {
         try {
+            set((state) => ({
+                showFeedbackModal:{show:true, title:'Please wait', message:'Adding your comment!'}
+            }))
             const response = await fetch('/api/posts/addComment', {
                 method: 'POST',
                 body: JSON.stringify(comment),
@@ -173,11 +194,15 @@ export const usePostsStore = create<PostsState>()(
                 },
             });
             if (!response.ok) {
+                set((state) => ({
+                    showFeedbackModal:{show:true, title:'Opps!', message:'Something went wrong, please try again later'}
+                }))
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Something went wrong!');
             }
             const data = await response.json();
             set((state) => ({
+                showFeedbackModal:{show:true, title:'Success!', message:'Added your comment!'},
                 posts: state.posts.map((post) =>
                     post._id === comment.postId
                         ? { ...post, commentList: [...post.commentList || [], data.comment] }
@@ -191,6 +216,9 @@ export const usePostsStore = create<PostsState>()(
 
     deleteComment: async (postId: string, commentId: string, username: string | undefined | null) => {
         try {
+            set((state) => ({
+                showFeedbackModal:{show:true, title:'Please wait', message:'Deleting your comment!'}
+            }))
             const response = await fetch('/api/posts/deleteComment', {
                 method: 'DELETE',
                 body: JSON.stringify({ postId, commentId, username }),
@@ -200,6 +228,7 @@ export const usePostsStore = create<PostsState>()(
             });
             if (response.ok) {
                 set((state) => ({
+                    showFeedbackModal:{show:true, title:'Success!', message:'Deleted your comment!'},
                     posts: state.posts.map((post) =>
                         post._id === postId
                             ? { ...post, commentList: post.commentList.filter((comment) => comment._id !== commentId) }
@@ -207,6 +236,9 @@ export const usePostsStore = create<PostsState>()(
                     )
                 }));
             } else {
+                set((state) => ({
+                    showFeedbackModal:{show:true, title:'Opps!', message:'Something went wrong, please try again later'}
+                }))
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Something went wrong!');
             }
@@ -217,6 +249,7 @@ export const usePostsStore = create<PostsState>()(
 
     likePost: async (postId: string, username: string | undefined) => {
         try {
+            
             const response = await fetch('/api/posts/postLikes', {
                 method: 'POST',
                 body: JSON.stringify({ postId, username }),
@@ -241,6 +274,7 @@ export const usePostsStore = create<PostsState>()(
                 });
             }
         } catch (error) {
+
             console.error(error);
         }
     },
