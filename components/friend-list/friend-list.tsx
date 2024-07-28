@@ -1,7 +1,8 @@
+import { useEffect } from 'react';
 import classes from './friend-list.module.css';
 import { useSession } from 'next-auth/react';
-import useFriendList from '../../hooks/useFriendList';
 import User from '../users/user';
+import {useFriendStore} from '../../store/useFriendlistStore'
 interface Friend {
   _id: string;
   name: string;
@@ -10,7 +11,18 @@ interface Friend {
 
 function FriendList() {
   const { data: session } = useSession();
-  const { friendList, isLoading, error } = useFriendList(session?.user?.name || '');
+  const { friendList, isLoading, error, fetchFriendList } = useFriendStore((state) => ({
+    friendList: state.friendList,
+    isLoading: state.isLoading,
+    error: state.error,
+    fetchFriendList: state.fetchFriendList,
+  }));
+
+  useEffect(() => {
+    if (session?.user?.name) {
+      fetchFriendList(session.user.name);
+    }
+  }, [session?.user?.name, fetchFriendList]);
 
   if (!session) {
     return <div>Please log in.</div>

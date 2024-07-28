@@ -3,7 +3,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "16": "^0.0.2",
@@ -53,6 +55,8 @@
     "@types/react-transition-group": "^4.4.6",
     "@types/uuid": "^9.0.1",
     "@types/ws": "^8.5.4",
+    "cypress": "^13.13.1",
+    "cypress-file-upload": "^5.0.8",
     "tailwindcss": "^3.3.2",
     "typescript": "^5.0.4"
   },

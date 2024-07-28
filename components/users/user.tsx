@@ -3,6 +3,7 @@ import classes from './user.module.css'
 import { useSession } from 'next-auth/react';
 import {AiOutlineUserAdd,AiOutlineUserDelete} from 'react-icons/ai'
 import useFriendList from '../../hooks/useFriendList';
+import { useFriendStore } from '../../store/useFriendlistStore';
 
 interface UserProps {
     name: string;
@@ -18,8 +19,13 @@ interface UserProps {
 
 function User(props:UserProps){
     const { data: session, status } = useSession()
-    const { addUserHandler, deleteUserHandler, isFriend } = useFriendList(session?.user?.name || '', props.name);
+
     const name = session!.user!.name as string;
+    const { addUserHandler,deleteUserHandler, isFriend } = useFriendStore((state) => ({
+      addUserHandler: state.addUserHandler,
+      deleteUserHandler: state.deleteUserHandler,
+      isFriend:state.isFriend
+    }));
 
 
 
@@ -30,8 +36,8 @@ function User(props:UserProps){
         <span>{props.name}</span>
         </div>
         </Link>
-        {props.friend !== 'yes' && <div className={`${isFriend ? classes.isFriend : ''} ${classes.actions}`}>
-        {isFriend ? (
+        {props.friend !== 'yes' && <div className={`${isFriend(props.name) ? classes.isFriend : ''} ${classes.actions}`}>
+        {isFriend(props.name) ? (
           <button onClick={() => deleteUserHandler(name, props.name)}><AiOutlineUserDelete/></button>
         ) : (
           <button onClick={() => addUserHandler(name, props.name,props.userImage)}><AiOutlineUserAdd/></button>

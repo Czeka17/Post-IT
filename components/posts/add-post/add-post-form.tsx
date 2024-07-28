@@ -15,12 +15,13 @@ function AddPostForm({onSendPost,placeholder,messageInputRef,media,deleteMedia,i
     <div className={classes.container}>
       <div className={classes.textareaContainer}>
         <textarea
+        data-cy='add-post-textarea'
           placeholder={placeholder}
           id="post"
           rows={5}
           ref={messageInputRef}
         ></textarea>
-        <button className={classes.submitButton}><AiOutlineSend /></button>
+        <button data-cy="add-post-button" className={classes.submitButton}><AiOutlineSend /></button>
         <div className={classes.file}>
           <label htmlFor="file" className={classes.fileButton}>
             <AiFillFileAdd />
@@ -29,7 +30,7 @@ function AddPostForm({onSendPost,placeholder,messageInputRef,media,deleteMedia,i
         </div>
       </div>
       {media && media.type != null && (
-        <div className={classes.mediaPreview}>
+        <div className={classes.mediaPreview} data-cy='media-preview'>
           {media.type === 'image' && (
             <div>
               <img src={media.url} alt="Post Media" />

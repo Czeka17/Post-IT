@@ -26,7 +26,7 @@ function AuthForm({isLogin,
 			</section>
 			<section className={classes.auth}>
 				<h2>{isLogin ? "Log in" : "Sign up"}</h2>
-				<form onSubmit={submitHandler}>
+				<form noValidate={true} onSubmit={submitHandler}>
 						<div className={classes.control}>
 							<label htmlFor='name'>Name</label>
 							<input
@@ -57,7 +57,7 @@ function AuthForm({isLogin,
 						/>
 					</div>
 					<div className={classes.actions}>
-						<button>{isLogin ? "Log in" : "Sign Up"}</button>
+						<button data-cy="login-button">{isLogin ? "Log in" : "Sign Up"}</button>
 						<hr />
 						<button
 							className={classes.switch}

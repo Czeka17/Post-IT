@@ -49,7 +49,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
             {_id: objectId},
             {$set: {commentList: commentList}}
         )
-        res.status(200).json({ message: 'Comment added successfully!' });
+        res.status(200).json({ comment: newComment });
 
         client.close()
     }catch(error){

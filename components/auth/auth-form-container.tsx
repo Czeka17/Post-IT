@@ -52,6 +52,11 @@ function AuthFormContainer() {
         const enteredName = nameInputRef.current!.value;
         const enteredPassword = passwordInputRef.current!.value;
 
+        if(enteredEmail.trim() === '' || enteredName.trim() === '' || enteredPassword.trim() === '' || !enteredEmail.includes('@') || enteredPassword.length <= 5){
+          setRequestStatus('error');
+          return
+        }
+
         const result = await createUser(enteredEmail, enteredName, enteredPassword);
         console.log(result);
         await signIn('credentials', {
