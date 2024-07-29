@@ -11,6 +11,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
         client = await connectToDatabase(); 
     } catch(error){
         res.status(500).json({ message: 'Connecting to the database failed!'});
+        
         return
     }
 
@@ -39,6 +40,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
             const result = await db.collection('posts').insertOne(newPost)
 
             res.status(201).json({ message: 'Added post!', post: newPost})
+            client.close();
             return result
         }catch(error){
             res.status(500).json({message: 'Insetring post failed!'})
@@ -47,7 +49,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
     else if (req.method === 'GET') {
         try {
           const db = client.db();
-          const postsPerPage = 4;
+          const postsPerPage = 10;
           const author = req.query.author;
 const page = parseInt(req.query.page as string, 10) || 1;
 const skip = (page - 1) * postsPerPage;
@@ -78,7 +80,9 @@ for (const post of posts) {
 }
 
 res.status(200).json({ posts });
+client.close();
         } catch (error) {
+          client.close();
           res.status(500).json({ message: 'Getting posts failed.' });
         }finally {
           if (client) {

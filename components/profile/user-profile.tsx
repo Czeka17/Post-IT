@@ -8,12 +8,14 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import useFriendList from "../../hooks/useFriendList";
 import useProfileImage from "../../hooks/useProfileImage";
 import { usePostsStore } from "../../store/usePostsStore";
+import { useSession } from "next-auth/react";
 interface UserProfileProps {
 	image: string;
 	username: string;
 	activeUser?: string | null | undefined;
 }
 function UserProfile(props: UserProfileProps) {
+	const { data: session, status } = useSession();
   const [showPosts, setShowPosts] = useState(true);
 
 	function ShowFriendList() {
@@ -23,16 +25,19 @@ function UserProfile(props: UserProfileProps) {
 		setShowPosts(true);
 	}
 
-  const { posts, isLoading, initializePosts, fetchMoreData, hasMore } = usePostsStore(state => ({
+  const { posts, isLoading, initializeUserPosts, fetchMoreUserData, hasMore } = usePostsStore(state => ({
 		posts: state.posts,
 		isLoading: state.isLoading,
-		initializePosts: state.initializePosts,
-		fetchMoreData: state.fetchMoreData,
+		initializeUserPosts: state.initializePosts,
+		fetchMoreUserData: state.fetchMoreData,
 		hasMore:state.hasMore
 	  }));
     useEffect(() => {
-      initializePosts();
-      }, [initializePosts]);
+
+		initializeUserPosts(props.username);
+
+      }, [initializeUserPosts,props.username]);
+
 
 	const { friendList } = useFriendList(props.username);
 	const { selectImageHandler } = useProfileImage(props.image, props.username);
@@ -82,7 +87,7 @@ function UserProfile(props: UserProfileProps) {
 						{showPosts && (
 							<InfiniteScroll
 								dataLength={posts.length}
-								next={fetchMoreData}
+								next={() => fetchMoreUserData(props.username)}
 								hasMore={hasMore}
 								loader={<h4 className={classes.loadingPosts}>Loading...</h4>}
 								endMessage={

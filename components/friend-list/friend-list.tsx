@@ -45,7 +45,7 @@ function FriendList() {
         <div>
           <ul className={classes.list}>
             {friendList.map((friend: Friend) => (
-              <User name={friend.name} userImage={friend.image} friendList={friendList} friend={"yes"}/>
+              <User key={friend._id} name={friend.name} userImage={friend.image} friendList={friendList} friend={"yes"}/>
             ))}
             {friendList.length === 0 && (
               <p className={classes.friendListIsEmpty}>

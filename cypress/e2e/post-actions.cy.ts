@@ -1,6 +1,6 @@
 import 'cypress-file-upload';
 
-describe('Add Post', () => {
+describe('Post actions', () => {
     beforeEach(() => {
         cy.visit('http://localhost:3000/auth');
  
@@ -36,4 +36,32 @@ describe('Add Post', () => {
         cy.get('[data-cy=feedback-modal]').should('exist')
         
       });
-})
+      it('should edit post content', () => {
+        cy.get('[data-cy=post]').first().within(() => {
+        cy.get('[data-cy=kebab-menu]').click()
+        cy.get('[data-cy=edit-post]').click()
+        cy.get('[data-cy=modal-textarea]').clear().type('edited post!')
+        cy.get('[data-cy=modal-submit-button]').click()
+        })
+        cy.get('[data-cy=feedback-modal]').within(() => {
+          cy.contains('Success!').should('exist');
+        });
+        cy.get('[data-cy=feedback-modal-backdrop]').click({ force: true })
+        cy.get('[data-cy=post]').first().within(() => {
+          cy.contains('edited post!').should('exist');
+        });
+      })
+      it('should delete post', () => {
+            cy.get('[data-cy=post]').first().within(() => {
+            cy.get('[data-cy=kebab-menu]').click()
+            cy.get('[data-cy=delete-post]').click()
+          })
+            cy.get('[data-cy=feedback-modal]').within(() => {
+              cy.contains('Success!').should('exist');
+            });
+            cy.get('[data-cy=feedback-modal-backdrop]').click({ force: true });
+          
+            cy.get('[data-cy=post]').should('not.contain', 'edited post!');
+            
+          })
+        })

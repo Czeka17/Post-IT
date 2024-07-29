@@ -7,9 +7,9 @@ function FeedbackModal() {
 	}));
 	return (
 		<div>
-			{showFeedbackModal.show && <div>
-            <div className={classes.backdrop} onClick={closeFeedbackModal}></div>
-			<div className={classes.modal} data-cy='feedback-modal'>
+			{showFeedbackModal.show && <div data-cy='feedback-modal'>
+            <div className={classes.backdrop} onClick={closeFeedbackModal} data-cy='feedback-modal-backdrop'></div>
+			<div className={classes.modal}>
 				<h3>{showFeedbackModal.title}</h3>
 				<p>{showFeedbackModal.message}</p>
 			</div>

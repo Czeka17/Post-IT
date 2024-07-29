@@ -1,6 +1,6 @@
 import classes from "./post-modal.module.css";
 import CloudinaryUploader from "../add-post/cloudinary-uploader";
-import { AiOutlineSend, AiFillFileAdd } from "react-icons/ai";
+import { AiFillFileAdd } from "react-icons/ai";
 import PostImage from "../post-image/post-image";
 interface PostItemProps {
 	onSubmit: () => void;
@@ -30,6 +30,7 @@ function PostModal(props: PostItemProps) {
 		>
 			<div className={classes.postContent}>
 				<textarea
+				data-cy='modal-textarea'
 					value={props.inputValue}
 					onChange={props.onChange}
 				/>
@@ -71,6 +72,7 @@ function PostModal(props: PostItemProps) {
 					<button
 						className={classes.submitButton}
 						onClick={props.onSubmit}
+						data-cy='modal-submit-button'
 					>
 						Submit
 					</button>

@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import classes from "./chat.module.css";
 import { useSession } from "next-auth/react";
-import axios from "axios";
-import Pusher from "pusher-js";
 import { BsFillChatDotsFill } from 'react-icons/bs';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import ChatInput from "./chat-input";
@@ -18,6 +16,12 @@ function ChatContainer() {
     const prevScrollHeightRef = useRef<number | null>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
   
+    function handleKeyDown(event:any) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleSendMessage();
+      }
+    }
     const handleSendMessage = () => {
       sendMessage(messageInput);
       setMessageInput("");
@@ -73,6 +77,8 @@ function ChatContainer() {
           messageInput={messageInput}
           setMessageInput={setMessageInput}
           sendMessage={handleSendMessage}
+          handleKeyDown={handleKeyDown}
+          
         />
       </div>
       {!showChat && (

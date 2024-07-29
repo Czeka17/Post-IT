@@ -37,12 +37,13 @@ function PostAuthor(props: PostAuthorProps) {
 					className={classes.kebabMenu}
 					ref={props.kebabMenuRef}
 				>
-					<GoKebabHorizontal onClick={props.handleKebabMenuClick} />
+					<GoKebabHorizontal onClick={props.handleKebabMenuClick} data-cy='kebab-menu' />
 					{props.showOptions && (
 						<div className={classes.options}>
 							<button
 								className={classes.optionButton}
 								onClick={props.handleShowModal}
+								data-cy='edit-post'
 							>
 								<AiOutlineEdit />
 								Edit
@@ -51,6 +52,7 @@ function PostAuthor(props: PostAuthorProps) {
 							<button
 								className={classes.optionButton}
 								onClick={() => props.onDeletePost(props.id)}
+								data-cy='delete-post'
 							>
 								<BsTrash />
 								Delete

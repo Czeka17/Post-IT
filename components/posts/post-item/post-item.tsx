@@ -94,7 +94,7 @@ function PostItem(props: PostItemProps) {
 	const commentsLength = commentList?.length ?? 0;
 
 	return (
-		<li className={classes.item}>
+		<li className={classes.item} data-cy='post'>
 			<div>
 				<div className={classes.content}>
 					<PostAuthorContainer

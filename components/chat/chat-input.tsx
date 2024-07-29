@@ -5,12 +5,14 @@ interface ChatInputProps {
   messageInput: string;
   setMessageInput: (value: string) => void;
   sendMessage: () => void;
+  handleKeyDown:(event:any) => void;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({
   messageInput,
   setMessageInput,
   sendMessage,
+  handleKeyDown
 }) => {
   return (
     <div className={classes.inputContainer}>
@@ -19,6 +21,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         value={messageInput}
         onChange={(e) => setMessageInput(e.target.value)}
         className={classes.input}
+        onKeyDown={handleKeyDown}
       />
       <button onClick={sendMessage} className={classes.sendButton}>
         Send

@@ -28,8 +28,9 @@ function Comments(props: CommentsProps) {
 	return (
 		<div className={classes.comments}>
 			<ul>
-				{props.comments?.map((comment) => (
+				{props.comments?.map((comment, key) => (
 					<UserComment
+					key={key}
 						comment={comment}
 						id={props.id}
 					/>

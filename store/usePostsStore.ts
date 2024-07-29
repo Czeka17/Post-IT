@@ -35,8 +35,8 @@ interface PostsState {
     currentPage: number;
     hasFetched: boolean;
     closeFeedbackModal:() => void;
-    initializePosts: () => Promise<void>;
-    fetchMoreData: () => Promise<void>;
+    initializePosts: (author?:string) => Promise<void>;  
+    fetchMoreData: (author?:string) => Promise<void>;
     addPost: (postData: any) => Promise<void>;
     updatePost: (postId: string, newTitle: string, newImage: { url: string | undefined; type: 'image' | 'video' | 'gif' | undefined }) => Promise<void>;
     deletePost: (postId: string) => Promise<void>;
@@ -61,33 +61,46 @@ export const usePostsStore = create<PostsState>()(
       },
 
 
-      initializePosts: async () => {
-  
+      initializePosts: async (author?: string) => {
         set({ isLoading: true });
         try {
-          const response = await fetch("/api/posts/addPost");
-          const data = await response.json();
-          set({ posts: data.posts, isLoading:false });
+            let url = "/api/posts/addPost";
+            if (author) {
+                url += `?author=${encodeURIComponent(author)}`;
+            }
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            set({ posts: data.posts, isLoading: false });
         } catch (error) {
-          console.error("Failed to fetch initial posts", error);
+            console.error("Failed to fetch posts", error);
         } finally {
-          set({ isLoading: false });
+            set({ isLoading: false });
         }
-      },
-    fetchMoreData: async () => {
+    },
+    
+      
+     
+    fetchMoreData: async (author?: string) => {
         try {
             const state = get();
-            const response = await fetch(`/api/posts/addPost?page=${state.currentPage + 1}`);
+            let url = `/api/posts/addPost?page=${state.currentPage + 1}`;
+            if (author) {
+                url += `&author=${encodeURIComponent(author)}`;
+            }
+    
+            const response = await fetch(url);
             const data = await response.json();
             set((state) => ({
                 posts: [...state.posts, ...data.posts],
                 isLoading: false,
-                currentPage:state.currentPage + 1,
+                currentPage: state.currentPage + 1,
             }));
         } catch (error) {
             console.error(error);
         }
     },
+    
 
     addPost: async (postData: any) => {
         try {
